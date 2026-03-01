@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v3 "Enigma"</title>
 
   <!-- Leaflet -->
@@ -55,7 +55,6 @@
       display:flex; gap:12px; align-items:flex-end; justify-content:space-between; flex-wrap:wrap;
       margin-bottom:10px;
     }
-
     .brand{display:flex; flex-direction:column; gap:4px}
     .brandLine{display:flex; gap:10px; align-items:baseline; flex-wrap:wrap}
     .brand h1{margin:0; font-size:30px; line-height:1}
@@ -69,7 +68,6 @@
       box-shadow: 0 0 0 2px rgba(0,0,0,.45) inset;
     }
     .brand .sub{font-size:16px; color:var(--muted)}
-
     .btns{display:flex; gap:10px; flex-wrap:wrap}
     .btn{
       cursor:pointer;
@@ -92,7 +90,6 @@
       grid-template-columns: 1.6fr 1fr;
       gap:12px;
     }
-
     .panel{
       background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(0,0,0,.25)), var(--panel);
       border:1px solid var(--stroke);
@@ -182,13 +179,7 @@
     .badge.vsl{border-color: rgba(255,120,120,.45)}
     .badge.pat{border-color: rgba(255,220,120,.45)}
     .badge.sat{border-color: rgba(0,200,200,.45)}
-    .summary{
-      margin-top:10px;
-      color:rgba(255,255,255,.86);
-      font-size:18px;
-      line-height:1.25;
-      white-space:pre-wrap
-    }
+    .summary{margin-top:10px; color:rgba(255,255,255,.86); font-size:18px; line-height:1.25; white-space:pre-wrap}
 
     #map{
       height: 520px;
@@ -338,7 +329,7 @@
               <label class="toggle"><input type="checkbox" id="mapOnlyFiltered" checked> map shows filtered only</label>
               <label class="toggle"><input type="checkbox" id="mapShowCI" checked> show CI overlay (cables/wind/ports)</label>
               <span class="hint" id="ciStatus">CI: idle</span>
-              <span class="hint">Tip: set lat,lon in issue body to create markers.</span>
+              <span class="hint">Debug: white dot = Leaflet OK</span>
             </div>
           </div>
 
@@ -440,7 +431,6 @@
           </div>
           <div class="pc">
             <div class="scrollbox"><div class="monoSmall" id="weatherBox">Loading…</div></div>
-            <div class="hint" style="margin-top:8px;">Endpoint optional. Wenn noch nicht vorhanden: wir bauen ihn als nächstes in den Worker.</div>
           </div>
         </div>
 
@@ -451,7 +441,6 @@
           </div>
           <div class="pc">
             <div class="scrollbox"><div class="monoSmall" id="navtexBox">Loading…</div></div>
-            <div class="hint" style="margin-top:8px;">Endpoint optional. Ziel: letzte Meldungen (Area + Zeit) als Liste.</div>
           </div>
         </div>
 
@@ -466,6 +455,18 @@
   const API_REBUILD = `${BASE}/api/rebuild`;
   const API_WEATHER = `${BASE}/api/weather`;
   const API_NAVTEX  = `${BASE}/api/navtex`;
+
+  // Falls du später debug ausschalten willst:
+  const DEBUG_MARKER = true;
+
+  const TEST_PORTS_GEOJSON = {
+    "type":"FeatureCollection",
+    "name":"ports",
+    "features":[
+      {"type":"Feature","properties":{"name":"Hamburg (TEST)"},"geometry":{"type":"Point","coordinates":[9.99,53.55]}},
+      {"type":"Feature","properties":{"name":"Wilhelmshaven (TEST)"},"geometry":{"type":"Point","coordinates":[8.15,53.51]}}
+    ]
+  };
 
   const el = (id) => document.getElementById(id);
 
@@ -487,7 +488,6 @@
 
   function nowStr(){ return new Date().toLocaleString(); }
   function uniq(arr){ return [...new Set(arr)].sort(); }
-
   function escapeHtml(s){
     return (s ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   }
@@ -510,10 +510,7 @@
     if (label.startsWith("SEV:4")) return "sev4";
     return "";
   }
-
-  function badge(label){
-    return `<span class="badge ${classifyBadge(label)}">${escapeHtml(label)}</span>`;
-  }
+  function badge(label){ return `<span class="badge ${classifyBadge(label)}">${escapeHtml(label)}</span>`; }
 
   function applyFilters(){
     const q = el("q").value.trim().toLowerCase();
@@ -726,7 +723,7 @@
   function initMap(){
     if (state.map) return;
 
-    state.map = L.map("map", { zoomControl: true, attributionControl: true }).setView([54.2, 8.6], 6);
+    state.map = L.map("map", { zoomControl:true, attributionControl:true }).setView([54.2, 8.6], 6);
 
     L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
       maxZoom: 19,
@@ -734,32 +731,14 @@
     }).addTo(state.map);
 
     state.markersLayer = L.layerGroup().addTo(state.map);
-    state.ciLayerGroup = L.layerGroup(); // not added by default; toggle controls it
-  }
+    state.ciLayerGroup = L.layerGroup(); // toggle controls it
 
-  function markerStyleFromEvent(ev){
-    const labels = ev.labels ?? [];
-    const sev = ev.severity ?? "SEV:1";
-    const dom = ev.category ?? "D:UNKNOWN";
-
-    const radius = sev === "SEV:4" ? 10 : sev === "SEV:3" ? 8 : sev === "SEV:2" ? 6 : 5;
-
-    let color = "#b08800";
-    if (dom === "D:AIS_TRACK") color = "#33d17a";
-    else if (dom === "D:RF_SIGNAL") color = "#9b6bff";
-    else if (dom === "D:DRONE_UAS") color = "#00d4ff";
-    else if (dom === "D:AIR_ACTIVITY") color = "#66e3ff";
-    else if (dom === "D:SATELLITE") color = "#00c8c8";
-    else if (dom === "D:CYBER_OT") color = "#ff4d4d";
-    else if (dom === "D:INFRA_CI") color = "#ff8a00";
-    else if (dom === "D:SECURITY_CRIME") color = "#ffb000";
-    else if (dom === "D:INCIDENT") color = "#ffd24d";
-    else if (dom === "D:SAR") color = "#ffffff";
-    else if (dom === "D:WEATHER_MET") color = "#bdbdbd";
-    else if (dom === "D:NEWS_INTEL") color = "#b08800";
-
-    const fill = labels.includes("P0:SUSPECT") ? "#ff4d4d" : "#ffffff";
-    return { radius, color, weight: 2, fillColor: fill, fillOpacity: 0.22 };
+    // DEBUG marker: proves Leaflet renders points
+    if (DEBUG_MARKER){
+      L.circleMarker([53.55, 9.99], {
+        radius: 7, color:"#ffffff", weight:2, fillColor:"#ffffff", fillOpacity:0.65
+      }).addTo(state.map).bindPopup("DEBUG marker Hamburg (Leaflet OK)");
+    }
   }
 
   function updateMapMarkers(){
@@ -772,30 +751,18 @@
     state.markersLayer.clearLayers();
 
     const pts = src.filter(e => e.geo && typeof e.geo.lat === "number" && typeof e.geo.lon === "number");
-
     for (const ev of pts){
-      const m = L.circleMarker([ev.geo.lat, ev.geo.lon], markerStyleFromEvent(ev));
-      const when = ev.ts ? new Date(ev.ts).toLocaleString() : "–";
-      const popup = `
-        <div style="font-family: ui-monospace, monospace; font-size:12px;">
-          <div style="font-weight:700; margin-bottom:6px;">${escapeHtml(ev.title)}</div>
-          <div style="opacity:.8; margin-bottom:6px;">${escapeHtml(when)} • ${escapeHtml(ev.category ?? "")} • ${escapeHtml(ev.severity ?? "")}</div>
-          <div style="opacity:.85; margin-bottom:6px;">${escapeHtml((ev.labels ?? []).slice(0,12).join(", "))}</div>
-          <div><a href="${ev.url}" target="_blank" rel="noreferrer">Open Issue</a></div>
-        </div>
-      `;
-      m.bindPopup(popup);
+      const m = L.circleMarker([ev.geo.lat, ev.geo.lon], { radius: 6, color: "#b08800", weight: 2, fillColor:"#ffffff", fillOpacity:0.22 });
       m.addTo(state.markersLayer);
     }
 
-    // Robust CI toggle: whole group
+    // toggle CI group
     if (showCI) {
       if (!state.map.hasLayer(state.ciLayerGroup)) state.ciLayerGroup.addTo(state.map);
     } else {
       if (state.map.hasLayer(state.ciLayerGroup)) state.map.removeLayer(state.ciLayerGroup);
     }
 
-    // Auto-fit: events first, else CI
     if (pts.length){
       const bounds = L.latLngBounds(pts.map(p => [p.geo.lat, p.geo.lon]));
       state.map.fitBounds(bounds.pad(0.15));
@@ -806,9 +773,9 @@
 
   async function loadCIOverlays(){
     const sources = [
-      { name: "Ports",  url: `${BASE}/api/ci/ports` },
-      { name: "Cables", url: `${BASE}/api/ci/cables` },
-      { name: "Wind",   url: `${BASE}/api/ci/windfarms` }
+      { name: "Ports",  url: `${BASE}/api/ci/ports`,  fallback: TEST_PORTS_GEOJSON },
+      { name: "Cables", url: `${BASE}/api/ci/cables`, fallback: null },
+      { name: "Wind",   url: `${BASE}/api/ci/windfarms`, fallback: null }
     ];
 
     state.ciLayerGroup.clearLayers();
@@ -819,60 +786,77 @@
 
     let loaded = 0;
     let totalFeatures = 0;
+    let usedFallbackAny = false;
+
+    async function fetchGeoJSON(url){
+      const res = await fetch(url, { cache: "no-store" });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return await res.json();
+    }
 
     for (const s of sources){
+      let gj = null;
+      let usedFallback = false;
+
       try{
-        const res = await fetch(s.url, { cache: "no-store" });
-        if (!res.ok){
-          if (status) status.textContent = `CI: ${s.name} HTTP ${res.status}`;
+        gj = await fetchGeoJSON(s.url);
+      } catch(err){
+        if (s.fallback){
+          gj = s.fallback;
+          usedFallback = true;
+          usedFallbackAny = true;
+        } else {
+          if (status) status.textContent = `CI: ${s.name} failed (${err.message})`;
           continue;
         }
+      }
 
-        const gj = await res.json();
-        const n = Array.isArray(gj?.features) ? gj.features.length : 0;
-        totalFeatures += n;
+      const n = Array.isArray(gj?.features) ? gj.features.length : 0;
+      totalFeatures += n;
 
-        const layer = L.geoJSON(gj, {
-          style: () => ({ color: "#b08800", weight: 2.5, opacity: 0.75 }),
-          pointToLayer: (_feature, latlng) =>
-            L.circleMarker(latlng, {
-              radius: 9,
-              color: "#b08800",
-              weight: 3,
-              fillColor: "#ffd24d",
-              fillOpacity: 0.55
-            }),
-          onEachFeature: (feature, lyr) => {
-            const name = feature?.properties?.name || feature?.properties?.Name || s.name;
-            lyr.bindPopup(
-              `<div style="font-family: ui-monospace, monospace; font-size:12px;">
-                <b>${escapeHtml(name)}</b><br>${escapeHtml(s.name)} overlay
-              </div>`
-            );
-          }
-        });
+      const layer = L.geoJSON(gj, {
+        style: () => ({ color: "#b08800", weight: 2.5, opacity: 0.75 }),
+        pointToLayer: (_feature, latlng) =>
+          L.circleMarker(latlng, {
+            radius: 10,
+            color: "#b08800",
+            weight: 3,
+            fillColor: "#ffd24d",
+            fillOpacity: 0.70
+          }),
+        onEachFeature: (feature, lyr) => {
+          const name = feature?.properties?.name || feature?.properties?.Name || s.name;
+          lyr.bindPopup(
+            `<div style="font-family: ui-monospace, monospace; font-size:12px;">
+              <b>${escapeHtml(name)}</b><br>${escapeHtml(s.name)} overlay
+            </div>`
+          );
+        }
+      });
 
-        layer.addTo(state.ciLayerGroup);
+      layer.addTo(state.ciLayerGroup);
 
-        try{
-          const b = layer.getBounds && layer.getBounds();
-          if (b && b.isValid && b.isValid()){
-            state.ciBounds = state.ciBounds ? state.ciBounds.extend(b) : b;
-          }
-        } catch(_e){}
+      try{
+        const b = layer.getBounds && layer.getBounds();
+        if (b && b.isValid && b.isValid()){
+          state.ciBounds = state.ciBounds ? state.ciBounds.extend(b) : b;
+        }
+      } catch(_e){}
 
-        loaded++;
-        if (status) status.textContent = `CI: ${loaded}/${sources.length} • features=${totalFeatures}`;
-      } catch(_e){
-        if (status) status.textContent = `CI: ${s.name} error`;
+      loaded++;
+      if (status){
+        const tag = usedFallback ? " (fallback)" : "";
+        status.textContent = `CI: ${loaded}/${sources.length} • features=${totalFeatures}${tag}`;
       }
     }
 
+    // ensure CI is on map if toggle is on
     if (state.map && el("mapShowCI")?.checked && !state.map.hasLayer(state.ciLayerGroup)) {
       state.ciLayerGroup.addTo(state.map);
     }
 
     if (status && loaded === 0) status.textContent = "CI: none loaded";
+    if (status && usedFallbackAny) status.textContent += " • fallback active";
   }
 
   async function loadOptionalBox(url, boxEl, metaEl){
@@ -904,7 +888,7 @@
         state.map.invalidateSize();
         await loadCIOverlays().catch(()=>{});
         updateMapMarkers();
-      }, 120);
+      }, 150);
     }
   }
 
@@ -956,14 +940,15 @@
 
   async function rebuildNow(){
     try{ await fetch(API_REBUILD, { cache: "no-store" }); } catch(_e){}
-    await loadBundle();
+    try{ await loadBundle(); } catch(_e){}
   }
 
+  // listeners
   ["q","domain","region","sev","onlyP0","onlyGeo"].forEach(id => {
     el(id).addEventListener(id === "q" ? "input" : "change", applyFilters);
   });
 
-  el("btnReload").addEventListener("click", loadBundle);
+  el("btnReload").addEventListener("click", () => loadBundle().catch(()=>{}));
   el("btnRebuild").addEventListener("click", rebuildNow);
   el("btnExport").addEventListener("click", exportFiltered);
 
@@ -975,15 +960,15 @@
       el("domain").value = dom;
       applyFilters();
     }
-
     setTab(tab, t);
   }));
 
   el("mapOnlyFiltered").addEventListener("change", updateMapMarkers);
   el("mapShowCI").addEventListener("change", updateMapMarkers);
 
+  // boot
   loadBundle().catch(err => {
-    el("list").innerHTML = `<div class="event">Fehler beim Laden: ${escapeHtml(err.message)}</div>`;
+    el("list").innerHTML = `<div class="event">Bundle lädt nicht (ok für Map-Test): ${escapeHtml(err.message)}</div>`;
   });
 
   loadOptionalBox(API_WEATHER, el("weatherBox"), el("weatherMeta"));
