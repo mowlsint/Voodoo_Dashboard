@@ -467,6 +467,7 @@
     map: null,
     markersLayer: null,
     ciLayerGroup: null,
+    ciBounds: null
   };
 
   const DOMAINS_ALL = [
@@ -476,12 +477,11 @@
   ];
 
   function nowStr(){ return new Date().toLocaleString(); }
+  function uniq(arr){ return [...new Set(arr)].sort(); }
 
   function escapeHtml(s){
     return (s ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   }
-
-  function uniq(arr){ return [...new Set(arr)].sort(); }
 
   function buildSelectOptions(selectEl, values){
     const current = selectEl.value;
@@ -651,7 +651,7 @@
     }
 
     const pct = clamp(Math.round((points / 90) * 100), 0, 100);
-    return { pct, points, count: recent.length };
+    return { pct };
   }
 
   function scoreWeirdness(events){
@@ -683,7 +683,7 @@
     }
 
     const pct = clamp(Math.round((w / 70) * 100), 0, 100);
-    return { pct, points: w, count: recent.length };
+    return { pct };
   }
 
   function setNeedle(pct){
@@ -789,9 +789,12 @@
       else state.map.removeLayer(layer);
     });
 
+    // Auto-fit: events first, else CI
     if (pts.length){
       const bounds = L.latLngBounds(pts.map(p => [p.geo.lat, p.geo.lon]));
       state.map.fitBounds(bounds.pad(0.15));
+    } else if (showCI && state.ciBounds){
+      state.map.fitBounds(state.ciBounds.pad(0.20));
     }
   }
 
@@ -803,23 +806,39 @@
     ];
 
     state.ciLayerGroup.clearLayers();
+    state.ciBounds = null;
 
     for (const s of sources){
       try{
         const res = await fetch(s.url, { cache: "no-store" });
         if (!res.ok) continue;
         const gj = await res.json();
+
         const layer = L.geoJSON(gj, {
-          style: () => ({ color: "#b08800", weight: 2, opacity: 0.55 }),
-          pointToLayer: (feature, latlng) =>
-            L.circleMarker(latlng, { radius: 5, color:"#b08800", weight:2, fillColor:"#000", fillOpacity:0.0 }),
+          style: () => ({ color: "#b08800", weight: 2.5, opacity: 0.70 }),
+          pointToLayer: (_feature, latlng) =>
+            L.circleMarker(latlng, {
+              radius: 8,
+              color:"#b08800",
+              weight: 3,
+              fillColor:"#ffd24d",
+              fillOpacity: 0.35
+            }),
           onEachFeature: (feature, layer) => {
             const name = feature?.properties?.name || feature?.properties?.Name || s.name;
             layer.bindPopup(`<div style="font-family: ui-monospace, monospace; font-size:12px;"><b>${escapeHtml(name)}</b><br>${escapeHtml(s.name)} overlay</div>`);
           }
         });
+
         layer.addTo(state.ciLayerGroup);
-      } catch(e){
+
+        try{
+          const b = layer.getBounds && layer.getBounds();
+          if (b && b.isValid && b.isValid()){
+            state.ciBounds = state.ciBounds ? state.ciBounds.extend(b) : b;
+          }
+        } catch(_e){}
+      } catch(_e){
         // ignore
       }
     }
@@ -831,7 +850,7 @@
     try{
       const res = await fetch(url, { cache: "no-store" });
       if (!res.ok) {
-        boxEl.textContent = `Endpoint not available (${res.status}).\n\nNext step: we add this endpoint to the Worker.`;
+        boxEl.textContent = `Endpoint not available (${res.status}).`;
         return;
       }
       const data = await res.json();
@@ -843,7 +862,6 @@
 
   // ----- Tabs -----
   function setTab(name, clickedEl){
-    // only one active at a time (fix for multi-events tabs)
     document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
     if (clickedEl) clickedEl.classList.add("active");
 
@@ -853,11 +871,12 @@
 
     if (name === "map"){
       initMap();
-      // Leaflet needs this when container becomes visible
-      setTimeout(() => {
+      // map is now visible -> recalc + refresh CI + redraw markers
+      setTimeout(async () => {
         state.map.invalidateSize();
+        await loadCIOverlays().catch(()=>{});
         updateMapMarkers();
-      }, 50);
+      }, 80);
     }
   }
 
@@ -873,11 +892,10 @@
     el("src").textContent = `${data.source?.owner ?? "?"}/${data.source?.repo ?? "?"}`;
     el("stand").textContent = data.generated_at ? new Date(data.generated_at).toLocaleString() : "–";
 
-    // Use known domain list as baseline, but include any new ones from data
     const domainsFromData = uniq(state.events.map(e => e.category).filter(Boolean));
     const domains = uniq(DOMAINS_ALL.concat(domainsFromData));
-
     const regions = uniq(state.events.map(e => e.region).filter(Boolean));
+
     buildSelectOptions(el("domain"), domains);
     buildSelectOptions(el("region"), regions);
 
@@ -910,7 +928,7 @@
   }
 
   async function rebuildNow(){
-    try{ await fetch(API_REBUILD, { cache: "no-store" }); } catch(e){}
+    try{ await fetch(API_REBUILD, { cache: "no-store" }); } catch(_e){}
     await loadBundle();
   }
 
@@ -923,14 +941,12 @@
   el("btnRebuild").addEventListener("click", rebuildNow);
   el("btnExport").addEventListener("click", exportFiltered);
 
-  // Tabs: apply domain preset when data-domain exists
   document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => {
     const tab = t.dataset.tab;
     const dom = (t.dataset.domain ?? "");
 
-    // Satellite tab is its own view; keep dropdown as-is
     if (tab === "events") {
-      el("domain").value = dom; // "" => all
+      el("domain").value = dom;
       applyFilters();
     }
 
