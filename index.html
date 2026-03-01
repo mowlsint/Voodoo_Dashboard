@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Voodoo Dashboard – Hybrid Maritime</title>
+  <style>
+    :root{
+      --bg:#0b1220;
+      --card:rgba(255,255,255,.06);
+      --stroke:rgba(255,255,255,.10);
+      --text:rgba(255,255,255,.92);
+      --muted:rgba(255,255,255,.70);
+      --shadow:0 18px 50px rgba(0,0,0,.35);
+      --r:16px;
+      --max:1200px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; background:var(--bg); color:var(--text);
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    }
+    a{color:inherit}
+    .wrap{max-width:var(--max); margin:0 auto; padding:18px;}
+    header{display:flex; gap:14px; align-items:flex-end; justify-content:space-between; flex-wrap:wrap;}
+    h1{margin:0; font-size:20px; letter-spacing:.3px}
+    .sub{color:var(--muted); font-size:13px; margin-top:6px}
+    .row{display:flex; gap:12px; flex-wrap:wrap; margin-top:14px}
+    .card{
+      background:var(--card); border:1px solid var(--stroke);
+      border-radius:var(--r); padding:12px; box-shadow:var(--shadow);
+    }
+    .kpi{min-width:220px; flex:1}
+    .kpi .label{color:var(--muted); font-size:12px}
+    .kpi .value{font-size:18px; margin-top:6px}
+    .controls{display:grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap:10px; width:100%;}
+    .controls .card{padding:10px}
+    label{display:block; font-size:12px; color:var(--muted); margin-bottom:6px}
+    input,select{
+      width:100%; padding:10px 10px;
+      border-radius:12px; border:1px solid var(--stroke);
+      background:rgba(0,0,0,.15); color:var(--text);
+      outline:none;
+    }
+    .toggles{display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:10px}
+    .toggle{
+      display:flex; gap:8px; align-items:center;
+      padding:8px 10px; border:1px solid var(--stroke);
+      border-radius:999px; background:rgba(0,0,0,.12);
+      font-size:13px; color:var(--text);
+      user-select:none;
+    }
+    .toggle input{width:auto}
+    .btn{
+      cursor:pointer; padding:10px 12px; border-radius:12px;
+      border:1px solid var(--stroke); background:rgba(255,255,255,.08);
+      color:var(--text); font-weight:600;
+    }
+    .btn:active{transform:translateY(1px)}
+    .list{margin-top:12px}
+    .event{padding:12px; border-radius:var(--r); border:1px solid var(--stroke); background:rgba(255,255,255,.04); margin-bottom:10px}
+    .etop{display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:flex-start}
+    .title{font-weight:700}
+    .meta{color:var(--muted); font-size:12px; margin-top:4px}
+    .badges{display:flex; gap:6px; flex-wrap:wrap; margin-top:8px}
+    .badge{
+      font-size:12px; padding:4px 8px; border-radius:999px;
+      border:1px solid var(--stroke); background:rgba(0,0,0,.15); color:var(--text);
+    }
+    .badge.p0{border-color:rgba(255,80,80,.55)}
+    .badge.sev3,.badge.sev4{border-color:rgba(255,180,0,.60)}
+    .badge.dom{border-color:rgba(90,160,255,.55)}
+    .badge.reg{border-color:rgba(140,220,255,.45)}
+    .badge.vsl{border-color:rgba(255,120,120,.45)}
+    .badge.pat{border-color:rgba(255,220,120,.45)}
+    .badge.sat{border-color:rgba(0,200,200,.45)}
+    .summary{margin-top:10px; color:rgba(255,255,255,.86); font-size:13px; line-height:1.35; white-space:pre-wrap}
+    .footer{color:var(--muted); font-size:12px; margin:16px 0 0}
+    @media (max-width: 980px){ .controls{grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 560px){ .controls{grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Voodoo Dashboard – Hybrid Maritime</h1>
+        <div class="sub">Quelle: <span id="src">–</span> • Stand: <span id="stand">–</span></div>
+      </div>
+      <div style="display:flex; gap:10px; align-items:center;">
+        <button class="btn" id="btnReload">Neu laden</button>
+        <button class="btn" id="btnExport">Export (gefiltert)</button>
+      </div>
+    </header>
+
+    <div class="row">
+      <div class="card kpi">
+        <div class="label">Events (gefiltert)</div>
+        <div class="value" id="kpiEvents">–</div>
+      </div>
+      <div class="card kpi">
+        <div class="label">Phase Zero Verdacht</div>
+        <div class="value" id="kpiP0">–</div>
+      </div>
+      <div class="card kpi">
+        <div class="label">Mit Geo</div>
+        <div class="value" id="kpiGeo">–</div>
+      </div>
+      <div class="card kpi">
+        <div class="label">Letzter Fetch</div>
+        <div class="value" id="kpiFetch">–</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="controls">
+        <div class="card">
+          <label>Suche (Text/Labels)</label>
+          <input id="q" placeholder="z.B. SHADOW_FLEET, RUS_RESEARCH, LOITERING, Kabel, GNSS..." />
+        </div>
+        <div class="card">
+          <label>Domäne (D:*)</label>
+          <select id="domain">
+            <option value="">Alle</option>
+          </select>
+        </div>
+        <div class="card">
+          <label>Region (REG:*)</label>
+          <select id="region">
+            <option value="">Alle</option>
+          </select>
+        </div>
+        <div class="card">
+          <label>Severity (SEV:*)</label>
+          <select id="sev">
+            <option value="">Alle</option>
+            <option value="SEV:1">SEV:1</option>
+            <option value="SEV:2">SEV:2</option>
+            <option value="SEV:3">SEV:3</option>
+            <option value="SEV:4">SEV:4</option>
+          </select>
+          <div class="toggles">
+            <label class="toggle"><input type="checkbox" id="onlyP0"> nur P0:SUSPECT</label>
+            <label class="toggle"><input type="checkbox" id="onlyGeo"> nur mit Geo</label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="list" id="list"></div>
+    <div class="footer" id="foot">–</div>
+  </div>
+
+<script>
+(() => {
+  const API = "https://voodoo-hybrid-api.mowlsint.workers.dev/api/bundle";
+
+  const el = (id) => document.getElementById(id);
+
+  const state = {
+    bundle: null,
+    events: [],
+    filtered: []
+  };
+
+  function nowStr(){
+    return new Date().toLocaleString();
+  }
+
+  function escapeHtml(s){
+    return (s ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function getLabelsByPrefix(labels, prefix){
+    return labels.filter(x => x.startsWith(prefix));
+  }
+
+  function uniq(arr){
+    return [...new Set(arr)].sort();
+  }
+
+  function buildSelectOptions(selectEl, values){
+    const current = selectEl.value;
+    const opts = ['<option value="">Alle</option>']
+      .concat(values.map(v => `<option value="${escapeHtml(v)}">${escapeHtml(v)}</option>`));
+    selectEl.innerHTML = opts.join("");
+    // try restore
+    if (values.includes(current)) selectEl.value = current;
+  }
+
+  function applyFilters(){
+    const q = el("q").value.trim().toLowerCase();
+    const domain = el("domain").value;
+    const region = el("region").value;
+    const sev = el("sev").value;
+    const onlyP0 = el("onlyP0").checked;
+    const onlyGeo = el("onlyGeo").checked;
+
+    const filtered = state.events.filter(ev => {
+      if (domain && ev.category !== domain) return false;
+      if (region && ev.region !== region) return false;
+      if (sev && ev.severity !== sev) return false;
+      if (onlyP0 && !(ev.phase0 && ev.phase0.suspect)) return false;
+      if (onlyGeo && !ev.geo) return false;
+
+      if (q) {
+        const hay = (ev.title + " " + (ev.summary ?? "") + " " + (ev.labels ?? []).join(" ")).toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+
+    // newest first
+    filtered.sort((a,b)=> (b.ts || "").localeCompare(a.ts || ""));
+    state.filtered = filtered;
+
+    render();
+  }
+
+  function badge(label, cls){
+    return `<span class="badge ${cls}">${escapeHtml(label)}</span>`;
+  }
+
+  function classifyBadge(label){
+    if (label.startsWith("D:")) return "dom";
+    if (label.startsWith("REG:")) return "reg";
+    if (label.startsWith("V:")) return "vsl";
+    if (label.startsWith("PAT:")) return "pat";
+    if (label.startsWith("SAT:")) return "sat";
+    if (label === "P0:SUSPECT" || label.startsWith("P0:")) return "p0";
+    if (label.startsWith("SEV:3")) return "sev3";
+    if (label.startsWith("SEV:4")) return "sev4";
+    return "";
+  }
+
+  function render(){
+    const list = el("list");
+
+    const p0Count = state.filtered.filter(e => e.phase0 && e.phase0.suspect).length;
+    const geoCount = state.filtered.filter(e => !!e.geo).length;
+
+    el("kpiEvents").textContent = String(state.filtered.length);
+    el("kpiP0").textContent = String(p0Count);
+    el("kpiGeo").textContent = String(geoCount);
+    el("kpiFetch").textContent = nowStr();
+
+    list.innerHTML = state.filtered.map(ev => {
+      const labels = ev.labels ?? [];
+      const dom = ev.category ?? "D:UNKNOWN";
+
+      // compact: show key labels first, then the rest
+      const key = []
+        .concat(ev.severity ? [ev.severity] : [])
+        .concat(ev.confidence ? [ev.confidence] : [])
+        .concat(ev.phase0?.suspect ? ["P0:SUSPECT"] : [])
+        .concat(ev.phase0?.level && ev.phase0.level !== "P0:SUSPECT" ? [ev.phase0.level] : [])
+        .concat(dom ? [dom] : [])
+        .concat(ev.region ? [ev.region] : []);
+
+      const remaining = labels.filter(l => !key.includes(l));
+      const ordered = key.concat(remaining);
+
+      const badgesHtml = ordered.slice(0, 18).map(l => badge(l, classifyBadge(l))).join("");
+
+      const when = ev.ts ? new Date(ev.ts).toLocaleString() : "–";
+      const geoTxt = ev.geo ? `${ev.geo.lat.toFixed(4)}, ${ev.geo.lon.toFixed(4)}` : "";
+      const meta = [
+        `#${ev.number}`,
+        when,
+        geoTxt ? `Geo: ${geoTxt}` : null
+      ].filter(Boolean).join(" • ");
+
+      return `
+        <div class="event">
+          <div class="etop">
+            <div>
+              <div class="title"><a href="${ev.url}" target="_blank" rel="noreferrer">${escapeHtml(ev.title)}</a></div>
+              <div class="meta">${escapeHtml(meta)}</div>
+            </div>
+          </div>
+          <div class="badges">${badgesHtml}</div>
+          <div class="summary">${escapeHtml((ev.summary ?? "").slice(0, 500))}${(ev.summary ?? "").length > 500 ? "…" : ""}</div>
+        </div>
+      `;
+    }).join("");
+
+    el("foot").textContent = `Angezeigt: ${state.filtered.length} / ${state.events.length} Events`;
+  }
+
+  async function loadBundle(){
+    const res = await fetch(API, { cache: "no-store" });
+    const data = await res.json();
+    if (data.error) throw new Error(data.error);
+
+    state.bundle = data;
+    state.events = data.events ?? [];
+
+    el("src").textContent = `${data.source?.owner ?? "?"}/${data.source?.repo ?? "?"}`;
+    el("stand").textContent = data.generated_at ? new Date(data.generated_at).toLocaleString() : "–";
+
+    // populate dropdowns from data
+    const domains = uniq(state.events.map(e => e.category).filter(Boolean));
+    const regions = uniq(state.events.map(e => e.region).filter(Boolean));
+    buildSelectOptions(el("domain"), domains);
+    buildSelectOptions(el("region"), regions);
+
+    applyFilters();
+  }
+
+  function exportFiltered(){
+    const blob = new Blob([JSON.stringify({
+      exported_at: new Date().toISOString(),
+      source: state.bundle?.source ?? null,
+      generated_at: state.bundle?.generated_at ?? null,
+      filters: {
+        q: el("q").value,
+        domain: el("domain").value,
+        region: el("region").value,
+        sev: el("sev").value,
+        onlyP0: el("onlyP0").checked,
+        onlyGeo: el("onlyGeo").checked
+      },
+      events: state.filtered
+    }, null, 2)], { type: "application/json" });
+
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "voodoo_filtered_events.json";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(a.href);
+  }
+
+  // events
+  ["q","domain","region","sev","onlyP0","onlyGeo"].forEach(id => {
+    el(id).addEventListener(id === "q" ? "input" : "change", applyFilters);
+  });
+  el("btnReload").addEventListener("click", loadBundle);
+  el("btnExport").addEventListener("click", exportFiltered);
+
+  loadBundle().catch(err => {
+    el("list").innerHTML = `<div class="card" style="margin-top:12px">Fehler beim Laden: ${escapeHtml(err.message)}</div>`;
+  });
+})();
+</script>
+</body>
+</html>
