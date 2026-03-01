@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v1 "Raw"</title>
+  <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v3 "Enigma"</title>
 
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -326,13 +326,14 @@
 
           <div id="tab-map" style="margin-top:12px; display:none;">
             <div id="map"></div>
-          <div class="mapbar">
-            <label class="toggle"><input type="checkbox" id="mapOnlyFiltered" checked> map shows filtered only</label>
-            <label class="toggle"><input type="checkbox" id="mapShowCI" checked> show CI overlay (cables/wind/ports)</label>
-            <span class="hint" id="ciStatus">CI: idle</span>
-            <span class="hint">Tip: set lat,lon in issue body to create markers.</span>
-          </div>  
-          
+            <div class="mapbar">
+              <label class="toggle"><input type="checkbox" id="mapOnlyFiltered" checked> map shows filtered only</label>
+              <label class="toggle"><input type="checkbox" id="mapShowCI" checked> show CI overlay (cables/wind/ports)</label>
+              <span class="hint" id="ciStatus">CI: idle</span>
+              <span class="hint">Tip: set lat,lon in issue body to create markers.</span>
+            </div>
+          </div>
+
           <div id="tab-sat" style="margin-top:12px; display:none;">
             <div class="hint">Satellite view = events with <b>D:SATELLITE</b> or <b>SAT:*</b> labels.</div>
             <div class="list" id="satList" style="margin-top:10px;"></div>
@@ -728,8 +729,6 @@
 
     state.markersLayer = L.layerGroup().addTo(state.map);
     state.ciLayerGroup = L.layerGroup().addTo(state.map);
-
-    loadCIOverlays().catch(()=>{});
   }
 
   function markerStyleFromEvent(ev){
@@ -783,50 +782,66 @@
       m.addTo(state.markersLayer);
     }
 
-    // CI overlays toggle
+    // toggle CI visibility
     state.ciLayerGroup.eachLayer(layer => {
       if (showCI) layer.addTo(state.map);
       else state.map.removeLayer(layer);
     });
 
-    // Auto-fit: events first, else CI
+    // auto-fit: events first, else CI
     if (pts.length){
       const bounds = L.latLngBounds(pts.map(p => [p.geo.lat, p.geo.lon]));
       state.map.fitBounds(bounds.pad(0.15));
     } else if (showCI && state.ciBounds){
-      state.map.fitBounds(state.ciBounds.pad(0.20));
+      state.map.fitBounds(state.ciBounds.pad(0.25));
     }
   }
 
   async function loadCIOverlays(){
     const sources = [
-      { name: "Cables",  url: `${BASE}/api/ci/cables`  },
-      { name: "Wind",    url: `${BASE}/api/ci/windfarms` },
-      { name: "Ports",   url: `${BASE}/api/ci/ports`   },
+      { name: "Ports",   url: `${BASE}/api/ci/ports` },      // first
+      { name: "Cables",  url: `${BASE}/api/ci/cables` },
+      { name: "Wind",    url: `${BASE}/api/ci/windfarms` }
     ];
 
     state.ciLayerGroup.clearLayers();
     state.ciBounds = null;
 
+    const status = el("ciStatus");
+    if (status) status.textContent = "CI: loading…";
+
+    let loaded = 0;
+    let totalFeatures = 0;
+
     for (const s of sources){
       try{
         const res = await fetch(s.url, { cache: "no-store" });
-        if (!res.ok) continue;
+        if (!res.ok){
+          if (status) status.textContent = `CI: ${s.name} HTTP ${res.status}`;
+          continue;
+        }
+
         const gj = await res.json();
+        const n = Array.isArray(gj?.features) ? gj.features.length : 0;
+        totalFeatures += n;
 
         const layer = L.geoJSON(gj, {
-          style: () => ({ color: "#b08800", weight: 2.5, opacity: 0.70 }),
+          style: () => ({ color: "#b08800", weight: 2.5, opacity: 0.75 }),
           pointToLayer: (_feature, latlng) =>
             L.circleMarker(latlng, {
-              radius: 8,
-              color:"#b08800",
+              radius: 9,
+              color: "#b08800",
               weight: 3,
-              fillColor:"#ffd24d",
-              fillOpacity: 0.35
+              fillColor: "#ffd24d",
+              fillOpacity: 0.55
             }),
           onEachFeature: (feature, layer) => {
             const name = feature?.properties?.name || feature?.properties?.Name || s.name;
-            layer.bindPopup(`<div style="font-family: ui-monospace, monospace; font-size:12px;"><b>${escapeHtml(name)}</b><br>${escapeHtml(s.name)} overlay</div>`);
+            layer.bindPopup(
+              `<div style="font-family: ui-monospace, monospace; font-size:12px;">
+                 <b>${escapeHtml(name)}</b><br>${escapeHtml(s.name)} overlay
+               </div>`
+            );
           }
         });
 
@@ -838,10 +853,15 @@
             state.ciBounds = state.ciBounds ? state.ciBounds.extend(b) : b;
           }
         } catch(_e){}
+
+        loaded++;
+        if (status) status.textContent = `CI: ${loaded}/${sources.length} • features=${totalFeatures}`;
       } catch(_e){
-        // ignore
+        if (status) status.textContent = `CI: ${s.name} error`;
       }
     }
+
+    if (status && loaded === 0) status.textContent = "CI: none loaded";
   }
 
   // ----- Weather + NAVTEX windows -----
@@ -871,12 +891,11 @@
 
     if (name === "map"){
       initMap();
-      // map is now visible -> recalc + refresh CI + redraw markers
       setTimeout(async () => {
         state.map.invalidateSize();
         await loadCIOverlays().catch(()=>{});
         updateMapMarkers();
-      }, 80);
+      }, 120);
     }
   }
 
