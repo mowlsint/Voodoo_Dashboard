@@ -1,0 +1,93 @@
+name: "Incident / Security / Smuggling / Fisheries"
+description: "Zwischenfälle, Pollution, Kollision, Feuer, Boarding/Threats, Schmuggel (auch Rauschgift), Fischereibeobachtung."
+title: "[Incident/Security] "
+labels: ["D:INCIDENT", "CONF:MED", "SEV:2", "SRC:OFFICIAL"]
+body:
+  - type: dropdown
+    id: domain
+    attributes:
+      label: "Domäne (prüfen/ggf. ändern)"
+      options: ["D:INCIDENT","D:SECURITY_CRIME","D:SAR","D:WEATHER_MET"]
+    validations:
+      required: true
+
+  - type: input
+    id: time_start
+    attributes:
+      label: "Zeit (UTC)"
+      placeholder: "2026-03-01T10:20:00Z"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: region
+    attributes:
+      label: "Region"
+      options: ["REG:NORTH_SEA","REG:BALTIC_SEA","REG:MED","REG:ATLANTIC_NE","REG:INLAND_WATERWAYS"]
+    validations:
+      required: true
+
+  - type: input
+    id: latlon
+    attributes:
+      label: "Ort (lat, lon) – optional"
+      placeholder: "54.1800, 7.8900"
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: vessel_context
+    attributes:
+      label: "Vessel-Kontext (V:-Labels setzen falls relevant)"
+      options:
+        - label: "V:FISHING"
+        - label: "V:TANKER"
+        - label: "V:CARGO"
+        - label: "V:PASSENGER"
+        - label: "V:SHADOW_FLEET"
+    validations:
+      required: false
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "Beschreibung"
+      placeholder: "Was ist passiert? Schaden/Umwelt/Personen? Bei Crime: Indikatoren, modus operandi, beteiligte Einheiten."
+    validations:
+      required: true
+
+  - type: dropdown
+    id: conf_event
+    attributes:
+      label: "Fakten-Confidence (CONF:*)"
+      options: ["CONF:LOW","CONF:MED","CONF:HIGH"]
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: "Severity (SEV:*)"
+      options: ["SEV:1","SEV:2","SEV:3","SEV:4"]
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: phase0
+    attributes:
+      label: "Phase Zero / Hybrid-Verdacht (optional; z.B. Schmuggel/Fischerei als Service/Proxy)"
+      options:
+        - label: "P0:SUSPECT"
+        - label: "P0:LOW"
+        - label: "P0:MED"
+        - label: "P0:HIGH"
+    validations:
+      required: false
+
+  - type: textarea
+    id: sources
+    attributes:
+      label: "Quellen"
+      placeholder: "- Behörde\n- Presse\n- OSINT\n- Fotos"
+    validations:
+      required: false

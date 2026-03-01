@@ -1,0 +1,105 @@
+name: "Drone / Air Activity"
+description: "Drohnenaktivität auf See/Offshore + Flugaktivitäten (MPA/ISR/Helos), Muster/Interdiction."
+title: "[UAS/Air] "
+labels: ["D:DRONE_UAS", "CONF:MED", "SEV:2", "SRC:OSINT"]
+body:
+  - type: input
+    id: time_start
+    attributes:
+      label: "Zeit (UTC)"
+      placeholder: "2026-03-01T10:20:00Z"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: domain_variant
+    attributes:
+      label: "Domäne (falls eher Flugaktivität: D:-Label später umstellen)"
+      options: ["D:DRONE_UAS", "D:AIR_ACTIVITY"]
+    validations:
+      required: true
+
+  - type: dropdown
+    id: region
+    attributes:
+      label: "Region"
+      options: ["REG:NORTH_SEA","REG:BALTIC_SEA","REG:MED","REG:ATLANTIC_NE","REG:INLAND_WATERWAYS"]
+    validations:
+      required: true
+
+  - type: input
+    id: latlon
+    attributes:
+      label: "Ort (lat, lon) – optional"
+      placeholder: "54.1800, 7.8900"
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: uas_types
+    attributes:
+      label: "UAS (bitte passende UAS:-Labels setzen)"
+      options:
+        - label: "UAS:SIGHTING"
+        - label: "UAS:INTERDICT"
+        - label: "UAS:REMOTE_ID"
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: objs
+    attributes:
+      label: "Objektbezug (OBJ:*) – passende Labels setzen"
+      options:
+        - label: "OBJ:WINDFARM"
+        - label: "OBJ:PORT"
+        - label: "OBJ:CABLE"
+        - label: "OBJ:OFFSHORE"
+        - label: "OBJ:VESSEL"
+        - label: "OBJ:SEA_AREA"
+    validations:
+      required: false
+
+  - type: textarea
+    id: observation
+    attributes:
+      label: "Beobachtung / Muster"
+      placeholder: "Route/Loitering/Altitude/Speed, Offshore-Nähe, Interaktion mit Schiffen/CI, Besonderheiten"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: conf_event
+    attributes:
+      label: "Fakten-Confidence (CONF:*)"
+      options: ["CONF:LOW","CONF:MED","CONF:HIGH"]
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: "Severity (SEV:*)"
+      options: ["SEV:1","SEV:2","SEV:3","SEV:4"]
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: phase0
+    attributes:
+      label: "Phase Zero / Hybrid-Verdacht (optional)"
+      options:
+        - label: "P0:SUSPECT"
+        - label: "P0:LOW"
+        - label: "P0:MED"
+        - label: "P0:HIGH"
+    validations:
+      required: false
+
+  - type: textarea
+    id: sources
+    attributes:
+      label: "Quellen"
+      placeholder: "- ADS-B/OSINT Link\n- Meldung\n- Foto/Video"
+    validations:
+      required: false

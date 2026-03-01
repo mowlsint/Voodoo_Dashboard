@@ -1,0 +1,123 @@
+name: "Vessel / Track / Loitering"
+description: "Schiff + Track-/Verhaltensauffälligkeiten (Loitering, STS, AIS-Gap, Surveying, Shadow Fleet, Russ. Research, Behörden/Warships)."
+title: "[Vessel/Track] "
+labels: ["D:AIS_TRACK", "OBJ:VESSEL", "CONF:MED", "SEV:2", "SRC:OSINT"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Zweck:** Ereignis + Muster. Ergänze V:-, PAT:-, REG:-, ggf. OBJ:- und Phase-Zero Labels.
+        **Tipp:** Wenn es primär um Identität/Ownership/Flag/Insurance geht -> zusätzlich/alternativ `D:VESSEL`.
+
+  - type: input
+    id: time_start
+    attributes:
+      label: "Zeit (Start, UTC)"
+      placeholder: "2026-03-01T10:20:00Z"
+    validations:
+      required: true
+
+  - type: input
+    id: time_end
+    attributes:
+      label: "Zeit (Ende, UTC, optional)"
+      placeholder: "2026-03-01T14:00:00Z"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: region
+    attributes:
+      label: "Region"
+      options:
+        - "REG:NORTH_SEA"
+        - "REG:BALTIC_SEA"
+        - "REG:MED"
+        - "REG:ATLANTIC_NE"
+        - "REG:INLAND_WATERWAYS"
+    validations:
+      required: true
+
+  - type: input
+    id: latlon
+    attributes:
+      label: "Ort (lat, lon) – optional"
+      placeholder: "54.1800, 7.8900"
+    validations:
+      required: false
+
+  - type: input
+    id: area_text
+    attributes:
+      label: "Ortstext / Area – optional"
+      placeholder: "Helgoland / Ankerfeld / Kabelkorridor / Übungsraum"
+    validations:
+      required: false
+
+  - type: input
+    id: vessel_name
+    attributes:
+      label: "Vessel Name"
+      placeholder: "VESSEL NAME"
+    validations:
+      required: false
+
+  - type: input
+    id: imo
+    attributes:
+      label: "IMO (optional)"
+      placeholder: "9616840"
+    validations:
+      required: false
+
+  - type: input
+    id: mmsi
+    attributes:
+      label: "MMSI (optional)"
+      placeholder: "123456789"
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: remind_labels
+    attributes:
+      label: "Erinnerung: passende Labels setzen (manuell klicken)"
+      options:
+        - label: "Vessel-Klasse: V:SHADOW_FLEET / V:RUS_RESEARCH / V:RUS_WARSHIP / V:AUTH_* / V:FISHING / …"
+        - label: "Pattern: PAT:LOITERING / PAT:STS_SUSPECT / PAT:AIS_GAP / PAT:SURVEYING / …"
+        - label: "Objekt: OBJ:CABLE / OBJ:WINDFARM / OBJ:PORT / OBJ:SEA_AREA / …"
+        - label: "Phase Zero: P0:SUSPECT + P0:LOW|MED|HIGH (falls begründet)"
+    validations:
+      required: false
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: "Kurzbeschreibung (inkl. Alternativerklärungen)"
+      placeholder: "Was ist auffällig? Warum nicht nur Zufall/Technik/Wetter? Welche Indikatoren stützen das?"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: conf_event
+    attributes:
+      label: "Fakten-Confidence (CONF:*)"
+      options: ["CONF:LOW", "CONF:MED", "CONF:HIGH"]
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: "Severity (SEV:*)"
+      options: ["SEV:1", "SEV:2", "SEV:3", "SEV:4"]
+    validations:
+      required: true
+
+  - type: textarea
+    id: sources
+    attributes:
+      label: "Quellen (Links)"
+      placeholder: "- https://...\n- https://..."
+    validations:
+      required: false

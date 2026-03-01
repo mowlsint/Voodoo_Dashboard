@@ -1,0 +1,86 @@
+name: "RF / Funk / GNSS / NAVTEX"
+description: "RF-Anomalien, GNSS Jamming/Spoofing, unbekannte Sender, Funkauffälligkeiten, NAVTEX/NAVWARN."
+title: "[RF/Signal] "
+labels: ["D:RF_SIGNAL", "CONF:MED", "SEV:2", "SRC:SENSOR"]
+body:
+  - type: input
+    id: time_start
+    attributes:
+      label: "Zeit (UTC)"
+      placeholder: "2026-03-01T10:20:00Z"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: region
+    attributes:
+      label: "Region"
+      options: ["REG:NORTH_SEA","REG:BALTIC_SEA","REG:MED","REG:ATLANTIC_NE","REG:INLAND_WATERWAYS"]
+    validations:
+      required: true
+
+  - type: input
+    id: latlon
+    attributes:
+      label: "Ort (lat, lon) – optional"
+      placeholder: "54.1800, 7.8900"
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: rf_types
+    attributes:
+      label: "RF-Subtypen (bitte passende RF:-Labels im Issue setzen)"
+      options:
+        - label: "RF:GNSS_JAM"
+        - label: "RF:GNSS_SPOOF"
+        - label: "RF:UNKNOWN_TX"
+        - label: "RF:COMMS_ANOM"
+        - label: "RF:NAVTEX"
+        - label: "RF:NAVWARN"
+    validations:
+      required: true
+
+  - type: textarea
+    id: observation
+    attributes:
+      label: "Beobachtung"
+      placeholder: "Was wurde gemessen? Frequenz/Signalform/Dauer/Betroffene Systeme/Indizien?"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: conf_event
+    attributes:
+      label: "Fakten-Confidence (CONF:*)"
+      options: ["CONF:LOW","CONF:MED","CONF:HIGH"]
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: "Severity (SEV:*)"
+      options: ["SEV:1","SEV:2","SEV:3","SEV:4"]
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: phase0
+    attributes:
+      label: "Phase Zero / Hybrid-Verdacht (optional)"
+      options:
+        - label: "P0:SUSPECT"
+        - label: "P0:LOW"
+        - label: "P0:MED"
+        - label: "P0:HIGH"
+    validations:
+      required: false
+
+  - type: textarea
+    id: sources
+    attributes:
+      label: "Quellen / Logs / Screenshots / Links"
+      placeholder: "- Link\n- Screenshot\n- Log-Auszug"
+    validations:
+      required: false

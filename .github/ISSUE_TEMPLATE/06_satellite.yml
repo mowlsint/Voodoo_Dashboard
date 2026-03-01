@@ -1,0 +1,102 @@
+name: "Satellite / Imagery / Detections"
+description: "Satellitendaten (SAR/Optisch/IR) + Detektionen (Vessel, Wake, Change, CI monitoring) – ideal als Bestätigung/Indikator."
+title: "[Satellite] "
+labels: ["D:SATELLITE", "CONF:MED", "SEV:2", "SRC:SATELLITE"]
+body:
+  - type: input
+    id: time_start
+    attributes:
+      label: "Zeit (Acquisition, UTC)"
+      placeholder: "2026-03-01T10:20:00Z"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: region
+    attributes:
+      label: "Region"
+      options: ["REG:NORTH_SEA","REG:BALTIC_SEA","REG:MED","REG:ATLANTIC_NE","REG:INLAND_WATERWAYS"]
+    validations:
+      required: true
+
+  - type: input
+    id: bbox_or_latlon
+    attributes:
+      label: "AOI (lat, lon oder BBOX) – optional"
+      placeholder: "lat, lon oder BBOX: 7.5,54.0,8.2,54.4"
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: sat_types
+    attributes:
+      label: "Sat-Subtypen (SAT:-Labels setzen)"
+      options:
+        - label: "SAT:SAR"
+        - label: "SAT:OPTICAL"
+        - label: "SAT:IR_THERMAL"
+        - label: "SAT:VESSEL_DET"
+        - label: "SAT:WAKE"
+        - label: "SAT:CHANGE_DET"
+        - label: "SAT:CI_MONITOR"
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: objects
+    attributes:
+      label: "Objektbezug (OBJ:-Labels setzen)"
+      options:
+        - label: "OBJ:VESSEL"
+        - label: "OBJ:CABLE"
+        - label: "OBJ:PIPELINE"
+        - label: "OBJ:WINDFARM"
+        - label: "OBJ:PORT"
+        - label: "OBJ:OFFSHORE"
+        - label: "OBJ:SEA_AREA"
+    validations:
+      required: false
+
+  - type: textarea
+    id: finding
+    attributes:
+      label: "Befund / Detektion"
+      placeholder: "Was zeigt das Produkt? Vessel count/positions? Wake? Change? CI-Nähe? Abgleich zu AIS?"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: conf_event
+    attributes:
+      label: "Fakten-Confidence (CONF:*)"
+      options: ["CONF:LOW","CONF:MED","CONF:HIGH"]
+    validations:
+      required: true
+
+  - type: dropdown
+    id: severity
+    attributes:
+      label: "Severity (SEV:*)"
+      options: ["SEV:1","SEV:2","SEV:3","SEV:4"]
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: phase0
+    attributes:
+      label: "Phase Zero / Hybrid-Verdacht (optional)"
+      options:
+        - label: "P0:SUSPECT"
+        - label: "P0:LOW"
+        - label: "P0:MED"
+        - label: "P0:HIGH"
+    validations:
+      required: false
+
+  - type: textarea
+    id: sources
+    attributes:
+      label: "Quelle/Produkt"
+      placeholder: "Produkt/Provider/Link/Reference-ID (öffentliches Repo: keine sensitiven Daten)"
+    validations:
+      required: false
