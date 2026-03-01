@@ -11,7 +11,7 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
           integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
-  <!-- Optional retro font (falls offline -> fallback monospace) -->
+  <!-- Optional retro font (fallback monospace) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
@@ -20,17 +20,18 @@
     :root{
       --bg:#050607;
       --panel:#0b0c0e;
-      --panel2:#090a0c;
       --text:#f5f5f5;
       --muted:#bdbdbd;
+
       --stroke:#b08800;          /* dunkelgelbe Rahmen */
-      --stroke2:#6b5200;
       --glow:rgba(176,136,0,.25);
+
       --bad:#ff4d4d;
       --warn:#ffb000;
       --ok:#33d17a;
       --money:#ffd24d;
       --orange:#ff8a00;
+
       --shadow: 0 18px 50px rgba(0,0,0,.55);
       --r:14px;
       --max: 1400px;
@@ -39,9 +40,10 @@
     *{box-sizing:border-box}
     body{
       margin:0;
-      background: radial-gradient(1200px 800px at 25% 20%, rgba(176,136,0,.08), transparent 60%),
-                  radial-gradient(900px 700px at 70% 60%, rgba(255,138,0,.06), transparent 60%),
-                  var(--bg);
+      background:
+        radial-gradient(1200px 800px at 25% 20%, rgba(176,136,0,.08), transparent 60%),
+        radial-gradient(900px 700px at 70% 60%, rgba(255,138,0,.06), transparent 60%),
+        var(--bg);
       color:var(--text);
       font-family: "VT323", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
       letter-spacing: .2px;
@@ -75,7 +77,7 @@
 
     .grid{
       display:grid;
-      grid-template-columns: 1.6fr 1fr; /* links main, rechts side stack */
+      grid-template-columns: 1.6fr 1fr;
       gap:12px;
     }
 
@@ -175,7 +177,7 @@
 
     /* Map */
     #map{
-      height: 520px; /* gut sichtbar */
+      height: 520px;
       border-radius: 12px;
       border: 1px solid rgba(176,136,0,.35);
       overflow:hidden;
@@ -207,75 +209,34 @@
     .kpi .k{color:var(--muted); font-size:16px}
     .kpi .v{font-size:24px; margin-top:6px}
 
-    /* Gauge (semi-circle) */
-    .gaugeWrap{
-      display:flex; gap:12px; align-items:center; justify-content:space-between;
-    }
-    .gauge{
-      width: 100%;
-      max-width: 340px;
-      aspect-ratio: 2 / 1;
-      position: relative;
-      margin-top: 6px;
-    }
+    /* Gauge + meter */
+    .gaugeWrap{display:flex; gap:12px; align-items:center; justify-content:space-between;}
+    .gauge{width:100%; max-width:340px; aspect-ratio: 2 / 1; position:relative; margin-top:6px;}
     .gauge svg{width:100%; height:100%;}
-    .gauge .labelLine{
-      position:absolute; left:0; right:0; bottom:-6px;
-      display:flex; justify-content:space-between;
-      font-size:16px; color:var(--muted);
-    }
-    .gaugeTitle{font-size:20px; margin:0}
     .gaugeValue{font-size:28px; margin-top:4px}
 
-    /* Weirdness vertical meter */
-    .meterWrap{
-      display:flex; gap:12px; align-items:center;
-    }
+    .meterWrap{display:flex; gap:12px; align-items:center;}
     .meter{
-      width: 46px;
-      height: 220px;
-      border-radius: 14px;
+      width:46px; height:220px; border-radius:14px;
       border:1px solid rgba(176,136,0,.45);
       background: rgba(0,0,0,.35);
-      position: relative;
-      overflow:hidden;
+      position: relative; overflow:hidden;
       box-shadow: 0 0 0 2px rgba(0,0,0,.45) inset;
     }
     .meter .fill{
-      position:absolute; left:0; right:0; bottom:0;
-      height: 0%;
-      background: linear-gradient(
-        0deg,
-        var(--ok) 0%,
-        var(--money) 55%,
-        var(--orange) 85%,
-        var(--bad) 100%
-      );
+      position:absolute; left:0; right:0; bottom:0; height:0%;
+      background: linear-gradient(0deg, var(--ok) 0%, var(--money) 55%, var(--orange) 85%, var(--bad) 100%);
     }
-    .meter .capline{
-      position:absolute; left:0; right:0; top:12%;
-      height:1px; background: rgba(255,255,255,.12);
-    }
-    .meter .capline2{
-      position:absolute; left:0; right:0; top:55%;
-      height:1px; background: rgba(255,255,255,.12);
-    }
-    .meterLabel{
-      font-size:18px;
-    }
+    .meter .capline{position:absolute; left:0; right:0; top:12%; height:1px; background: rgba(255,255,255,.12);}
+    .meter .capline2{position:absolute; left:0; right:0; top:55%; height:1px; background: rgba(255,255,255,.12);}
     .meterLegend{color:var(--muted); font-size:16px; line-height:1.2}
 
     /* Scroll windows */
-    .scrollbox{
-      max-height: 240px;
-      overflow:auto;
-      padding-right:6px;
-    }
+    .scrollbox{max-height: 240px; overflow:auto; padding-right:6px;}
     .scrollbox::-webkit-scrollbar{width:10px}
     .scrollbox::-webkit-scrollbar-thumb{background: rgba(176,136,0,.35); border-radius:999px}
     .monoSmall{font-size:16px; color:rgba(255,255,255,.85); white-space:pre-wrap}
 
-    /* Responsive */
     @media (max-width: 1100px){
       .grid{grid-template-columns: 1fr;}
       #map{height: 440px;}
@@ -305,20 +266,30 @@
     </div>
 
     <div class="grid">
-      <!-- LEFT: Main -->
+      <!-- LEFT -->
       <div class="panel">
         <div class="ph">
           <div class="title">Main Console</div>
           <div class="meta">Events • Map • Satellite • CI</div>
         </div>
         <div class="pc">
-          <div class="tabs">
-            <div class="tab active" data-tab="events">EVENTS</div>
-            <div class="tab" data-tab="map">MAP</div>
-            <div class="tab" data-tab="sat">SATELLITE</div>
+          <div class="tabs" id="tabs">
+            <div class="tab active" data-tab="events" data-domain="">ALL</div>
+            <div class="tab" data-tab="map" data-domain="">MAP</div>
+            <div class="tab" data-tab="sat" data-domain="D:SATELLITE">SAT</div>
+
+            <div class="tab" data-tab="events" data-domain="D:AIS_TRACK">AIS</div>
+            <div class="tab" data-tab="events" data-domain="D:RF_SIGNAL">RF</div>
+            <div class="tab" data-tab="events" data-domain="D:DRONE_UAS">DRONE</div>
+            <div class="tab" data-tab="events" data-domain="D:AIR_ACTIVITY">AIR</div>
+            <div class="tab" data-tab="events" data-domain="D:CYBER_OT">CYBER</div>
+            <div class="tab" data-tab="events" data-domain="D:INFRA_CI">CI</div>
+            <div class="tab" data-tab="events" data-domain="D:INCIDENT">INCIDENT</div>
+            <div class="tab" data-tab="events" data-domain="D:SECURITY_CRIME">SECURITY</div>
+            <div class="tab" data-tab="events" data-domain="D:SAR">SAR</div>
+            <div class="tab" data-tab="events" data-domain="D:WEATHER_MET">WEATHER</div>
           </div>
 
-          <!-- Filters (shared) -->
           <div class="controls">
             <div class="panel" style="border-radius:12px; padding:10px;">
               <label>Search (Text/Labels)</label>
@@ -348,13 +319,11 @@
             </div>
           </div>
 
-          <!-- EVENTS TAB -->
           <div id="tab-events" style="margin-top:12px;">
             <div class="list" id="list"></div>
             <div class="hint" id="foot">–</div>
           </div>
 
-          <!-- MAP TAB -->
           <div id="tab-map" style="margin-top:12px; display:none;">
             <div id="map"></div>
             <div class="mapbar">
@@ -364,7 +333,6 @@
             </div>
           </div>
 
-          <!-- SATELLITE TAB -->
           <div id="tab-sat" style="margin-top:12px; display:none;">
             <div class="hint">Satellite view = events with <b>D:SATELLITE</b> or <b>SAT:*</b> labels.</div>
             <div class="list" id="satList" style="margin-top:10px;"></div>
@@ -372,9 +340,8 @@
         </div>
       </div>
 
-      <!-- RIGHT: Side stack -->
+      <!-- RIGHT -->
       <div class="sideGrid">
-        <!-- KPIs + Instruments -->
         <div class="panel">
           <div class="ph">
             <div class="title">Indicators</div>
@@ -382,22 +349,10 @@
           </div>
           <div class="pc">
             <div class="kpis">
-              <div class="kpi">
-                <div class="k">Events (filtered)</div>
-                <div class="v" id="kpiEvents">–</div>
-              </div>
-              <div class="kpi">
-                <div class="k">P0:SUSPECT</div>
-                <div class="v" id="kpiP0">–</div>
-              </div>
-              <div class="kpi">
-                <div class="k">With GEO</div>
-                <div class="v" id="kpiGeo">–</div>
-              </div>
-              <div class="kpi">
-                <div class="k">Last Fetch</div>
-                <div class="v" id="kpiFetch">–</div>
-              </div>
+              <div class="kpi"><div class="k">Events (filtered)</div><div class="v" id="kpiEvents">–</div></div>
+              <div class="kpi"><div class="k">P0:SUSPECT</div><div class="v" id="kpiP0">–</div></div>
+              <div class="kpi"><div class="k">With GEO</div><div class="v" id="kpiGeo">–</div></div>
+              <div class="kpi"><div class="k">Last Fetch</div><div class="v" id="kpiFetch">–</div></div>
             </div>
 
             <div style="display:grid; grid-template-columns: 1fr; gap:12px; margin-top:12px;">
@@ -414,9 +369,7 @@
                     </div>
                     <div class="gauge" aria-label="Phase Zero Gauge">
                       <svg viewBox="0 0 200 100">
-                        <!-- background arc -->
                         <path d="M 20 90 A 80 80 0 0 1 180 90" fill="none" stroke="rgba(255,255,255,.10)" stroke-width="14" stroke-linecap="round"/>
-                        <!-- gradient arc (static) -->
                         <defs>
                           <linearGradient id="p0grad" x1="0" y1="0" x2="1" y2="0">
                             <stop offset="0%" stop-color="#33d17a"/>
@@ -426,20 +379,15 @@
                           </linearGradient>
                         </defs>
                         <path d="M 20 90 A 80 80 0 0 1 180 90" fill="none" stroke="url(#p0grad)" stroke-width="10" stroke-linecap="round" opacity="0.95"/>
-
-                        <!-- needle -->
                         <g id="needle" transform="translate(100,90) rotate(-90)">
                           <line x1="0" y1="0" x2="0" y2="-72" stroke="#f5f5f5" stroke-width="3" />
                           <circle cx="0" cy="0" r="6" fill="#f5f5f5"/>
                           <circle cx="0" cy="0" r="11" fill="rgba(0,0,0,.35)" stroke="rgba(176,136,0,.65)" stroke-width="2"/>
                         </g>
-
-                        <!-- tick labels -->
                         <text x="18" y="98" fill="rgba(255,255,255,.55)" font-size="10">0</text>
                         <text x="94" y="18" fill="rgba(255,255,255,.55)" font-size="10">50</text>
                         <text x="172" y="98" fill="rgba(255,255,255,.55)" font-size="10">100</text>
                       </svg>
-                      <div class="labelLine"><span>0</span><span>100</span></div>
                     </div>
                   </div>
                 </div>
@@ -476,35 +424,25 @@
           </div>
         </div>
 
-        <!-- Weather -->
         <div class="panel">
           <div class="ph">
             <div class="title">Weather Window</div>
             <div class="meta" id="weatherMeta">/api/weather</div>
           </div>
           <div class="pc">
-            <div class="scrollbox">
-              <div class="monoSmall" id="weatherBox">Loading…</div>
-            </div>
-            <div class="hint" style="margin-top:8px;">
-              Endpoint optional. Wenn noch nicht vorhanden: wir bauen ihn als nächstes in den Worker.
-            </div>
+            <div class="scrollbox"><div class="monoSmall" id="weatherBox">Loading…</div></div>
+            <div class="hint" style="margin-top:8px;">Endpoint optional. Wenn noch nicht vorhanden: wir bauen ihn als nächstes in den Worker.</div>
           </div>
         </div>
 
-        <!-- NAVTEX -->
         <div class="panel">
           <div class="ph">
             <div class="title">NAVTEX / NAVWARN</div>
             <div class="meta" id="navtexMeta">/api/navtex</div>
           </div>
           <div class="pc">
-            <div class="scrollbox">
-              <div class="monoSmall" id="navtexBox">Loading…</div>
-            </div>
-            <div class="hint" style="margin-top:8px;">
-              Endpoint optional. Ziel: letzte Meldungen (Area + Zeit) als Liste.
-            </div>
+            <div class="scrollbox"><div class="monoSmall" id="navtexBox">Loading…</div></div>
+            <div class="hint" style="margin-top:8px;">Endpoint optional. Ziel: letzte Meldungen (Area + Zeit) als Liste.</div>
           </div>
         </div>
 
@@ -529,11 +467,20 @@
     map: null,
     markersLayer: null,
     ciLayerGroup: null,
-    ciLoaded: false,
   };
 
+  const DOMAINS_ALL = [
+    "D:AIS_TRACK","D:VESSEL","D:RF_SIGNAL","D:DRONE_UAS","D:AIR_ACTIVITY",
+    "D:INCIDENT","D:SECURITY_CRIME","D:CYBER_OT","D:INFRA_CI","D:NEWS_INTEL",
+    "D:SAR","D:WEATHER_MET","D:SATELLITE"
+  ];
+
   function nowStr(){ return new Date().toLocaleString(); }
-  function escapeHtml(s){ return (s ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  function escapeHtml(s){
+    return (s ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
   function uniq(arr){ return [...new Set(arr)].sort(); }
 
   function buildSelectOptions(selectEl, values){
@@ -608,7 +555,7 @@
 
       const when = ev.ts ? new Date(ev.ts).toLocaleString() : "–";
       const geoTxt = ev.geo ? `${ev.geo.lat.toFixed(4)}, ${ev.geo.lon.toFixed(4)}` : "";
-      const meta = [`#${ev.number}`, when, geoTxt ? `Geo: ${geoTxt}` : null].filter(Boolean).join(" • ");
+      const meta = [`#${ev.number ?? "?"}`, when, geoTxt ? `Geo: ${geoTxt}` : null].filter(Boolean).join(" • ");
 
       return `
         <div class="event">
@@ -651,7 +598,7 @@
       const badgesHtml = ordered.slice(0, 22).map(badge).join("");
 
       const when = ev.ts ? new Date(ev.ts).toLocaleString() : "–";
-      const meta = [`#${ev.number}`, when].filter(Boolean).join(" • ");
+      const meta = [`#${ev.number ?? "?"}`, when].filter(Boolean).join(" • ");
 
       return `
         <div class="event">
@@ -672,50 +619,27 @@
     }
   }
 
-  // ----- Instruments (Phase Zero + Weirdness) -----
-
+  // ----- Instruments -----
   function parseISO(ts){ const d = ts ? new Date(ts) : null; return (d && !isNaN(d)) ? d : null; }
-
-  function daysAgo(d){
-    const ms = Date.now() - d.getTime();
-    return ms / (1000*60*60*24);
-  }
-
-  function clamp(n, a, b){ return Math.max(a, Math.min(b, n)); }
-
-  function hasLabel(ev, prefixOrExact){
-    const labels = ev.labels ?? [];
-    if (prefixOrExact.endsWith(":*")) {
-      const p = prefixOrExact.slice(0, -1);
-      return labels.some(l => l.startsWith(p));
-    }
-    return labels.includes(prefixOrExact);
-  }
+  function daysAgo(d){ return (Date.now() - d.getTime()) / (1000*60*60*24); }
+  function clamp(n,a,b){ return Math.max(a, Math.min(b, n)); }
 
   function scorePhaseZero(events){
-    // Heuristik: letzte 7 Tage
-    // - P0:SUSPECT + severity + confidence
-    // - + Bonus bei CI-Bezug (OBJ:CABLE/PIPELINE/WINDFARM/PORT/VTS_WSV)
-    // - + Bonus bei Mustern (PAT:LOITERING, STS, AIS_GAP, DARK_ACTIVITY, SURVEYING)
-    // Ergebnis: 0..100 (nicht "Wahrheit", sondern Anzeiger)
-    const recent = events.filter(e => {
-      const d = parseISO(e.ts);
-      return d ? daysAgo(d) <= 7 : false;
-    });
-
+    const recent = events.filter(e => { const d = parseISO(e.ts); return d ? daysAgo(d) <= 7 : false; });
     let points = 0;
+
     for (const e of recent){
       const sev = (e.severity ?? "SEV:1");
       const conf = (e.confidence ?? "CONF:LOW");
+      const labels = e.labels ?? [];
       const p0 = e.phase0?.suspect ? 1 : 0;
 
       const sevW = sev === "SEV:4" ? 9 : sev === "SEV:3" ? 6 : sev === "SEV:2" ? 3 : 1;
       const confW = conf === "CONF:HIGH" ? 1.2 : conf === "CONF:MED" ? 1.0 : 0.8;
 
-      const ci = ["OBJ:CABLE","OBJ:PIPELINE","OBJ:WINDFARM","OBJ:PORT","OBJ:VTS_WSV"].some(x => (e.labels ?? []).includes(x));
-      const patterns = ["PAT:LOITERING","PAT:STS_SUSPECT","PAT:AIS_GAP","PAT:DARK_ACTIVITY","PAT:SURVEYING","PAT:ROUTE_DEVIATION"].some(x => (e.labels ?? []).includes(x));
-
-      const vesselHot = ["V:SHADOW_FLEET","V:RUS_RESEARCH","V:RUS_WARSHIP","V:RUS_AUXILIARY"].some(x => (e.labels ?? []).includes(x));
+      const ci = ["OBJ:CABLE","OBJ:PIPELINE","OBJ:WINDFARM","OBJ:PORT","OBJ:VTS_WSV"].some(x => labels.includes(x));
+      const patterns = ["PAT:LOITERING","PAT:STS_SUSPECT","PAT:AIS_GAP","PAT:DARK_ACTIVITY","PAT:SURVEYING","PAT:ROUTE_DEVIATION"].some(x => labels.includes(x));
+      const vesselHot = ["V:SHADOW_FLEET","V:RUS_RESEARCH","V:RUS_WARSHIP","V:RUS_AUXILIARY"].some(x => labels.includes(x));
 
       let evPts = sevW * confW;
       if (p0) evPts *= 1.6;
@@ -726,27 +650,21 @@
       points += evPts;
     }
 
-    // Normalisierung: ~ab 85-110 Punkten saturiert es Richtung 100
     const pct = clamp(Math.round((points / 90) * 100), 0, 100);
     return { pct, points, count: recent.length };
   }
 
   function scoreWeirdness(events){
-    // Government Weirdness = Noise + contradictions + infoops/cyber + "too many weird signals"
-    // Heuristik: letzte 14 Tage (breiter, weil weirdness schleicht)
-    const recent = events.filter(e => {
-      const d = parseISO(e.ts);
-      return d ? daysAgo(d) <= 14 : false;
-    });
-
+    const recent = events.filter(e => { const d = parseISO(e.ts); return d ? daysAgo(d) <= 14 : false; });
     let w = 0;
+
     for (const e of recent){
       const labels = e.labels ?? [];
       const sev = (e.severity ?? "SEV:1");
       const conf = (e.confidence ?? "CONF:LOW");
 
       const sevW = sev === "SEV:4" ? 6 : sev === "SEV:3" ? 4 : sev === "SEV:2" ? 2 : 1;
-      const confW = conf === "CONF:HIGH" ? 1.0 : conf === "CONF:MED" ? 1.1 : 1.2; // low-conf erhöht weirdness (mehr fog)
+      const confW = conf === "CONF:HIGH" ? 1.0 : conf === "CONF:MED" ? 1.1 : 1.2;
 
       const news = labels.includes("D:NEWS_INTEL") || labels.includes("SRC:SOCIAL");
       const cyber = labels.includes("D:CYBER_OT");
@@ -769,7 +687,6 @@
   }
 
   function setNeedle(pct){
-    // pct 0..100 => angle -90..+90 (semi)
     const angle = -90 + (pct / 100) * 180;
     const g = document.getElementById("needle");
     if (g) g.setAttribute("transform", `translate(100,90) rotate(${angle})`);
@@ -777,7 +694,7 @@
 
   function setWeirdFill(pct){
     const fill = el("weirdFill");
-    fill.style.height = `${pct}%`;
+    if (fill) fill.style.height = `${pct}%`;
   }
 
   function updateKPIsAndInstruments(){
@@ -799,16 +716,11 @@
   }
 
   // ----- Map -----
-
   function initMap(){
     if (state.map) return;
 
-    state.map = L.map("map", {
-      zoomControl: true,
-      attributionControl: true
-    }).setView([54.2, 8.6], 6);
+    state.map = L.map("map", { zoomControl: true, attributionControl: true }).setView([54.2, 8.6], 6);
 
-    // dark basemap (no key): CARTO dark (public tiles)
     L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
       maxZoom: 19,
       attribution: '&copy; OpenStreetMap &copy; CARTO'
@@ -817,7 +729,6 @@
     state.markersLayer = L.layerGroup().addTo(state.map);
     state.ciLayerGroup = L.layerGroup().addTo(state.map);
 
-    // initial load of CI overlays (best-effort)
     loadCIOverlays().catch(()=>{});
   }
 
@@ -826,24 +737,23 @@
     const sev = ev.severity ?? "SEV:1";
     const dom = ev.category ?? "D:UNKNOWN";
 
-    // Simple style mapping (no fancy color configs necessary)
-    // We'll encode with circleMarker options.
-    let radius = sev === "SEV:4" ? 10 : sev === "SEV:3" ? 8 : sev === "SEV:2" ? 6 : 5;
+    const radius = sev === "SEV:4" ? 10 : sev === "SEV:3" ? 8 : sev === "SEV:2" ? 6 : 5;
 
-    // Color by domain
-    let color = "#b08800"; // default border (retro)
-    if (dom === "D:RF_SIGNAL") color = "#9b6bff";
-    if (dom === "D:DRONE_UAS") color = "#00d4ff";
-    if (dom === "D:SATELLITE") color = "#00c8c8";
-    if (dom === "D:CYBER_OT") color = "#ff4d4d";
-    if (dom === "D:INFRA_CI") color = "#ff8a00";
-    if (dom === "D:SECURITY_CRIME") color = "#ffb000";
+    let color = "#b08800";
     if (dom === "D:AIS_TRACK") color = "#33d17a";
+    else if (dom === "D:RF_SIGNAL") color = "#9b6bff";
+    else if (dom === "D:DRONE_UAS") color = "#00d4ff";
+    else if (dom === "D:AIR_ACTIVITY") color = "#66e3ff";
+    else if (dom === "D:SATELLITE") color = "#00c8c8";
+    else if (dom === "D:CYBER_OT") color = "#ff4d4d";
+    else if (dom === "D:INFRA_CI") color = "#ff8a00";
+    else if (dom === "D:SECURITY_CRIME") color = "#ffb000";
+    else if (dom === "D:INCIDENT") color = "#ffd24d";
+    else if (dom === "D:SAR") color = "#ffffff";
+    else if (dom === "D:WEATHER_MET") color = "#bdbdbd";
+    else if (dom === "D:NEWS_INTEL") color = "#b08800";
 
-    // Fill: P0 suspect makes it hotter
-    let fill = labels.includes("P0:SUSPECT") ? "#ff4d4d" : "#ffffff";
-
-    // low opacity fill
+    const fill = labels.includes("P0:SUSPECT") ? "#ff4d4d" : "#ffffff";
     return { radius, color, weight: 2, fillColor: fill, fillOpacity: 0.22 };
   }
 
@@ -854,10 +764,10 @@
     const showCI = el("mapShowCI").checked;
 
     const src = useFiltered ? state.filtered : state.events;
-
     state.markersLayer.clearLayers();
 
     const pts = src.filter(e => e.geo && typeof e.geo.lat === "number" && typeof e.geo.lon === "number");
+
     for (const ev of pts){
       const m = L.circleMarker([ev.geo.lat, ev.geo.lon], markerStyleFromEvent(ev));
       const when = ev.ts ? new Date(ev.ts).toLocaleString() : "–";
@@ -865,7 +775,7 @@
         <div style="font-family: ui-monospace, monospace; font-size:12px;">
           <div style="font-weight:700; margin-bottom:6px;">${escapeHtml(ev.title)}</div>
           <div style="opacity:.8; margin-bottom:6px;">${escapeHtml(when)} • ${escapeHtml(ev.category ?? "")} • ${escapeHtml(ev.severity ?? "")}</div>
-          <div style="opacity:.85; margin-bottom:6px;">${escapeHtml((ev.labels ?? []).slice(0,10).join(", "))}</div>
+          <div style="opacity:.85; margin-bottom:6px;">${escapeHtml((ev.labels ?? []).slice(0,12).join(", "))}</div>
           <div><a href="${ev.url}" target="_blank" rel="noreferrer">Open Issue</a></div>
         </div>
       `;
@@ -873,12 +783,11 @@
       m.addTo(state.markersLayer);
     }
 
-    // CI overlays toggling
-    if (showCI) {
-      state.ciLayerGroup.eachLayer(l => l.addTo(state.map));
-    } else {
-      state.ciLayerGroup.eachLayer(l => state.map.removeLayer(l));
-    }
+    // CI overlays toggle
+    state.ciLayerGroup.eachLayer(layer => {
+      if (showCI) layer.addTo(state.map);
+      else state.map.removeLayer(layer);
+    });
 
     if (pts.length){
       const bounds = L.latLngBounds(pts.map(p => [p.geo.lat, p.geo.lon]));
@@ -887,13 +796,6 @@
   }
 
   async function loadCIOverlays(){
-    // Best-effort: load GeoJSON overlays if they exist.
-    // You can later add these files to your repo and expose them (GitHub Pages or Worker endpoint).
-    //
-    // Option 1 (recommended later): Worker endpoints:
-    //   /api/ci/cables, /api/ci/windfarms, /api/ci/ports
-    //
-    // For now we attempt Worker endpoints (will fail gracefully if not present).
     const sources = [
       { name: "Cables",  url: `${BASE}/api/ci/cables`  },
       { name: "Wind",    url: `${BASE}/api/ci/windfarms` },
@@ -901,7 +803,6 @@
     ];
 
     state.ciLayerGroup.clearLayers();
-    state.ciLoaded = false;
 
     for (const s of sources){
       try{
@@ -910,22 +811,21 @@
         const gj = await res.json();
         const layer = L.geoJSON(gj, {
           style: () => ({ color: "#b08800", weight: 2, opacity: 0.55 }),
-          pointToLayer: (feature, latlng) => L.circleMarker(latlng, { radius: 5, color:"#b08800", weight:2, fillColor:"#000", fillOpacity:0.0 }),
+          pointToLayer: (feature, latlng) =>
+            L.circleMarker(latlng, { radius: 5, color:"#b08800", weight:2, fillColor:"#000", fillOpacity:0.0 }),
           onEachFeature: (feature, layer) => {
             const name = feature?.properties?.name || feature?.properties?.Name || s.name;
             layer.bindPopup(`<div style="font-family: ui-monospace, monospace; font-size:12px;"><b>${escapeHtml(name)}</b><br>${escapeHtml(s.name)} overlay</div>`);
           }
         });
         layer.addTo(state.ciLayerGroup);
-        state.ciLoaded = true;
       } catch(e){
         // ignore
       }
     }
   }
 
-  // ----- Weather + NAVTEX windows (best-effort) -----
-
+  // ----- Weather + NAVTEX windows -----
   async function loadOptionalBox(url, boxEl, metaEl){
     metaEl.textContent = url.replace(BASE, "");
     try{
@@ -941,32 +841,42 @@
     }
   }
 
-  // ----- Bundle load + UI wiring -----
+  // ----- Tabs -----
+  function setTab(name, clickedEl){
+    // only one active at a time (fix for multi-events tabs)
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    if (clickedEl) clickedEl.classList.add("active");
 
-  function setTab(name){
-    document.querySelectorAll(".tab").forEach(t => t.classList.toggle("active", t.dataset.tab === name));
     el("tab-events").style.display = (name === "events") ? "" : "none";
     el("tab-map").style.display = (name === "map") ? "" : "none";
     el("tab-sat").style.display = (name === "sat") ? "" : "none";
 
     if (name === "map"){
       initMap();
-      updateMapMarkers();
+      // Leaflet needs this when container becomes visible
+      setTimeout(() => {
+        state.map.invalidateSize();
+        updateMapMarkers();
+      }, 50);
     }
   }
 
+  // ----- Load bundle -----
   async function loadBundle(){
     const res = await fetch(API_BUNDLE, { cache: "no-store" });
     const data = await res.json();
     if (data.error) throw new Error(data.error);
 
     state.bundle = data;
-    state.events = data.events ?? [];
+    state.events = Array.isArray(data.events) ? data.events : [];
 
     el("src").textContent = `${data.source?.owner ?? "?"}/${data.source?.repo ?? "?"}`;
     el("stand").textContent = data.generated_at ? new Date(data.generated_at).toLocaleString() : "–";
 
-    const domains = uniq(state.events.map(e => e.category).filter(Boolean));
+    // Use known domain list as baseline, but include any new ones from data
+    const domainsFromData = uniq(state.events.map(e => e.category).filter(Boolean));
+    const domains = uniq(DOMAINS_ALL.concat(domainsFromData));
+
     const regions = uniq(state.events.map(e => e.region).filter(Boolean));
     buildSelectOptions(el("domain"), domains);
     buildSelectOptions(el("region"), regions);
@@ -1000,13 +910,11 @@
   }
 
   async function rebuildNow(){
-    try{
-      await fetch(API_REBUILD, { cache: "no-store" });
-    } catch(e){}
+    try{ await fetch(API_REBUILD, { cache: "no-store" }); } catch(e){}
     await loadBundle();
   }
 
-  // Listeners
+  // ----- Listeners -----
   ["q","domain","region","sev","onlyP0","onlyGeo"].forEach(id => {
     el(id).addEventListener(id === "q" ? "input" : "change", applyFilters);
   });
@@ -1015,7 +923,19 @@
   el("btnRebuild").addEventListener("click", rebuildNow);
   el("btnExport").addEventListener("click", exportFiltered);
 
-  document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => setTab(t.dataset.tab)));
+  // Tabs: apply domain preset when data-domain exists
+  document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => {
+    const tab = t.dataset.tab;
+    const dom = (t.dataset.domain ?? "");
+
+    // Satellite tab is its own view; keep dropdown as-is
+    if (tab === "events") {
+      el("domain").value = dom; // "" => all
+      applyFilters();
+    }
+
+    setTab(tab, t);
+  }));
 
   el("mapOnlyFiltered").addEventListener("change", updateMapMarkers);
   el("mapShowCI").addEventListener("change", updateMapMarkers);
@@ -1025,7 +945,6 @@
     el("list").innerHTML = `<div class="event">Fehler beim Laden: ${escapeHtml(err.message)}</div>`;
   });
 
-  // Optional windows
   loadOptionalBox(API_WEATHER, el("weatherBox"), el("weatherMeta"));
   loadOptionalBox(API_NAVTEX, el("navtexBox"), el("navtexMeta"));
 })();
