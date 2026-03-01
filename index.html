@@ -5,13 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v3 "Enigma"</title>
 
-  <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
           integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
-  <!-- Optional retro font (fallback monospace) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=VT323&display=swap" rel="stylesheet">
@@ -23,7 +21,7 @@
       --text:#f5f5f5;
       --muted:#bdbdbd;
 
-      --stroke:#b08800;          /* dunkelgelbe Rahmen */
+      --stroke:#b08800;
       --glow:rgba(176,136,0,.25);
 
       --bad:#ff4d4d;
@@ -53,16 +51,28 @@
     .wrap{max-width:var(--max); margin:0 auto; padding:14px;}
     .topbar{
       display:flex; gap:12px; align-items:flex-end; justify-content:space-between; flex-wrap:wrap;
-      margin-bottom: 10px;
+      margin-bottom:10px;
     }
+
     .brand{display:flex; flex-direction:column; gap:4px}
+    .brandLine{display:flex; gap:10px; align-items:baseline; flex-wrap:wrap}
     .brand h1{margin:0; font-size:30px; line-height:1}
+    .ver{
+      font-size:18px;
+      padding:3px 10px;
+      border-radius:999px;
+      border:1px solid rgba(176,136,0,.55);
+      color: var(--money);
+      background: rgba(176,136,0,.12);
+      box-shadow: 0 0 0 2px rgba(0,0,0,.45) inset;
+    }
+
     .brand .sub{font-size:16px; color:var(--muted)}
     .btns{display:flex; gap:10px; flex-wrap:wrap}
     .btn{
       cursor:pointer;
       padding:10px 12px;
-      border-radius: 10px;
+      border-radius:10px;
       border:1px solid var(--stroke);
       background: linear-gradient(180deg, rgba(176,136,0,.14), rgba(0,0,0,.25));
       color: var(--text);
@@ -98,11 +108,10 @@
     .ph .meta{font-size:16px; color:var(--muted)}
     .pc{padding:12px}
 
-    /* Tabs */
     .tabs{display:flex; gap:8px; flex-wrap:wrap}
     .tab{
       padding:8px 10px;
-      border-radius: 999px;
+      border-radius:999px;
       border:1px solid rgba(176,136,0,.55);
       background: rgba(0,0,0,.25);
       cursor:pointer;
@@ -115,7 +124,6 @@
       background: rgba(176,136,0,.14);
     }
 
-    /* Controls */
     .controls{
       display:grid;
       grid-template-columns: 1.4fr 1fr 1fr 1fr;
@@ -145,7 +153,6 @@
     }
     .toggle input{width:auto; transform: scale(1.15);}
 
-    /* Event list */
     .list{margin-top:12px}
     .event{
       padding:12px;
@@ -175,7 +182,6 @@
     .badge.sat{border-color: rgba(0,200,200,.45)}
     .summary{margin-top:10px; color:rgba(255,255,255,.86); font-size:18px; line-height:1.25; white-space:pre-wrap}
 
-    /* Map */
     #map{
       height: 520px;
       border-radius: 12px;
@@ -189,7 +195,6 @@
     .mapbar .toggle{font-size:18px}
     .hint{color:var(--muted); font-size:16px}
 
-    /* Side panels */
     .sideGrid{
       display:grid;
       grid-template-columns: 1fr;
@@ -209,7 +214,6 @@
     .kpi .k{color:var(--muted); font-size:16px}
     .kpi .v{font-size:24px; margin-top:6px}
 
-    /* Gauge + meter */
     .gaugeWrap{display:flex; gap:12px; align-items:center; justify-content:space-between;}
     .gauge{width:100%; max-width:340px; aspect-ratio: 2 / 1; position:relative; margin-top:6px;}
     .gauge svg{width:100%; height:100%;}
@@ -225,13 +229,18 @@
     }
     .meter .fill{
       position:absolute; left:0; right:0; bottom:0; height:0%;
-      background: linear-gradient(0deg, var(--ok) 0%, var(--money) 55%, var(--orange) 85%, var(--bad) 100%);
+      background: linear-gradient(
+        0deg,
+        var(--ok) 0%,
+        var(--money) 55%,
+        var(--orange) 85%,
+        var(--bad) 100%
+      );
     }
     .meter .capline{position:absolute; left:0; right:0; top:12%; height:1px; background: rgba(255,255,255,.12);}
     .meter .capline2{position:absolute; left:0; right:0; top:55%; height:1px; background: rgba(255,255,255,.12);}
     .meterLegend{color:var(--muted); font-size:16px; line-height:1.2}
 
-    /* Scroll windows */
     .scrollbox{max-height: 240px; overflow:auto; padding-right:6px;}
     .scrollbox::-webkit-scrollbar{width:10px}
     .scrollbox::-webkit-scrollbar-thumb{background: rgba(176,136,0,.35); border-radius:999px}
@@ -253,7 +262,10 @@
   <div class="wrap">
     <div class="topbar">
       <div class="brand">
-        <h1>VOODOO // HYBRID MARITIME OPS</h1>
+        <div class="brandLine">
+          <h1>VOODOO // HYBRID MARITIME OPS</h1>
+          <span class="ver">v3 “Enigma”</span>
+        </div>
         <div class="sub">
           Source: <span id="src">–</span> • Stand: <span id="stand">–</span> • Worker: <span class="hint">voodoo-hybrid-api</span>
         </div>
@@ -266,7 +278,6 @@
     </div>
 
     <div class="grid">
-      <!-- LEFT -->
       <div class="panel">
         <div class="ph">
           <div class="title">Main Console</div>
@@ -341,7 +352,6 @@
         </div>
       </div>
 
-      <!-- RIGHT -->
       <div class="sideGrid">
         <div class="panel">
           <div class="ph">
@@ -397,7 +407,7 @@
               <div class="panel" style="border-radius:12px;">
                 <div class="ph">
                   <div class="title">GOVERNMENT WEIRDNESS</div>
-                  <div class="meta">green → gelb → orange → red</div>
+                  <div class="meta">unten grün → oben rot</div>
                 </div>
                 <div class="pc">
                   <div class="meterWrap">
@@ -408,12 +418,15 @@
                     </div>
                     <div>
                       <div class="gaugeValue"><span id="weirdPct">–</span>%</div>
+
+                      <!-- Legende von OBEN nach UNTEN (rot -> grün) -->
                       <div class="meterLegend">
-                        <div>LOW: green</div>
-                        <div>MID: <span style="color:var(--money)">gelb</span></div>
+                        <div>TOP: <span style="color:var(--bad)">red</span></div>
                         <div>HIGH: <span style="color:var(--orange)">orange</span></div>
-                        <div>MAX: <span style="color:var(--bad)">red</span></div>
+                        <div>MID: <span style="color:var(--money)">gelb</span></div>
+                        <div>BOTTOM: <span style="color:var(--ok)">green</span></div>
                       </div>
+
                       <div class="hint" style="margin-top:8px;">Heuristik aus Noise/Contradictions/InfoOps/Cyber/„weird“ clusters</div>
                     </div>
                   </div>
@@ -620,7 +633,6 @@
     }
   }
 
-  // ----- Instruments -----
   function parseISO(ts){ const d = ts ? new Date(ts) : null; return (d && !isNaN(d)) ? d : null; }
   function daysAgo(d){ return (Date.now() - d.getTime()) / (1000*60*60*24); }
   function clamp(n,a,b){ return Math.max(a, Math.min(b, n)); }
@@ -716,7 +728,6 @@
     setWeirdFill(weird.pct);
   }
 
-  // ----- Map -----
   function initMap(){
     if (state.map) return;
 
@@ -782,13 +793,11 @@
       m.addTo(state.markersLayer);
     }
 
-    // toggle CI visibility
     state.ciLayerGroup.eachLayer(layer => {
       if (showCI) layer.addTo(state.map);
       else state.map.removeLayer(layer);
     });
 
-    // auto-fit: events first, else CI
     if (pts.length){
       const bounds = L.latLngBounds(pts.map(p => [p.geo.lat, p.geo.lon]));
       state.map.fitBounds(bounds.pad(0.15));
@@ -799,7 +808,7 @@
 
   async function loadCIOverlays(){
     const sources = [
-      { name: "Ports",   url: `${BASE}/api/ci/ports` },      // first
+      { name: "Ports",   url: `${BASE}/api/ci/ports` },
       { name: "Cables",  url: `${BASE}/api/ci/cables` },
       { name: "Wind",    url: `${BASE}/api/ci/windfarms` }
     ];
@@ -835,9 +844,9 @@
               fillColor: "#ffd24d",
               fillOpacity: 0.55
             }),
-          onEachFeature: (feature, layer) => {
+          onEachFeature: (feature, lyr) => {
             const name = feature?.properties?.name || feature?.properties?.Name || s.name;
-            layer.bindPopup(
+            lyr.bindPopup(
               `<div style="font-family: ui-monospace, monospace; font-size:12px;">
                  <b>${escapeHtml(name)}</b><br>${escapeHtml(s.name)} overlay
                </div>`
@@ -864,7 +873,6 @@
     if (status && loaded === 0) status.textContent = "CI: none loaded";
   }
 
-  // ----- Weather + NAVTEX windows -----
   async function loadOptionalBox(url, boxEl, metaEl){
     metaEl.textContent = url.replace(BASE, "");
     try{
@@ -880,7 +888,6 @@
     }
   }
 
-  // ----- Tabs -----
   function setTab(name, clickedEl){
     document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
     if (clickedEl) clickedEl.classList.add("active");
@@ -899,7 +906,6 @@
     }
   }
 
-  // ----- Load bundle -----
   async function loadBundle(){
     const res = await fetch(API_BUNDLE, { cache: "no-store" });
     const data = await res.json();
@@ -951,7 +957,6 @@
     await loadBundle();
   }
 
-  // ----- Listeners -----
   ["q","domain","region","sev","onlyP0","onlyGeo"].forEach(id => {
     el(id).addEventListener(id === "q" ? "input" : "change", applyFilters);
   });
@@ -975,7 +980,6 @@
   el("mapOnlyFiltered").addEventListener("change", updateMapMarkers);
   el("mapShowCI").addEventListener("change", updateMapMarkers);
 
-  // Boot
   loadBundle().catch(err => {
     el("list").innerHTML = `<div class="event">Fehler beim Laden: ${escapeHtml(err.message)}</div>`;
   });
