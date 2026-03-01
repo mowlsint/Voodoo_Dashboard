@@ -326,13 +326,13 @@
 
           <div id="tab-map" style="margin-top:12px; display:none;">
             <div id="map"></div>
-            <div class="mapbar">
-              <label class="toggle"><input type="checkbox" id="mapOnlyFiltered" checked> map shows filtered only</label>
-              <label class="toggle"><input type="checkbox" id="mapShowCI" checked> show CI overlay (cables/wind/ports)</label>
-              <span class="hint">Tip: set lat,lon in issue body to create markers.</span>
-            </div>
-          </div>
-
+          <div class="mapbar">
+            <label class="toggle"><input type="checkbox" id="mapOnlyFiltered" checked> map shows filtered only</label>
+            <label class="toggle"><input type="checkbox" id="mapShowCI" checked> show CI overlay (cables/wind/ports)</label>
+            <span class="hint" id="ciStatus">CI: idle</span>
+            <span class="hint">Tip: set lat,lon in issue body to create markers.</span>
+          </div>  
+          
           <div id="tab-sat" style="margin-top:12px; display:none;">
             <div class="hint">Satellite view = events with <b>D:SATELLITE</b> or <b>SAT:*</b> labels.</div>
             <div class="list" id="satList" style="margin-top:10px;"></div>
