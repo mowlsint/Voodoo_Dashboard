@@ -1,0 +1,16 @@
+{
+  "type": "FeatureCollection",
+  "name": "ports",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "name": "Hamburg (Test)" },
+      "geometry": { "type": "Point", "coordinates": [9.99, 53.55] }
+    },
+    {
+      "type": "Feature",
+      "properties": { "name": "Wilhelmshaven (Test)" },
+      "geometry": { "type": "Point", "coordinates": [8.15, 53.51] }
+    }
+  ]
+}
