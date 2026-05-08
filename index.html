@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v4 "Enigma"</title>
+  <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v4 "Enigma – Recovery"</title>
 
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -171,8 +171,8 @@
       background: rgba(0,0,0,.30);
       color: var(--text);
     }
-    .badge.p0{border-color: rgba(255,77,77,.60)}
-    .badge.sev3,.badge.sev4{border-color: rgba(255,176,0,.70)}
+    .badge.p0{border-color: rgba(255,77,77,.70)}
+    .badge.sev3,.badge.sev4{border-color: rgba(255,176,0,.80)}
     .badge.dom{border-color: rgba(90,160,255,.55)}
     .badge.reg{border-color: rgba(140,220,255,.45)}
     .badge.vsl{border-color: rgba(255,120,120,.45)}
@@ -245,7 +245,7 @@
       <div class="brand">
         <div class="brandLine">
           <h1>VOODOO // HYBRID MARITIME OPS</h1>
-          <span class="ver">v4 “Enigma”</span>
+          <span class="ver">v4 “Enigma – Recovery”</span>
         </div>
         <div class="sub">
           Source: <span id="src">–</span> • Stand: <span id="stand">–</span> • Worker: <span class="hint" id="wkr">–</span>
@@ -264,11 +264,10 @@
       <div class="panel">
         <div class="ph">
           <div class="title">Main Console</div>
-          <div class="meta">Events • Map • Satellite • CI</div>
+          <div class="meta">Events • Map • CI • Satellite</div>
         </div>
 
         <div class="pc">
-          <!-- Tabs reflect your current Issue-template categories -->
           <div class="tabs">
             <div class="tab active" data-tab="events" data-domain="">ALL</div>
             <div class="tab" data-tab="map" data-domain="">MAP</div>
@@ -278,7 +277,7 @@
             <div class="tab" data-tab="events" data-domain="D:DRONE_UAS">DRONE</div>
             <div class="tab" data-tab="events" data-domain="D:AIR_ACTIVITY">AIR</div>
             <div class="tab" data-tab="events" data-domain="D:INCIDENT">INCIDENT</div>
-            <div class="tab" data-tab="events" data-domain="D:SECURITY_CRIME">SECURITY/SMUGGLING</div>
+            <div class="tab" data-tab="events" data-domain="D:SECURITY_CRIME">SECURITY</div>
             <div class="tab" data-tab="events" data-domain="D:CYBER_OT">CYBER/OT</div>
             <div class="tab" data-tab="events" data-domain="D:INFRA_CI">CI/PORT</div>
             <div class="tab" data-tab="events" data-domain="D:SATELLITE">SAT</div>
@@ -318,7 +317,7 @@
 
           <div id="tab-events" style="margin-top:12px;">
             <div class="hint" style="margin-bottom:8px;">
-              Map-Marker erscheinen, wenn im Issue-Body irgendwo steht: <b>Geo: 53.5500, 9.9900</b> (Dezimalgrad).
+              Map-Marker erscheinen, wenn im Issue-Body irgendwo steht: <b>Geo: 53.5100, 8.1500</b> (Dezimalgrad).
             </div>
             <div class="list" id="list"></div>
             <div class="hint" id="foot">–</div>
@@ -331,7 +330,8 @@
               <label class="toggle"><input type="checkbox" id="mapOnlyFiltered" checked> map uses filters</label>
               <label class="toggle"><input type="checkbox" id="mapShowCI" checked> show CI overlays</label>
               <button class="btn secondary" id="btnFit" style="padding:8px 10px; font-size:18px;">FIT</button>
-              <span class="hint" id="ciStatus">CI: idle</span><span class="hint" id="mapStatus">MAP: –</span>
+              <span class="hint" id="ciStatus">CI: idle</span>
+              <span class="hint" id="mapStatus">MAP: –</span>
             </div>
             <div class="hint">Basemap: Dark + Satellite (Layer-Button oben rechts). CI kommt vom Worker: /api/ci/*</div>
           </div>
@@ -448,7 +448,6 @@
 
 <script>
 (() => {
-  // Worker base (change only if you rename worker)
   const BASE = "https://voodoo-hybrid-api.mowlsint.workers.dev";
   document.getElementById("wkr").textContent = new URL(BASE).hostname;
 
@@ -469,15 +468,7 @@
     events: [],
     filtered: [],
     map: null,
-    baseLayers: {},
-    layerCtl: null,
-    layers: {
-      events: null,
-      ciGroup: null,
-      ciPorts: null,
-      ciCables: null,
-      ciWind: null
-    },
+    layers: { events: null, ciGroup: null },
     ciBounds: null
   };
 
@@ -644,7 +635,6 @@
     const g = document.getElementById("needle");
     if (g) g.setAttribute("transform", `translate(100,90) rotate(${angle})`);
   }
-
   function setWeirdFill(pct){
     const fill = el("weirdFill");
     if (fill) fill.style.height = `${pct}%`;
@@ -682,47 +672,44 @@
     });
 
     dark.addTo(state.map);
-    state.baseLayers = { dark, sat };
+
+    L.control.layers(
+      { "Dark": dark, "Satellite": sat },
+      {},
+      { collapsed: true }
+    ).addTo(state.map);
 
     state.layers.events = L.layerGroup().addTo(state.map);
     state.layers.ciGroup = L.layerGroup().addTo(state.map);
-
-    state.layerCtl = L.control.layers(
-      { "Dark": dark, "Satellite": sat },
-      { "Events": state.layers.events, "CI": state.layers.ciGroup },
-      { collapsed: true }
-    ).addTo(state.map);
   }
 
   function eventMarkerStyle(ev){
-  const labels = ev.labels ?? [];
-  const sev = ev.severity ?? "SEV:1";
-  const dom = ev.category ?? "D:UNKNOWN";
-  const hot = labels.includes("P0:SUSPECT");
+    const labels = ev.labels ?? [];
+    const sev = ev.severity ?? "SEV:1";
+    const dom = ev.category ?? "D:UNKNOWN";
+    const hot = labels.includes("P0:SUSPECT");
 
-  // bigger, very visible
-  const radius = sev === "SEV:4" ? 14 : sev === "SEV:3" ? 12 : sev === "SEV:2" ? 10 : 9;
+    const radius = sev === "SEV:4" ? 14 : sev === "SEV:3" ? 12 : sev === "SEV:2" ? 10 : 9;
 
-  // ring color by domain, fill always yellow/red
-  let color = "#b08800";
-  if (dom === "D:AIS_TRACK") color = "#33d17a";
-  else if (dom === "D:RF_SIGNAL") color = "#9b6bff";
-  else if (dom === "D:DRONE_UAS") color = "#00d4ff";
-  else if (dom === "D:AIR_ACTIVITY") color = "#66e3ff";
-  else if (dom === "D:CYBER_OT") color = "#ff4d4d";
-  else if (dom === "D:INFRA_CI") color = "#ff8a00";
-  else if (dom === "D:SECURITY_CRIME") color = "#ffb000";
-  else if (dom === "D:INCIDENT") color = "#ffd24d";
-  else if (dom === "D:SATELLITE") color = "#00c8c8";
+    let color = "#b08800";
+    if (dom === "D:AIS_TRACK") color = "#33d17a";
+    else if (dom === "D:RF_SIGNAL") color = "#9b6bff";
+    else if (dom === "D:DRONE_UAS") color = "#00d4ff";
+    else if (dom === "D:AIR_ACTIVITY") color = "#66e3ff";
+    else if (dom === "D:CYBER_OT") color = "#ff4d4d";
+    else if (dom === "D:INFRA_CI") color = "#ff8a00";
+    else if (dom === "D:SECURITY_CRIME") color = "#ffb000";
+    else if (dom === "D:INCIDENT") color = "#ffd24d";
+    else if (dom === "D:SATELLITE") color = "#00c8c8";
 
-  return {
-    radius,
-    color,
-    weight: 3,
-    fillColor: hot ? "#ff4d4d" : "#ffd24d",
-    fillOpacity: hot ? 0.92 : 0.80
-  };
-}
+    return {
+      radius,
+      color,
+      weight: 3,
+      fillColor: hot ? "#ff4d4d" : "#ffd24d",
+      fillOpacity: hot ? 0.92 : 0.80
+    };
+  }
 
   function refreshMapLayers(){
     if (!state.map) return;
@@ -731,44 +718,31 @@
     const onlyFiltered = el("mapOnlyFiltered").checked;
     const showCI = el("mapShowCI").checked;
 
-    // Events markers
     state.layers.events.clearLayers();
-    let eventBounds = null;
 
-    if (showEvents){
-      const src = onlyFiltered ? state.filtered : state.events;
-      const pts = src.filter(e => e.geo && typeof e.geo.lat === "number" && typeof e.geo.lon === "number");
+    const src = showEvents ? (onlyFiltered ? state.filtered : state.events) : [];
+    const pts = src.filter(e => e.geo && typeof e.geo.lat === "number" && typeof e.geo.lon === "number");
 
-      for (const ev of pts){
-        const m = L.circleMarker([ev.geo.lat, ev.geo.lon], eventMarkerStyle(ev));
-        const when = ev.ts ? new Date(ev.ts).toLocaleString() : "–";
-        m.bindPopup(`
-          <div style="font-family: ui-monospace, monospace; font-size:12px;">
-            <b>${escapeHtml(ev.title)}</b><br>
-            <span style="opacity:.85">${escapeHtml(when)} • ${escapeHtml(ev.category ?? "")} • ${escapeHtml(ev.severity ?? "")}</span><br>
-            <span style="opacity:.85">${escapeHtml((ev.labels ?? []).slice(0,12).join(", "))}</span><br>
-            <a href="${ev.url}" target="_blank" rel="noreferrer">Open Issue</a>
-          </div>
-        `);
-        m.addTo(state.layers.events);
+    const ms = el("mapStatus");
+    if (ms) ms.textContent = `MAP: src=${src.length} geo=${pts.length}`;
 
-        eventBounds = eventBounds ? eventBounds.extend([ev.geo.lat, ev.geo.lon]) : L.latLngBounds([[ev.geo.lat, ev.geo.lon],[ev.geo.lat, ev.geo.lon]]);
-      }
+    let bounds = null;
+    for (const ev of pts){
+      const m = L.circleMarker([ev.geo.lat, ev.geo.lon], eventMarkerStyle(ev));
+      m.bindPopup(`<b>${escapeHtml(ev.title)}</b><br><a href="${ev.url}" target="_blank" rel="noreferrer">Open Issue</a>`);
+      m.addTo(state.layers.events);
+      bounds = bounds ? bounds.extend([ev.geo.lat, ev.geo.lon]) : L.latLngBounds([[ev.geo.lat, ev.geo.lon],[ev.geo.lat, ev.geo.lon]]);
     }
 
-    // CI visibility
     if (showCI) {
       if (!state.map.hasLayer(state.layers.ciGroup)) state.layers.ciGroup.addTo(state.map);
     } else {
       if (state.map.hasLayer(state.layers.ciGroup)) state.map.removeLayer(state.layers.ciGroup);
     }
 
-    // Auto fit preference: events -> CI
-    if (eventBounds && eventBounds.isValid()){
-      state.map.fitBounds(eventBounds.pad(0.15));
-      return;
-    }
-    if (showCI && state.ciBounds && state.ciBounds.isValid()){
+    if (bounds && bounds.isValid()){
+      state.map.fitBounds(bounds.pad(0.15));
+    } else if (showCI && state.ciBounds && state.ciBounds.isValid && state.ciBounds.isValid()){
       state.map.fitBounds(state.ciBounds.pad(0.20));
     }
   }
@@ -803,17 +777,16 @@
         const layer = L.geoJSON(gj, {
           style: () => ({ color: "#b08800", weight: (s.kind === "lines") ? 2 : 2.5, opacity: 0.65 }),
           pointToLayer: (_feature, latlng) => L.circleMarker(latlng, {
-            radius: 9, color:"#b08800", weight: 3, fillColor:"#ffd24d", fillOpacity: 0.55
+            radius: 8, color:"#b08800", weight: 2.5, fillColor:"#ffd24d", fillOpacity: 0.35
           }),
           onEachFeature: (feature, lyr) => {
             const name = feature?.properties?.name || feature?.properties?.Name || s.name;
-            lyr.bindPopup(`<div style="font-family: ui-monospace, monospace; font-size:12px;"><b>${escapeHtml(name)}</b><br>${escapeHtml(s.name)}</div>`);
+            lyr.bindPopup(`<b>${escapeHtml(name)}</b>`);
           }
         });
 
         layer.addTo(state.layers.ciGroup);
 
-        // bounds
         try{
           if (layer.getBounds){
             const b = layer.getBounds();
@@ -945,7 +918,7 @@
     const dom = (t.dataset.domain ?? "");
 
     if (tab === "events") {
-      el("domain").value = dom; // preset by tab
+      el("domain").value = dom;
       applyFilters();
     }
     setTab(tab, t);
