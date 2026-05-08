@@ -331,7 +331,7 @@
               <label class="toggle"><input type="checkbox" id="mapOnlyFiltered" checked> map uses filters</label>
               <label class="toggle"><input type="checkbox" id="mapShowCI" checked> show CI overlays</label>
               <button class="btn secondary" id="btnFit" style="padding:8px 10px; font-size:18px;">FIT</button>
-              <span class="hint" id="ciStatus">CI: idle</span>
+              <span class="hint" id="ciStatus">CI: idle</span><span class="hint" id="mapStatus">MAP: –</span>
             </div>
             <div class="hint">Basemap: Dark + Satellite (Layer-Button oben rechts). CI kommt vom Worker: /api/ci/*</div>
           </div>
@@ -695,26 +695,34 @@
   }
 
   function eventMarkerStyle(ev){
-    const labels = ev.labels ?? [];
-    const sev = ev.severity ?? "SEV:1";
-    const dom = ev.category ?? "D:UNKNOWN";
+  const labels = ev.labels ?? [];
+  const sev = ev.severity ?? "SEV:1";
+  const dom = ev.category ?? "D:UNKNOWN";
+  const hot = labels.includes("P0:SUSPECT");
 
-    const radius = sev === "SEV:4" ? 10 : sev === "SEV:3" ? 8 : sev === "SEV:2" ? 6 : 5;
+  // bigger, very visible
+  const radius = sev === "SEV:4" ? 14 : sev === "SEV:3" ? 12 : sev === "SEV:2" ? 10 : 9;
 
-    let color = "#b08800";
-    if (dom === "D:AIS_TRACK") color = "#33d17a";
-    else if (dom === "D:RF_SIGNAL") color = "#9b6bff";
-    else if (dom === "D:DRONE_UAS") color = "#00d4ff";
-    else if (dom === "D:AIR_ACTIVITY") color = "#66e3ff";
-    else if (dom === "D:CYBER_OT") color = "#ff4d4d";
-    else if (dom === "D:INFRA_CI") color = "#ff8a00";
-    else if (dom === "D:SECURITY_CRIME") color = "#ffb000";
-    else if (dom === "D:INCIDENT") color = "#ffd24d";
-    else if (dom === "D:SATELLITE") color = "#00c8c8";
+  // ring color by domain, fill always yellow/red
+  let color = "#b08800";
+  if (dom === "D:AIS_TRACK") color = "#33d17a";
+  else if (dom === "D:RF_SIGNAL") color = "#9b6bff";
+  else if (dom === "D:DRONE_UAS") color = "#00d4ff";
+  else if (dom === "D:AIR_ACTIVITY") color = "#66e3ff";
+  else if (dom === "D:CYBER_OT") color = "#ff4d4d";
+  else if (dom === "D:INFRA_CI") color = "#ff8a00";
+  else if (dom === "D:SECURITY_CRIME") color = "#ffb000";
+  else if (dom === "D:INCIDENT") color = "#ffd24d";
+  else if (dom === "D:SATELLITE") color = "#00c8c8";
 
-    const fill = labels.includes("P0:SUSPECT") ? "#ff4d4d" : "#ffffff";
-    return { radius, color, weight: 2, fillColor: fill, fillOpacity: 0.22 };
-  }
+  return {
+    radius,
+    color,
+    weight: 3,
+    fillColor: hot ? "#ff4d4d" : "#ffd24d",
+    fillOpacity: hot ? 0.92 : 0.80
+  };
+}
 
   function refreshMapLayers(){
     if (!state.map) return;
