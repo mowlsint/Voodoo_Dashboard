@@ -1,0 +1,20 @@
+{
+  "max_new_per_run": 12,
+  "feeds": [
+    {
+      "name": "The Maritime Executive",
+      "url": "https://maritime-executive.com/articles.rss",
+      "base_labels": ["SRC:MEDIA", "D:NEWS_INTEL", "CONF:MED", "SEV:1"]
+    },
+    {
+      "name": "gCaptain",
+      "url": "https://feeds.feedburner.com/gcaptain",
+      "base_labels": ["SRC:MEDIA", "D:NEWS_INTEL", "CONF:MED", "SEV:1"]
+    },
+    {
+      "name": "UKMTO Recent Incidents",
+      "url": "https://www.ukmto.org/recent-incidents",
+      "base_labels": ["SRC:OFFICIAL", "D:SECURITY_CRIME", "CONF:HIGH", "SEV:2"]
+    }
+  ]
+}
