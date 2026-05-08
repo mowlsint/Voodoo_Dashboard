@@ -1,0 +1,288 @@
+# config/sources.yml
+# Weg 1: Public/official + OSINT + Social. Ziel: daraus Issues generieren.
+# Felder:
+# - id: eindeutiger Key
+# - kind: rss | atom | html | json | bsky | x_bridge
+# - url: Quelle
+# - labels: Default-Labels, die IMMER gesetzt werden (D:*, SRC:*, oft REG:* optional)
+# - conf_default: CONF:LOW|MED|HIGH (Basisbewertung nach Quelle)
+# - notes: Parser/Erwartung
+
+sources:
+  # --- OFFICIAL MSI / NAVWARN / NAVTEX / NTMs (EU + Baltikum) ---
+  - id: ukho_navwarn
+    kind: html
+    url: "https://msi.admiralty.co.uk/RadioNavigationalWarnings"
+    labels: ["D:INCIDENT","RF:NAVWARN","SRC:OFFICIAL"]
+    conf_default: "CONF:HIGH"
+    notes: "UKHO MSI Radio Navigational Warnings (NAVAREA/Coastal)."
+
+  - id: ukmto_warnings
+    kind: html
+    url: "https://www.ukmto.org/ukmto-products/warnings"
+    labels: ["D:SECURITY_CRIME","SRC:OFFICIAL"]
+    conf_default: "CONF:HIGH"
+    notes: "UKMTO Warnings (Attack/Boarding/etc.)."
+
+  - id: ukmto_advisories
+    kind: html
+    url: "https://www.ukmto.org/ukmto-products/advisories"
+    labels: ["D:SECURITY_CRIME","SRC:OFFICIAL"]
+    conf_default: "CONF:HIGH"
+    notes: "UKMTO Advisories (suspicious/unusual activity)."
+
+  - id: ukmto_recent_incidents
+    kind: html
+    url: "https://www.ukmto.org/recent-incidents"
+    labels: ["D:SECURITY_CRIME","SRC:OFFICIAL"]
+    conf_default: "CONF:HIGH"
+    notes: "UKMTO incident list page."
+
+  - id: nato_shipping_centre_home
+    kind: html
+    url: "https://shipping.nato.int/"
+    labels: ["D:NEWS_INTEL","SRC:OFFICIAL"]
+    conf_default: "CONF:HIGH"
+    notes: "NATO Shipping Centre (NSC) pages; scrape news/risk sections."
+
+  - id: nato_marcom_news
+    kind: html
+    url: "https://mc.nato.int/media-centre"
+    labels: ["D:NEWS_INTEL","SRC:OFFICIAL"]
+    conf_default: "CONF:HIGH"
+    notes: "NATO MARCOM media centre (ops/exercises/CI protection)."
+
+  - id: swe_navvarn
+    kind: html
+    url: "https://navvarn.sjofartsverket.se/"
+    labels: ["D:INCIDENT","RF:NAVTEX","SRC:OFFICIAL","REG:BALTIC"]
+    conf_default: "CONF:HIGH"
+    notes: "Sweden navigational warnings (NAVTEX/VHF etc.)."
+
+  - id: nor_kystverket_warnings
+    kind: html
+    url: "https://www.kystverket.no/en/sea-and-coastal/navigational-safety/navigational-warnings/"
+    labels: ["D:INCIDENT","SRC:OFFICIAL","REG:ATLANTIC_NE"]
+    conf_default: "CONF:HIGH"
+    notes: "Norway Coastal Admin navigational warnings."
+
+  - id: den_dma_warnings
+    kind: html
+    url: "https://www.dma.dk/safety-at-sea/navigational-information/navigational-warnings/"
+    labels: ["D:INCIDENT","SRC:OFFICIAL","REG:BALTIC"]
+    conf_default: "CONF:HIGH"
+    notes: "Denmark navigational warnings."
+
+  - id: fin_digitraffic_nautical_warnings_api
+    kind: json
+    url: "https://meri.digitraffic.fi/swagger-ui/"
+    labels: ["D:INCIDENT","SRC:OFFICIAL","REG:BALTIC"]
+    conf_default: "CONF:HIGH"
+    notes: "Digitraffic Marine API (nautical warnings). Use documented endpoints from swagger."
+
+  - id: pol_bhmw_ntm
+    kind: html
+    url: "https://bhmw.gov.pl/en/notices-to-mariners/"
+    labels: ["D:INCIDENT","SRC:OFFICIAL","REG:BALTIC"]
+    conf_default: "CONF:HIGH"
+    notes: "Poland Notices to Mariners."
+
+  - id: est_transpordiamet_warnings
+    kind: html
+    url: "https://www.transpordiamet.ee/en"
+    labels: ["D:INCIDENT","SRC:OFFICIAL","REG:BALTIC"]
+    conf_default: "CONF:HIGH"
+    notes: "Estonia Transport Admin – maritime notices/warnings (scrape relevant subpages)."
+
+  - id: ltu_ntm
+    kind: html
+    url: "https://ltsa.lrv.lt/en/"
+    labels: ["D:INCIDENT","SRC:OFFICIAL","REG:BALTIC"]
+    conf_default: "CONF:HIGH"
+    notes: "Lithuania Transport Safety Admin – notices/warnings (scrape)."
+
+  - id: ger_bsi_rss_certbund
+    kind: rss
+    url: "https://www.bsi.bund.de/DE/Service-Navi/Abonnements/RSS/RSS-Feeds/RSS-Feeds_node.html"
+    labels: ["D:CYBER_OT","SRC:OFFICIAL","REG:GER_BIGHT"]
+    conf_default: "CONF:HIGH"
+    notes: "BSI/CERT-Bund RSS list (pick CERT-Bund warning feed)."
+
+  - id: cert_eu_security_advisories
+    kind: html
+    url: "https://cert.europa.eu/publications/security-advisories/"
+    labels: ["D:CYBER_OT","SRC:OFFICIAL","REG:OTHER"]
+    conf_default: "CONF:HIGH"
+    notes: "CERT-EU advisories page (+ RSS available per categories)."
+
+  # --- GNSS / RF / GPS JAM (Phase-Zero sehr relevant) ---
+  - id: gpsjam
+    kind: html
+    url: "https://gpsjam.org/"
+    labels: ["D:RF_SIGNAL","PAT:GNSS_JAM","SRC:OSINT","CONF:MED"]
+    conf_default: "CONF:MED"
+    notes: "GNSS interference heatmap (OSINT)."
+
+  - id: uscg_navcen_gps
+    kind: html
+    url: "https://www.navcen.uscg.gov/"
+    labels: ["D:RF_SIGNAL","PAT:GNSS_JAM","SRC:OFFICIAL","CONF:HIGH"]
+    conf_default: "CONF:HIGH"
+    notes: "USCG NAVCEN – GPS-related advisories/reports (scrape relevant)."
+
+  - id: traficom_gnss
+    kind: html
+    url: "https://www.traficom.fi/en"
+    labels: ["D:RF_SIGNAL","PAT:GNSS_JAM","SRC:OFFICIAL","REG:BALTIC"]
+    conf_default: "CONF:HIGH"
+    notes: "Finland Traficom – GNSS disruption info (scrape)."
+
+  # --- FISHING / IUU / Schmuggel-Hybrid (inkl. Global Fishing Watch) ---
+  - id: gfw_api
+    kind: html
+    url: "https://globalfishingwatch.org/"
+    labels: ["D:NEWS_INTEL","SRC:OFFICIAL","V:FISHING"]
+    conf_default: "CONF:HIGH"
+    notes: "Global Fishing Watch (use API docs & datasets for automation)."
+
+  # --- SANCTIONS / SHADOW FLEET SIGNALS ---
+  - id: eu_consilium_rss
+    kind: rss
+    url: "https://www.consilium.europa.eu/en/press/press-releases/rss/"
+    labels: ["D:NEWS_INTEL","SRC:OFFICIAL","V:SANCTIONS_EVASION"]
+    conf_default: "CONF:HIGH"
+    notes: "EU Council press releases RSS (filter keywords: sanctions/shadow fleet/ships)."
+
+  # --- MARITIME NEWS / DEFENCE-MARITIME OSINT (Feed/scrape) ---
+  - id: navylookout_news
+    kind: html
+    url: "https://www.navylookout.com/category/current-news/"
+    labels: ["D:NEWS_INTEL","SRC:MEDIA","CONF:MED"]
+    conf_default: "CONF:MED"
+    notes: "Navy Lookout – current news page (scrape)."
+
+  - id: warontherocks_seapower
+    kind: rss
+    url: "https://warontherocks.com/tag/seapower/feed/"
+    labels: ["D:NEWS_INTEL","SRC:MEDIA","CONF:MED"]
+    conf_default: "CONF:MED"
+    notes: "War on the Rocks – seapower tag RSS."
+
+  - id: highnorthnews_en
+    kind: html
+    url: "https://en.highnorthnews.com/"
+    labels: ["D:NEWS_INTEL","SRC:MEDIA","REG:ATLANTIC_NE"]
+    conf_default: "CONF:MED"
+    notes: "High North News – scrape headlines (Nordics/Arctic)."
+
+  - id: maritime_executive
+    kind: html
+    url: "https://maritime-executive.com/"
+    labels: ["D:NEWS_INTEL","SRC:MEDIA","CONF:MED"]
+    conf_default: "CONF:MED"
+    notes: "The Maritime Executive – scrape front page or newsletter page."
+
+  - id: marinelink_feeds
+    kind: html
+    url: "https://www.marinelink.com/feeds"
+    labels: ["D:NEWS_INTEL","SRC:MEDIA","CONF:MED"]
+    conf_default: "CONF:MED"
+    notes: "MarineLink RSS index (pick relevant maritime RSS)."
+
+  - id: gcaptain_feedburner
+    kind: rss
+    url: "http://feeds.feedburner.com/Gcaptain"
+    labels: ["D:NEWS_INTEL","SRC:MEDIA","CONF:MED"]
+    conf_default: "CONF:MED"
+    notes: "gCaptain RSS (feedburner)."
+
+  - id: bundeswehr_marine_rss
+    kind: rss
+    url: "https://www.bundeswehr.de/de/rss/marine"
+    labels: ["D:NEWS_INTEL","SRC:OFFICIAL","CONF:HIGH","REG:GER_BIGHT"]
+    conf_default: "CONF:HIGH"
+    notes: "Bundeswehr/MARINE RSS."
+
+  # --- SOCIAL OSINT (BLUESKY) ---
+  # Hinweis: Bluesky ist gut automatisierbar via public API:
+  # https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed?actor=<handle>&limit=50
+  - id: bsky_auonsson
+    kind: bsky
+    url: "at://auonsson.bsky.social"
+    labels: ["D:NEWS_INTEL","SRC:SOCIAL","CONF:LOW"]
+    conf_default: "CONF:LOW"
+    notes: "OSINT account (Bluesky)."
+
+  - id: bsky_noelreports
+    kind: bsky
+    url: "at://noelreports.bsky.social"
+    labels: ["D:NEWS_INTEL","SRC:SOCIAL","CONF:LOW"]
+    conf_default: "CONF:LOW"
+    notes: "OSINT account (Bluesky)."
+
+  - id: bsky_navylookout
+    kind: bsky
+    url: "at://navylookout.bsky.social"
+    labels: ["D:NEWS_INTEL","SRC:SOCIAL","CONF:LOW"]
+    conf_default: "CONF:LOW"
+    notes: "OSINT account (Bluesky)."
+
+  - id: bsky_highnorthnews
+    kind: bsky
+    url: "at://highnorthnews.bsky.social"
+    labels: ["D:NEWS_INTEL","SRC:SOCIAL","CONF:LOW"]
+    conf_default: "CONF:LOW"
+    notes: "OSINT account (Bluesky)."
+
+  - id: bsky_ispk
+    kind: bsky
+    url: "at://ispk.bsky.social"
+    labels: ["D:NEWS_INTEL","SRC:SOCIAL","CONF:LOW"]
+    conf_default: "CONF:LOW"
+    notes: "ISPK Kiel (Bluesky)."
+
+  - id: bsky_jakobbohr
+    kind: bsky
+    url: "at://jakobbohr.bsky.social"
+    labels: ["D:NEWS_INTEL","SRC:SOCIAL","CONF:LOW"]
+    conf_default: "CONF:LOW"
+    notes: "OSINT account (Bluesky)."
+
+  - id: bsky_oiuye
+    kind: bsky
+    url: "at://oiuye.bsky.social"
+    labels: ["D:NEWS_INTEL","SRC:SOCIAL","CONF:LOW"]
+    conf_default: "CONF:LOW"
+    notes: "OSINT account (Bluesky)."
+
+  - id: bsky_warontherocks
+    kind: bsky
+    url: "at://warontherocks.bsky.social"
+    labels: ["D:NEWS_INTEL","SRC:SOCIAL","CONF:LOW"]
+    conf_default: "CONF:LOW"
+    notes: "WOTR (Bluesky)."
+
+  # --- SOCIAL OSINT (X / TWITTER) ---
+  # Ohne bezahlte X-API braucht es bei Weg 1 einen Bridge-Ansatz:
+  # - RSSHub (self-host / public instance) ODER Nitter (instabil).
+  # Du kannst hier erstmal nur "Handles" pflegen, Parser kümmert sich dann um die Bridge-URL.
+  - id: x_navylookout
+    kind: x_bridge
+    url: "x://NavyLookout"
+    labels: ["D:NEWS_INTEL","SRC:SOCIAL","CONF:LOW"]
+    conf_default: "CONF:LOW"
+    notes: "X handle; needs bridge (RSSHub/Nitter)."
+
+  - id: x_ukmto
+    kind: x_bridge
+    url: "x://UK_MTO"
+    labels: ["D:SECURITY_CRIME","SRC:SOCIAL","CONF:LOW"]
+    conf_default: "CONF:LOW"
+    notes: "X handle; bridge. (Offiziell, aber über Social transportiert.)"
+
+  - id: x_tankertrackers
+    kind: x_bridge
+    url: "x://TankerTrackers"
+    labels: ["D:NEWS_INTEL","V:SHADOW_FLEET","SRC:SOCIAL","CONF:LOW"]
+    conf_default: "CONF:LOW"
+    notes: "X handle; bridge."
