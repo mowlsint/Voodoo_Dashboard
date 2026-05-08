@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v3 "Enigma"</title>
+  <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v4 "Enigma"</title>
 
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -27,7 +27,6 @@
       --glow:rgba(176,136,0,.25);
 
       --bad:#ff4d4d;
-      --warn:#ffb000;
       --ok:#33d17a;
       --money:#ffd24d;
       --orange:#ff8a00;
@@ -182,7 +181,7 @@
     .summary{margin-top:10px; color:rgba(255,255,255,.86); font-size:18px; line-height:1.25; white-space:pre-wrap}
 
     #map{
-      height: 520px;
+      height: 540px;
       border-radius:12px;
       border:1px solid rgba(176,136,0,.35);
       overflow:hidden;
@@ -230,7 +229,7 @@
 
     @media (max-width: 1100px){
       .grid{grid-template-columns:1fr;}
-      #map{height:440px;}
+      #map{height:460px;}
       .controls{grid-template-columns:1fr 1fr;}
     }
     @media (max-width: 560px){
@@ -246,10 +245,10 @@
       <div class="brand">
         <div class="brandLine">
           <h1>VOODOO // HYBRID MARITIME OPS</h1>
-          <span class="ver">v3 “Enigma”</span>
+          <span class="ver">v4 “Enigma”</span>
         </div>
         <div class="sub">
-          Source: <span id="src">–</span> • Stand: <span id="stand">–</span> • Worker: <span class="hint">voodoo-hybrid-api</span>
+          Source: <span id="src">–</span> • Stand: <span id="stand">–</span> • Worker: <span class="hint" id="wkr">–</span>
         </div>
       </div>
 
@@ -269,27 +268,26 @@
         </div>
 
         <div class="pc">
+          <!-- Tabs reflect your current Issue-template categories -->
           <div class="tabs">
             <div class="tab active" data-tab="events" data-domain="">ALL</div>
             <div class="tab" data-tab="map" data-domain="">MAP</div>
-            <div class="tab" data-tab="sat" data-domain="D:SATELLITE">SAT</div>
 
-            <div class="tab" data-tab="events" data-domain="D:AIS_TRACK">AIS</div>
-            <div class="tab" data-tab="events" data-domain="D:RF_SIGNAL">RF</div>
+            <div class="tab" data-tab="events" data-domain="D:AIS_TRACK">VESSEL/TRACK</div>
+            <div class="tab" data-tab="events" data-domain="D:RF_SIGNAL">RF/GNSS</div>
             <div class="tab" data-tab="events" data-domain="D:DRONE_UAS">DRONE</div>
             <div class="tab" data-tab="events" data-domain="D:AIR_ACTIVITY">AIR</div>
-            <div class="tab" data-tab="events" data-domain="D:CYBER_OT">CYBER</div>
-            <div class="tab" data-tab="events" data-domain="D:INFRA_CI">CI</div>
             <div class="tab" data-tab="events" data-domain="D:INCIDENT">INCIDENT</div>
-            <div class="tab" data-tab="events" data-domain="D:SECURITY_CRIME">SECURITY</div>
-            <div class="tab" data-tab="events" data-domain="D:SAR">SAR</div>
-            <div class="tab" data-tab="events" data-domain="D:WEATHER_MET">WEATHER</div>
+            <div class="tab" data-tab="events" data-domain="D:SECURITY_CRIME">SECURITY/SMUGGLING</div>
+            <div class="tab" data-tab="events" data-domain="D:CYBER_OT">CYBER/OT</div>
+            <div class="tab" data-tab="events" data-domain="D:INFRA_CI">CI/PORT</div>
+            <div class="tab" data-tab="events" data-domain="D:SATELLITE">SAT</div>
           </div>
 
           <div class="controls">
             <div class="panel" style="border-radius:12px; padding:10px;">
               <label>Search (Text/Labels)</label>
-              <input id="q" placeholder="SHADOW_FLEET • RUS_RESEARCH • LOITERING • GNSS • cable • port..." />
+              <input id="q" placeholder="P0:SUSPECT • LOITERING • CABLE • IMO • GNSS • Wilhelmshaven • ..." />
             </div>
 
             <div class="panel" style="border-radius:12px; padding:10px;">
@@ -319,6 +317,9 @@
           </div>
 
           <div id="tab-events" style="margin-top:12px;">
+            <div class="hint" style="margin-bottom:8px;">
+              Map-Marker erscheinen, wenn im Issue-Body irgendwo steht: <b>Geo: 53.5500, 9.9900</b> (Dezimalgrad).
+            </div>
             <div class="list" id="list"></div>
             <div class="hint" id="foot">–</div>
           </div>
@@ -326,16 +327,13 @@
           <div id="tab-map" style="margin-top:12px; display:none;">
             <div id="map"></div>
             <div class="mapbar">
-              <label class="toggle"><input type="checkbox" id="mapOnlyFiltered" checked> map shows filtered only</label>
-              <label class="toggle"><input type="checkbox" id="mapShowCI" checked> show CI overlay (cables/wind/ports)</label>
+              <label class="toggle"><input type="checkbox" id="mapShowEvents" checked> show event markers</label>
+              <label class="toggle"><input type="checkbox" id="mapOnlyFiltered" checked> map uses filters</label>
+              <label class="toggle"><input type="checkbox" id="mapShowCI" checked> show CI overlays</label>
+              <button class="btn secondary" id="btnFit" style="padding:8px 10px; font-size:18px;">FIT</button>
               <span class="hint" id="ciStatus">CI: idle</span>
-              <span class="hint">Debug: white dot = Leaflet OK</span>
             </div>
-          </div>
-
-          <div id="tab-sat" style="margin-top:12px; display:none;">
-            <div class="hint">Satellite view = events with <b>D:SATELLITE</b> or <b>SAT:*</b> labels.</div>
-            <div class="list" id="satList" style="margin-top:10px;"></div>
+            <div class="hint">Basemap: Dark + Satellite (Layer-Button oben rechts). CI kommt vom Worker: /api/ci/*</div>
           </div>
         </div>
       </div>
@@ -366,7 +364,7 @@
                   <div class="gaugeWrap">
                     <div style="min-width:340px;">
                       <div class="gaugeValue"><span id="p0Pct">–</span>%</div>
-                      <div class="hint">Heuristik aus Severity/Confidence/P0/CI/Patterns (letzte 7 Tage)</div>
+                      <div class="hint">Heuristik: Severity/Confidence/P0/CI/Patterns (letzte 7 Tage)</div>
                     </div>
                     <div class="gauge" aria-label="Phase Zero Gauge">
                       <svg viewBox="0 0 200 100">
@@ -414,7 +412,7 @@
                         <div>MID: <span style="color:var(--money)">gelb</span></div>
                         <div>BOTTOM: <span style="color:var(--ok)">green</span></div>
                       </div>
-                      <div class="hint" style="margin-top:8px;">Heuristik aus Noise/Contradictions/InfoOps/Cyber/„weird“ clusters</div>
+                      <div class="hint" style="margin-top:8px;">Heuristik: Noise/Contradictions/InfoOps/Cyber/Clusters</div>
                     </div>
                   </div>
                 </div>
@@ -450,22 +448,18 @@
 
 <script>
 (() => {
+  // Worker base (change only if you rename worker)
   const BASE = "https://voodoo-hybrid-api.mowlsint.workers.dev";
-  const API_BUNDLE  = `${BASE}/api/bundle`;
-  const API_REBUILD = `${BASE}/api/rebuild`;
-  const API_WEATHER = `${BASE}/api/weather`;
-  const API_NAVTEX  = `${BASE}/api/navtex`;
+  document.getElementById("wkr").textContent = new URL(BASE).hostname;
 
-  // Falls du später debug ausschalten willst:
-  const DEBUG_MARKER = true;
-
-  const TEST_PORTS_GEOJSON = {
-    "type":"FeatureCollection",
-    "name":"ports",
-    "features":[
-      {"type":"Feature","properties":{"name":"Hamburg (TEST)"},"geometry":{"type":"Point","coordinates":[9.99,53.55]}},
-      {"type":"Feature","properties":{"name":"Wilhelmshaven (TEST)"},"geometry":{"type":"Point","coordinates":[8.15,53.51]}}
-    ]
+  const API = {
+    bundle:  `${BASE}/api/bundle`,
+    rebuild: `${BASE}/api/rebuild`,
+    weather: `${BASE}/api/weather`,
+    navtex:  `${BASE}/api/navtex`,
+    ci_ports: `${BASE}/api/ci/ports`,
+    ci_cables:`${BASE}/api/ci/cables`,
+    ci_wind:  `${BASE}/api/ci/windfarms`
   };
 
   const el = (id) => document.getElementById(id);
@@ -475,19 +469,22 @@
     events: [],
     filtered: [],
     map: null,
-    markersLayer: null,
-    ciLayerGroup: null,
+    baseLayers: {},
+    layerCtl: null,
+    layers: {
+      events: null,
+      ciGroup: null,
+      ciPorts: null,
+      ciCables: null,
+      ciWind: null
+    },
     ciBounds: null
   };
 
-  const DOMAINS_ALL = [
-    "D:AIS_TRACK","D:VESSEL","D:RF_SIGNAL","D:DRONE_UAS","D:AIR_ACTIVITY",
-    "D:INCIDENT","D:SECURITY_CRIME","D:CYBER_OT","D:INFRA_CI","D:NEWS_INTEL",
-    "D:SAR","D:WEATHER_MET","D:SATELLITE"
-  ];
-
   function nowStr(){ return new Date().toLocaleString(); }
   function uniq(arr){ return [...new Set(arr)].sort(); }
+  function clamp(n,a,b){ return Math.max(a, Math.min(b, n)); }
+
   function escapeHtml(s){
     return (s ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   }
@@ -538,9 +535,8 @@
     state.filtered = filtered;
 
     renderEvents();
-    renderSatellite();
     updateKPIsAndInstruments();
-    updateMapMarkers();
+    refreshMapLayers();
   }
 
   function renderEvents(){
@@ -551,13 +547,13 @@
         .concat(ev.severity ? [ev.severity] : [])
         .concat(ev.confidence ? [ev.confidence] : [])
         .concat(ev.phase0?.suspect ? ["P0:SUSPECT"] : [])
-        .concat(ev.phase0?.level && ev.phase0.level !== "P0:SUSPECT" ? [ev.phase0.level] : [])
+        .concat(ev.phase0?.level ? [ev.phase0.level] : [])
         .concat(ev.category ? [ev.category] : [])
         .concat(ev.region ? [ev.region] : []);
 
       const remaining = labels.filter(l => !key.includes(l));
       const ordered = key.concat(remaining);
-      const badgesHtml = ordered.slice(0, 20).map(badge).join("");
+      const badgesHtml = ordered.slice(0, 22).map(badge).join("");
 
       const when = ev.ts ? new Date(ev.ts).toLocaleString() : "–";
       const geoTxt = ev.geo ? `${ev.geo.lat.toFixed(4)}, ${ev.geo.lon.toFixed(4)}` : "";
@@ -580,54 +576,8 @@
     el("foot").textContent = `Angezeigt: ${state.filtered.length} / ${state.events.length} Events`;
   }
 
-  function renderSatellite(){
-    const satList = el("satList");
-    const satEvents = state.filtered.filter(ev => {
-      const labels = ev.labels ?? [];
-      return (ev.category === "D:SATELLITE") || labels.some(l => l.startsWith("SAT:"));
-    });
-
-    satList.innerHTML = satEvents.map(ev => {
-      const labels = (ev.labels ?? []);
-      const satLabels = labels.filter(l => l.startsWith("SAT:"));
-      const key = []
-        .concat(ev.severity ? [ev.severity] : [])
-        .concat(ev.confidence ? [ev.confidence] : [])
-        .concat(ev.phase0?.suspect ? ["P0:SUSPECT"] : [])
-        .concat(ev.phase0?.level && ev.phase0.level !== "P0:SUSPECT" ? [ev.phase0.level] : [])
-        .concat(["D:SATELLITE"])
-        .concat(ev.region ? [ev.region] : [])
-        .concat(satLabels);
-
-      const remaining = labels.filter(l => !key.includes(l));
-      const ordered = key.concat(remaining);
-      const badgesHtml = ordered.slice(0, 22).map(badge).join("");
-
-      const when = ev.ts ? new Date(ev.ts).toLocaleString() : "–";
-      const meta = [`#${ev.number ?? "?"}`, when].filter(Boolean).join(" • ");
-
-      return `
-        <div class="event">
-          <div class="etop">
-            <div>
-              <div class="title"><a href="${ev.url}" target="_blank" rel="noreferrer">${escapeHtml(ev.title)}</a></div>
-              <div class="meta">${escapeHtml(meta)}</div>
-            </div>
-          </div>
-          <div class="badges">${badgesHtml}</div>
-          <div class="summary">${escapeHtml((ev.summary ?? "").slice(0, 620))}${(ev.summary ?? "").length > 620 ? "…" : ""}</div>
-        </div>
-      `;
-    }).join("");
-
-    if (!satEvents.length){
-      satList.innerHTML = `<div class="hint">Keine Satellite-Events im aktuellen Filter. (Setze D:SATELLITE oder SAT:* Labels.)</div>`;
-    }
-  }
-
   function parseISO(ts){ const d = ts ? new Date(ts) : null; return (d && !isNaN(d)) ? d : null; }
   function daysAgo(d){ return (Date.now() - d.getTime()) / (1000*60*60*24); }
-  function clamp(n,a,b){ return Math.max(a, Math.min(b, n)); }
 
   function scorePhaseZero(events){
     const recent = events.filter(e => { const d = parseISO(e.ts); return d ? daysAgo(d) <= 7 : false; });
@@ -643,8 +593,8 @@
       const confW = conf === "CONF:HIGH" ? 1.2 : conf === "CONF:MED" ? 1.0 : 0.8;
 
       const ci = ["OBJ:CABLE","OBJ:PIPELINE","OBJ:WINDFARM","OBJ:PORT","OBJ:VTS_WSV"].some(x => labels.includes(x));
-      const patterns = ["PAT:LOITERING","PAT:STS_SUSPECT","PAT:AIS_GAP","PAT:DARK_ACTIVITY","PAT:SURVEYING","PAT:ROUTE_DEVIATION"].some(x => labels.includes(x));
-      const vesselHot = ["V:SHADOW_FLEET","V:RUS_RESEARCH","V:RUS_WARSHIP","V:RUS_AUXILIARY"].some(x => labels.includes(x));
+      const patterns = ["PAT:LOITERING","PAT:STS_SUSPECT","PAT:AIS_GAP","PAT:DARK_ACTIVITY","PAT:SURVEYING","PAT:ROUTE_DEVIATION","PAT:GNSS_JAM","PAT:GNSS_SPOOF"].some(x => labels.includes(x));
+      const vesselHot = ["V:SHADOW_FLEET","V:RUS_RESEARCH","V:RUS_WARSHIP"].some(x => labels.includes(x));
 
       let evPts = sevW * confW;
       if (p0) evPts *= 1.6;
@@ -655,8 +605,7 @@
       points += evPts;
     }
 
-    const pct = clamp(Math.round((points / 90) * 100), 0, 100);
-    return { pct };
+    return clamp(Math.round((points / 90) * 100), 0, 100);
   }
 
   function scoreWeirdness(events){
@@ -687,8 +636,7 @@
       w += evW;
     }
 
-    const pct = clamp(Math.round((w / 70) * 100), 0, 100);
-    return { pct };
+    return clamp(Math.round((w / 70) * 100), 0, 100);
   }
 
   function setNeedle(pct){
@@ -712,12 +660,12 @@
     el("kpiFetch").textContent = nowStr();
 
     const p0 = scorePhaseZero(state.filtered);
-    el("p0Pct").textContent = String(p0.pct);
-    setNeedle(p0.pct);
+    el("p0Pct").textContent = String(p0);
+    setNeedle(p0);
 
     const weird = scoreWeirdness(state.filtered);
-    el("weirdPct").textContent = String(weird.pct);
-    setWeirdFill(weird.pct);
+    el("weirdPct").textContent = String(weird);
+    setWeirdFill(weird);
   }
 
   function initMap(){
@@ -725,177 +673,162 @@
 
     state.map = L.map("map", { zoomControl:true, attributionControl:true }).setView([54.2, 8.6], 6);
 
-    L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
-      maxZoom: 19,
-      attribution: '&copy; OpenStreetMap &copy; CARTO'
-    }).addTo(state.map);
+    const dark = L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+      maxZoom: 19, attribution: '&copy; OpenStreetMap &copy; CARTO'
+    });
 
-    state.markersLayer = L.layerGroup().addTo(state.map);
-    state.ciLayerGroup = L.layerGroup(); // toggle controls it
+    const sat = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+      maxZoom: 19, attribution: '&copy; Esri'
+    });
 
-    // DEBUG marker: proves Leaflet renders points
-    if (DEBUG_MARKER){
-      L.circleMarker([53.55, 9.99], {
-        radius: 7, color:"#ffffff", weight:2, fillColor:"#ffffff", fillOpacity:0.65
-      }).addTo(state.map).bindPopup("DEBUG marker Hamburg (Leaflet OK)");
-    }
+    dark.addTo(state.map);
+    state.baseLayers = { dark, sat };
+
+    state.layers.events = L.layerGroup().addTo(state.map);
+    state.layers.ciGroup = L.layerGroup().addTo(state.map);
+
+    state.layerCtl = L.control.layers(
+      { "Dark": dark, "Satellite": sat },
+      { "Events": state.layers.events, "CI": state.layers.ciGroup },
+      { collapsed: true }
+    ).addTo(state.map);
   }
 
-  function updateMapMarkers(){
+  function eventMarkerStyle(ev){
+    const labels = ev.labels ?? [];
+    const sev = ev.severity ?? "SEV:1";
+    const dom = ev.category ?? "D:UNKNOWN";
+
+    const radius = sev === "SEV:4" ? 10 : sev === "SEV:3" ? 8 : sev === "SEV:2" ? 6 : 5;
+
+    let color = "#b08800";
+    if (dom === "D:AIS_TRACK") color = "#33d17a";
+    else if (dom === "D:RF_SIGNAL") color = "#9b6bff";
+    else if (dom === "D:DRONE_UAS") color = "#00d4ff";
+    else if (dom === "D:AIR_ACTIVITY") color = "#66e3ff";
+    else if (dom === "D:CYBER_OT") color = "#ff4d4d";
+    else if (dom === "D:INFRA_CI") color = "#ff8a00";
+    else if (dom === "D:SECURITY_CRIME") color = "#ffb000";
+    else if (dom === "D:INCIDENT") color = "#ffd24d";
+    else if (dom === "D:SATELLITE") color = "#00c8c8";
+
+    const fill = labels.includes("P0:SUSPECT") ? "#ff4d4d" : "#ffffff";
+    return { radius, color, weight: 2, fillColor: fill, fillOpacity: 0.22 };
+  }
+
+  function refreshMapLayers(){
     if (!state.map) return;
 
-    const useFiltered = el("mapOnlyFiltered").checked;
+    const showEvents = el("mapShowEvents").checked;
+    const onlyFiltered = el("mapOnlyFiltered").checked;
     const showCI = el("mapShowCI").checked;
 
-    const src = useFiltered ? state.filtered : state.events;
-    state.markersLayer.clearLayers();
+    // Events markers
+    state.layers.events.clearLayers();
+    let eventBounds = null;
 
-    const pts = src.filter(e => e.geo && typeof e.geo.lat === "number" && typeof e.geo.lon === "number");
-    for (const ev of pts){
-      const m = L.circleMarker([ev.geo.lat, ev.geo.lon], { radius: 6, color: "#b08800", weight: 2, fillColor:"#ffffff", fillOpacity:0.22 });
-      m.addTo(state.markersLayer);
+    if (showEvents){
+      const src = onlyFiltered ? state.filtered : state.events;
+      const pts = src.filter(e => e.geo && typeof e.geo.lat === "number" && typeof e.geo.lon === "number");
+
+      for (const ev of pts){
+        const m = L.circleMarker([ev.geo.lat, ev.geo.lon], eventMarkerStyle(ev));
+        const when = ev.ts ? new Date(ev.ts).toLocaleString() : "–";
+        m.bindPopup(`
+          <div style="font-family: ui-monospace, monospace; font-size:12px;">
+            <b>${escapeHtml(ev.title)}</b><br>
+            <span style="opacity:.85">${escapeHtml(when)} • ${escapeHtml(ev.category ?? "")} • ${escapeHtml(ev.severity ?? "")}</span><br>
+            <span style="opacity:.85">${escapeHtml((ev.labels ?? []).slice(0,12).join(", "))}</span><br>
+            <a href="${ev.url}" target="_blank" rel="noreferrer">Open Issue</a>
+          </div>
+        `);
+        m.addTo(state.layers.events);
+
+        eventBounds = eventBounds ? eventBounds.extend([ev.geo.lat, ev.geo.lon]) : L.latLngBounds([[ev.geo.lat, ev.geo.lon],[ev.geo.lat, ev.geo.lon]]);
+      }
     }
 
-    // toggle CI group
+    // CI visibility
     if (showCI) {
-      if (!state.map.hasLayer(state.ciLayerGroup)) state.ciLayerGroup.addTo(state.map);
+      if (!state.map.hasLayer(state.layers.ciGroup)) state.layers.ciGroup.addTo(state.map);
     } else {
-      if (state.map.hasLayer(state.ciLayerGroup)) state.map.removeLayer(state.ciLayerGroup);
+      if (state.map.hasLayer(state.layers.ciGroup)) state.map.removeLayer(state.layers.ciGroup);
     }
 
-    if (pts.length){
-      const bounds = L.latLngBounds(pts.map(p => [p.geo.lat, p.geo.lon]));
-      state.map.fitBounds(bounds.pad(0.15));
-    } else if (showCI && state.ciBounds && state.ciBounds.isValid && state.ciBounds.isValid()){
-      state.map.fitBounds(state.ciBounds.pad(0.25));
+    // Auto fit preference: events -> CI
+    if (eventBounds && eventBounds.isValid()){
+      state.map.fitBounds(eventBounds.pad(0.15));
+      return;
+    }
+    if (showCI && state.ciBounds && state.ciBounds.isValid()){
+      state.map.fitBounds(state.ciBounds.pad(0.20));
     }
   }
 
-  async function loadCIOverlays(){
-    const sources = [
-      { name: "Ports",  url: `${BASE}/api/ci/ports`,  fallback: TEST_PORTS_GEOJSON },
-      { name: "Cables", url: `${BASE}/api/ci/cables`, fallback: null },
-      { name: "Wind",   url: `${BASE}/api/ci/windfarms`, fallback: null }
-    ];
-
-    state.ciLayerGroup.clearLayers();
-    state.ciBounds = null;
+  async function loadCI(){
+    if (!state.map) return;
 
     const status = el("ciStatus");
-    if (status) status.textContent = "CI: loading…";
+    status.textContent = "CI: loading…";
+
+    state.layers.ciGroup.clearLayers();
+    state.ciBounds = null;
+
+    const sources = [
+      { name: "Ports",    url: API.ci_ports,  kind: "points" },
+      { name: "Cables",   url: API.ci_cables, kind: "lines" },
+      { name: "Windfarms",url: API.ci_wind,   kind: "polys" }
+    ];
 
     let loaded = 0;
-    let totalFeatures = 0;
-    let usedFallbackAny = false;
-
-    async function fetchGeoJSON(url){
-      const res = await fetch(url, { cache: "no-store" });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      return await res.json();
-    }
+    let feats = 0;
 
     for (const s of sources){
-      let gj = null;
-      let usedFallback = false;
-
       try{
-        gj = await fetchGeoJSON(s.url);
-      } catch(err){
-        if (s.fallback){
-          gj = s.fallback;
-          usedFallback = true;
-          usedFallbackAny = true;
-        } else {
-          if (status) status.textContent = `CI: ${s.name} failed (${err.message})`;
-          continue;
-        }
-      }
+        const res = await fetch(s.url, { cache: "no-store" });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const gj = await res.json();
 
-      const n = Array.isArray(gj?.features) ? gj.features.length : 0;
-      totalFeatures += n;
+        const n = Array.isArray(gj?.features) ? gj.features.length : 0;
+        feats += n;
 
-      const layer = L.geoJSON(gj, {
-        style: () => ({ color: "#b08800", weight: 2.5, opacity: 0.75 }),
-        pointToLayer: (_feature, latlng) =>
-          L.circleMarker(latlng, {
-            radius: 10,
-            color: "#b08800",
-            weight: 3,
-            fillColor: "#ffd24d",
-            fillOpacity: 0.70
+        const layer = L.geoJSON(gj, {
+          style: () => ({ color: "#b08800", weight: (s.kind === "lines") ? 2 : 2.5, opacity: 0.65 }),
+          pointToLayer: (_feature, latlng) => L.circleMarker(latlng, {
+            radius: 9, color:"#b08800", weight: 3, fillColor:"#ffd24d", fillOpacity: 0.55
           }),
-        onEachFeature: (feature, lyr) => {
-          const name = feature?.properties?.name || feature?.properties?.Name || s.name;
-          lyr.bindPopup(
-            `<div style="font-family: ui-monospace, monospace; font-size:12px;">
-              <b>${escapeHtml(name)}</b><br>${escapeHtml(s.name)} overlay
-            </div>`
-          );
-        }
-      });
+          onEachFeature: (feature, lyr) => {
+            const name = feature?.properties?.name || feature?.properties?.Name || s.name;
+            lyr.bindPopup(`<div style="font-family: ui-monospace, monospace; font-size:12px;"><b>${escapeHtml(name)}</b><br>${escapeHtml(s.name)}</div>`);
+          }
+        });
 
-      layer.addTo(state.ciLayerGroup);
+        layer.addTo(state.layers.ciGroup);
 
-      try{
-        const b = layer.getBounds && layer.getBounds();
-        if (b && b.isValid && b.isValid()){
-          state.ciBounds = state.ciBounds ? state.ciBounds.extend(b) : b;
-        }
-      } catch(_e){}
+        // bounds
+        try{
+          if (layer.getBounds){
+            const b = layer.getBounds();
+            if (b && b.isValid && b.isValid()){
+              state.ciBounds = state.ciBounds ? state.ciBounds.extend(b) : b;
+            }
+          }
+        } catch(_e){}
 
-      loaded++;
-      if (status){
-        const tag = usedFallback ? " (fallback)" : "";
-        status.textContent = `CI: ${loaded}/${sources.length} • features=${totalFeatures}${tag}`;
+        loaded++;
+        status.textContent = `CI: ${loaded}/${sources.length} • features=${feats}`;
+      } catch(e){
+        status.textContent = `CI: ${s.name} failed (${e.message})`;
       }
     }
 
-    // ensure CI is on map if toggle is on
-    if (state.map && el("mapShowCI")?.checked && !state.map.hasLayer(state.ciLayerGroup)) {
-      state.ciLayerGroup.addTo(state.map);
-    }
-
-    if (status && loaded === 0) status.textContent = "CI: none loaded";
-    if (status && usedFallbackAny) status.textContent += " • fallback active";
-  }
-
-  async function loadOptionalBox(url, boxEl, metaEl){
-    metaEl.textContent = url.replace(BASE, "");
-    try{
-      const res = await fetch(url, { cache: "no-store" });
-      if (!res.ok) {
-        boxEl.textContent = `Endpoint not available (${res.status}).`;
-        return;
-      }
-      const data = await res.json();
-      boxEl.textContent = JSON.stringify(data, null, 2);
-    } catch(err){
-      boxEl.textContent = `Error loading ${url}:\n${err?.message ?? String(err)}`;
-    }
-  }
-
-  function setTab(name, clickedEl){
-    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-    if (clickedEl) clickedEl.classList.add("active");
-
-    el("tab-events").style.display = (name === "events") ? "" : "none";
-    el("tab-map").style.display = (name === "map") ? "" : "none";
-    el("tab-sat").style.display = (name === "sat") ? "" : "none";
-
-    if (name === "map"){
-      initMap();
-      setTimeout(async () => {
-        state.map.invalidateSize();
-        await loadCIOverlays().catch(()=>{});
-        updateMapMarkers();
-      }, 150);
-    }
+    if (loaded === 0) status.textContent = "CI: none loaded";
   }
 
   async function loadBundle(){
-    const res = await fetch(API_BUNDLE, { cache: "no-store" });
+    const res = await fetch(API.bundle, { cache: "no-store" });
     const data = await res.json();
-    if (data.error) throw new Error(data.error);
+    if (data?.ok === false) throw new Error(data.error || "bundle failed");
 
     state.bundle = data;
     state.events = Array.isArray(data.events) ? data.events : [];
@@ -903,14 +836,24 @@
     el("src").textContent = `${data.source?.owner ?? "?"}/${data.source?.repo ?? "?"}`;
     el("stand").textContent = data.generated_at ? new Date(data.generated_at).toLocaleString() : "–";
 
-    const domainsFromData = uniq(state.events.map(e => e.category).filter(Boolean));
-    const domains = uniq(DOMAINS_ALL.concat(domainsFromData));
+    const domains = uniq(state.events.map(e => e.category).filter(Boolean));
     const regions = uniq(state.events.map(e => e.region).filter(Boolean));
 
     buildSelectOptions(el("domain"), domains);
     buildSelectOptions(el("region"), regions);
 
     applyFilters();
+  }
+
+  async function rebuildNow(){
+    try { await fetch(API.rebuild, { cache: "no-store" }); } catch(_e){}
+    await loadBundle();
+    if (state.map) {
+      await loadCI();
+      refreshMapLayers();
+    }
+    loadWeather();
+    loadNavtex();
   }
 
   function exportFiltered(){
@@ -938,9 +881,45 @@
     URL.revokeObjectURL(a.href);
   }
 
-  async function rebuildNow(){
-    try{ await fetch(API_REBUILD, { cache: "no-store" }); } catch(_e){}
-    try{ await loadBundle(); } catch(_e){}
+  async function loadWeather(){
+    el("weatherMeta").textContent = "/api/weather";
+    try{
+      const res = await fetch(API.weather, { cache: "no-store" });
+      const data = await res.json();
+      if (!res.ok || data.ok === false) throw new Error(data?.error ?? `HTTP ${res.status}`);
+      el("weatherBox").textContent = JSON.stringify(data, null, 2);
+    } catch(e){
+      el("weatherBox").textContent = `Weather error: ${e.message}`;
+    }
+  }
+
+  async function loadNavtex(){
+    el("navtexMeta").textContent = "/api/navtex";
+    try{
+      const res = await fetch(API.navtex, { cache: "no-store" });
+      const data = await res.json();
+      if (!res.ok || data.ok === false) throw new Error(data?.error ?? `HTTP ${res.status}`);
+      el("navtexBox").textContent = JSON.stringify(data, null, 2);
+    } catch(e){
+      el("navtexBox").textContent = `NAVWARN error: ${e.message}`;
+    }
+  }
+
+  function setTab(name, clickedEl){
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    if (clickedEl) clickedEl.classList.add("active");
+
+    el("tab-events").style.display = (name === "events") ? "" : "none";
+    el("tab-map").style.display = (name === "map") ? "" : "none";
+
+    if (name === "map"){
+      initMap();
+      setTimeout(async () => {
+        state.map.invalidateSize();
+        await loadCI();
+        refreshMapLayers();
+      }, 120);
+    }
   }
 
   // listeners
@@ -951,28 +930,30 @@
   el("btnReload").addEventListener("click", () => loadBundle().catch(()=>{}));
   el("btnRebuild").addEventListener("click", rebuildNow);
   el("btnExport").addEventListener("click", exportFiltered);
+  el("btnFit").addEventListener("click", refreshMapLayers);
 
   document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => {
     const tab = t.dataset.tab;
     const dom = (t.dataset.domain ?? "");
 
     if (tab === "events") {
-      el("domain").value = dom;
+      el("domain").value = dom; // preset by tab
       applyFilters();
     }
     setTab(tab, t);
   }));
 
-  el("mapOnlyFiltered").addEventListener("change", updateMapMarkers);
-  el("mapShowCI").addEventListener("change", updateMapMarkers);
+  ["mapShowEvents","mapOnlyFiltered","mapShowCI"].forEach(id => {
+    el(id).addEventListener("change", refreshMapLayers);
+  });
 
   // boot
   loadBundle().catch(err => {
-    el("list").innerHTML = `<div class="event">Bundle lädt nicht (ok für Map-Test): ${escapeHtml(err.message)}</div>`;
+    el("list").innerHTML = `<div class="event">Fehler beim Laden: ${escapeHtml(err.message)}</div>`;
   });
 
-  loadOptionalBox(API_WEATHER, el("weatherBox"), el("weatherMeta"));
-  loadOptionalBox(API_NAVTEX, el("navtexBox"), el("navtexMeta"));
+  loadWeather();
+  loadNavtex();
 })();
 </script>
 </body>
