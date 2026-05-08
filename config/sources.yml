@@ -1,288 +1,343 @@
-# config/sources.yml
-# Weg 1: Public/official + OSINT + Social. Ziel: daraus Issues generieren.
-# Felder:
-# - id: eindeutiger Key
-# - kind: rss | atom | html | json | bsky | x_bridge
-# - url: Quelle
-# - labels: Default-Labels, die IMMER gesetzt werden (D:*, SRC:*, oft REG:* optional)
-# - conf_default: CONF:LOW|MED|HIGH (Basisbewertung nach Quelle)
-# - notes: Parser/Erwartung
+version: 1
+
+endpoints:
+  hybrid_api_base: "https://voodoo-hybrid-api.mowlsint.workers.dev"
+  social_bridge_base: "https://voodoo-social-bridge.mowlsint.workers.dev"
+
+defaults:
+  domain_fallback: "D:NEWS_INTEL"
+  severity_fallback: "SEV:1"
+  confidence_fallback: "CONF:LOW"
+  base_labels:
+    - "SRC:OSINT"
+
+# Konvention:
+# - type: rss | html | json | social_x | social_bsky
+# - labels: werden beim Erzeugen der Issues standardmäßig gesetzt
+# - region_hint: nur Vorschlag (du kannst später automatisiert matchen)
+# - priority: 1..100 (höher = wichtiger / häufiger prüfen)
 
 sources:
-  # --- OFFICIAL MSI / NAVWARN / NAVTEX / NTMs (EU + Baltikum) ---
-  - id: ukho_navwarn
-    kind: html
+  # --- OFFICIAL / NAVWARN / NAVTEX / SAFETY ---------------------------------
+  - id: "ukho_navwarn"
+    name: "UKHO / Admiralty MSI – Radio Navigational Warnings"
+    type: "html"
     url: "https://msi.admiralty.co.uk/RadioNavigationalWarnings"
-    labels: ["D:INCIDENT","RF:NAVWARN","SRC:OFFICIAL"]
-    conf_default: "CONF:HIGH"
-    notes: "UKHO MSI Radio Navigational Warnings (NAVAREA/Coastal)."
+    labels: ["RF:NAVWARN", "D:NEWS_INTEL", "SRC:OFFICIAL"]
+    region_hint: "REG:ATLANTIC_NE"
+    priority: 95
 
-  - id: ukmto_warnings
-    kind: html
-    url: "https://www.ukmto.org/ukmto-products/warnings"
-    labels: ["D:SECURITY_CRIME","SRC:OFFICIAL"]
-    conf_default: "CONF:HIGH"
-    notes: "UKMTO Warnings (Attack/Boarding/etc.)."
+  - id: "ukmto_home"
+    name: "UKMTO – Maritime Trade Operations (Home)"
+    type: "html"
+    url: "https://www.ukmto.org/"
+    labels: ["D:NEWS_INTEL", "SRC:OFFICIAL"]
+    region_hint: "REG:MED"
+    priority: 90
 
-  - id: ukmto_advisories
-    kind: html
-    url: "https://www.ukmto.org/ukmto-products/advisories"
-    labels: ["D:SECURITY_CRIME","SRC:OFFICIAL"]
-    conf_default: "CONF:HIGH"
-    notes: "UKMTO Advisories (suspicious/unusual activity)."
+  - id: "nato_shipping_centre"
+    name: "NATO Shipping Centre (News/Advisories)"
+    type: "html"
+    url: "https://www.shipping.nato.int/"
+    labels: ["D:NEWS_INTEL", "SRC:OFFICIAL"]
+    region_hint: "REG:ATLANTIC_NE"
+    priority: 80
 
-  - id: ukmto_recent_incidents
-    kind: html
-    url: "https://www.ukmto.org/recent-incidents"
-    labels: ["D:SECURITY_CRIME","SRC:OFFICIAL"]
-    conf_default: "CONF:HIGH"
-    notes: "UKMTO incident list page."
+  - id: "bsh_warnings"
+    name: "BSH – Nautische Warnnachrichten / Navigationswarnungen"
+    type: "html"
+    url: "https://www.bsh.de/DE/THEMEN/Schifffahrt/Nautische_Warnnachrichten/nautische_warnnachrichten_node.html"
+    labels: ["RF:NAVWARN", "D:NEWS_INTEL", "SRC:OFFICIAL"]
+    region_hint: "REG:GER_BIGHT"
+    priority: 85
 
-  - id: nato_shipping_centre_home
-    kind: html
-    url: "https://shipping.nato.int/"
-    labels: ["D:NEWS_INTEL","SRC:OFFICIAL"]
-    conf_default: "CONF:HIGH"
-    notes: "NATO Shipping Centre (NSC) pages; scrape news/risk sections."
+  - id: "elwis_warnings"
+    name: "ELWIS – Nachrichten für Seefahrer / Verkehr & Warnungen"
+    type: "html"
+    url: "https://www.elwis.de/DE/Service/NfS/nfs-node.html"
+    labels: ["RF:NAVWARN", "D:NEWS_INTEL", "SRC:OFFICIAL"]
+    region_hint: "REG:INLAND_WATERWAYS"
+    priority: 75
 
-  - id: nato_marcom_news
-    kind: html
-    url: "https://mc.nato.int/media-centre"
-    labels: ["D:NEWS_INTEL","SRC:OFFICIAL"]
-    conf_default: "CONF:HIGH"
-    notes: "NATO MARCOM media centre (ops/exercises/CI protection)."
+  - id: "sjofartsverket_navwarn"
+    name: "Sjöfartsverket (SE) – Navigationsvarningar"
+    type: "html"
+    url: "https://www.sjofartsverket.se/en/Maritime-services/Notices-to-mariners/"
+    labels: ["RF:NAVWARN", "D:NEWS_INTEL", "SRC:OFFICIAL"]
+    region_hint: "REG:BALTIC"
+    priority: 80
 
-  - id: swe_navvarn
-    kind: html
-    url: "https://navvarn.sjofartsverket.se/"
-    labels: ["D:INCIDENT","RF:NAVTEX","SRC:OFFICIAL","REG:BALTIC"]
-    conf_default: "CONF:HIGH"
-    notes: "Sweden navigational warnings (NAVTEX/VHF etc.)."
+  - id: "dma_navwarn"
+    name: "Danish Maritime Authority – Nautical Information / Warnings"
+    type: "html"
+    url: "https://www.dma.dk/safety-at-sea/navigational-information"
+    labels: ["RF:NAVWARN", "D:NEWS_INTEL", "SRC:OFFICIAL"]
+    region_hint: "REG:BALTIC"
+    priority: 75
 
-  - id: nor_kystverket_warnings
-    kind: html
-    url: "https://www.kystverket.no/en/sea-and-coastal/navigational-safety/navigational-warnings/"
-    labels: ["D:INCIDENT","SRC:OFFICIAL","REG:ATLANTIC_NE"]
-    conf_default: "CONF:HIGH"
-    notes: "Norway Coastal Admin navigational warnings."
+  - id: "rws_shipping"
+    name: "Rijkswaterstaat – Shipping / Waterinfo (NL)"
+    type: "html"
+    url: "https://www.rijkswaterstaat.nl/"
+    labels: ["D:INFRA_CI", "OBJ:WATERWAY", "SRC:OFFICIAL"]
+    region_hint: "REG:ATLANTIC_NE"
+    priority: 60
 
-  - id: den_dma_warnings
-    kind: html
-    url: "https://www.dma.dk/safety-at-sea/navigational-information/navigational-warnings/"
-    labels: ["D:INCIDENT","SRC:OFFICIAL","REG:BALTIC"]
-    conf_default: "CONF:HIGH"
-    notes: "Denmark navigational warnings."
-
-  - id: fin_digitraffic_nautical_warnings_api
-    kind: json
-    url: "https://meri.digitraffic.fi/swagger-ui/"
-    labels: ["D:INCIDENT","SRC:OFFICIAL","REG:BALTIC"]
-    conf_default: "CONF:HIGH"
-    notes: "Digitraffic Marine API (nautical warnings). Use documented endpoints from swagger."
-
-  - id: pol_bhmw_ntm
-    kind: html
-    url: "https://bhmw.gov.pl/en/notices-to-mariners/"
-    labels: ["D:INCIDENT","SRC:OFFICIAL","REG:BALTIC"]
-    conf_default: "CONF:HIGH"
-    notes: "Poland Notices to Mariners."
-
-  - id: est_transpordiamet_warnings
-    kind: html
-    url: "https://www.transpordiamet.ee/en"
-    labels: ["D:INCIDENT","SRC:OFFICIAL","REG:BALTIC"]
-    conf_default: "CONF:HIGH"
-    notes: "Estonia Transport Admin – maritime notices/warnings (scrape relevant subpages)."
-
-  - id: ltu_ntm
-    kind: html
-    url: "https://ltsa.lrv.lt/en/"
-    labels: ["D:INCIDENT","SRC:OFFICIAL","REG:BALTIC"]
-    conf_default: "CONF:HIGH"
-    notes: "Lithuania Transport Safety Admin – notices/warnings (scrape)."
-
-  - id: ger_bsi_rss_certbund
-    kind: rss
-    url: "https://www.bsi.bund.de/DE/Service-Navi/Abonnements/RSS/RSS-Feeds/RSS-Feeds_node.html"
-    labels: ["D:CYBER_OT","SRC:OFFICIAL","REG:GER_BIGHT"]
-    conf_default: "CONF:HIGH"
-    notes: "BSI/CERT-Bund RSS list (pick CERT-Bund warning feed)."
-
-  - id: cert_eu_security_advisories
-    kind: html
-    url: "https://cert.europa.eu/publications/security-advisories/"
-    labels: ["D:CYBER_OT","SRC:OFFICIAL","REG:OTHER"]
-    conf_default: "CONF:HIGH"
-    notes: "CERT-EU advisories page (+ RSS available per categories)."
-
-  # --- GNSS / RF / GPS JAM (Phase-Zero sehr relevant) ---
-  - id: gpsjam
-    kind: html
+  # --- GNSS / RF / SIGNALS ---------------------------------------------------
+  - id: "gpsjam"
+    name: "GPSJam – GNSS interference heatmap"
+    type: "html"
     url: "https://gpsjam.org/"
-    labels: ["D:RF_SIGNAL","PAT:GNSS_JAM","SRC:OSINT","CONF:MED"]
-    conf_default: "CONF:MED"
-    notes: "GNSS interference heatmap (OSINT)."
+    labels: ["D:RF_SIGNAL", "PAT:GNSS_JAM", "SRC:OSINT"]
+    region_hint: "REG:OTHER"
+    priority: 85
 
-  - id: uscg_navcen_gps
-    kind: html
-    url: "https://www.navcen.uscg.gov/"
-    labels: ["D:RF_SIGNAL","PAT:GNSS_JAM","SRC:OFFICIAL","CONF:HIGH"]
-    conf_default: "CONF:HIGH"
-    notes: "USCG NAVCEN – GPS-related advisories/reports (scrape relevant)."
+  - id: "rfnosblog_x"
+    name: "Russia Maritime Watch (X) – RFNOSBlog"
+    type: "social_x"
+    handle: "RFNOSBlog"
+    bridge_path: "/x/RFNOSBlog"
+    labels: ["D:AIS_TRACK", "V:RUS_WARSHIP", "SRC:SOCIAL"]
+    region_hint: "REG:OTHER"
+    priority: 90
 
-  - id: traficom_gnss
-    kind: html
-    url: "https://www.traficom.fi/en"
-    labels: ["D:RF_SIGNAL","PAT:GNSS_JAM","SRC:OFFICIAL","REG:BALTIC"]
-    conf_default: "CONF:HIGH"
-    notes: "Finland Traficom – GNSS disruption info (scrape)."
+  - id: "shortwave78_x"
+    name: "Shortwave Observer (X) – shortwave78"
+    type: "social_x"
+    handle: "shortwave78"
+    bridge_path: "/x/shortwave78"
+    labels: ["D:RF_SIGNAL", "PAT:RF_BURST", "SRC:SOCIAL"]
+    region_hint: "REG:OTHER"
+    priority: 70
 
-  # --- FISHING / IUU / Schmuggel-Hybrid (inkl. Global Fishing Watch) ---
-  - id: gfw_api
-    kind: html
-    url: "https://globalfishingwatch.org/"
-    labels: ["D:NEWS_INTEL","SRC:OFFICIAL","V:FISHING"]
-    conf_default: "CONF:HIGH"
-    notes: "Global Fishing Watch (use API docs & datasets for automation)."
+  # --- SHADOW FLEET / SANCTIONS / OIL / SHIPPING INTEL ------------------------
+  - id: "tankertrackers_x"
+    name: "TankerTrackers (X)"
+    type: "social_x"
+    handle: "TankerTrackers"
+    bridge_path: "/x/TankerTrackers"
+    labels: ["D:AIS_TRACK", "V:SHADOW_FLEET", "V:SANCTIONS_EVASION", "SRC:SOCIAL"]
+    region_hint: "REG:OTHER"
+    priority: 85
 
-  # --- SANCTIONS / SHADOW FLEET SIGNALS ---
-  - id: eu_consilium_rss
-    kind: rss
-    url: "https://www.consilium.europa.eu/en/press/press-releases/rss/"
-    labels: ["D:NEWS_INTEL","SRC:OFFICIAL","V:SANCTIONS_EVASION"]
-    conf_default: "CONF:HIGH"
-    notes: "EU Council press releases RSS (filter keywords: sanctions/shadow fleet/ships)."
+  - id: "starboardintel_x"
+    name: "Starboard Maritime Intelligence (X)"
+    type: "social_x"
+    handle: "StarboardIntel"
+    bridge_path: "/x/StarboardIntel"
+    labels: ["D:AIS_TRACK", "SRC:SOCIAL"]
+    region_hint: "REG:OTHER"
+    priority: 65
 
-  # --- MARITIME NEWS / DEFENCE-MARITIME OSINT (Feed/scrape) ---
-  - id: navylookout_news
-    kind: html
-    url: "https://www.navylookout.com/category/current-news/"
-    labels: ["D:NEWS_INTEL","SRC:MEDIA","CONF:MED"]
-    conf_default: "CONF:MED"
-    notes: "Navy Lookout – current news page (scrape)."
+  - id: "maritime_int_x"
+    name: "Maritime Intelligence Support Group (X)"
+    type: "social_x"
+    handle: "maritime_int"
+    bridge_path: "/x/maritime_int"
+    labels: ["D:AIS_TRACK", "SRC:SOCIAL"]
+    region_hint: "REG:OTHER"
+    priority: 55
 
-  - id: warontherocks_seapower
-    kind: rss
-    url: "https://warontherocks.com/tag/seapower/feed/"
-    labels: ["D:NEWS_INTEL","SRC:MEDIA","CONF:MED"]
-    conf_default: "CONF:MED"
-    notes: "War on the Rocks – seapower tag RSS."
+  # --- PIRACY / INCIDENTS / SECURITY -----------------------------------------
+  - id: "maritime_exec_rss"
+    name: "The Maritime Executive (RSS)"
+    type: "rss"
+    url: "https://maritime-executive.com/rss"
+    labels: ["D:NEWS_INTEL", "SRC:MEDIA"]
+    region_hint: "REG:OTHER"
+    priority: 80
 
-  - id: highnorthnews_en
-    kind: html
-    url: "https://en.highnorthnews.com/"
-    labels: ["D:NEWS_INTEL","SRC:MEDIA","REG:ATLANTIC_NE"]
-    conf_default: "CONF:MED"
-    notes: "High North News – scrape headlines (Nordics/Arctic)."
+  - id: "gcaptain_rss"
+    name: "gCaptain (RSS)"
+    type: "rss"
+    url: "https://gcaptain.com/feed/"
+    labels: ["D:NEWS_INTEL", "SRC:MEDIA"]
+    region_hint: "REG:OTHER"
+    priority: 70
 
-  - id: maritime_executive
-    kind: html
-    url: "https://maritime-executive.com/"
-    labels: ["D:NEWS_INTEL","SRC:MEDIA","CONF:MED"]
-    conf_default: "CONF:MED"
-    notes: "The Maritime Executive – scrape front page or newsletter page."
+  - id: "vesseltracker_news"
+    name: "Vesseltracker News (DE) – News page"
+    type: "html"
+    url: "https://www.vesseltracker.com/de/news.html"
+    labels: ["D:NEWS_INTEL", "SRC:MEDIA"]
+    region_hint: "REG:OTHER"
+    priority: 60
 
-  - id: marinelink_feeds
-    kind: html
-    url: "https://www.marinelink.com/feeds"
-    labels: ["D:NEWS_INTEL","SRC:MEDIA","CONF:MED"]
-    conf_default: "CONF:MED"
-    notes: "MarineLink RSS index (pick relevant maritime RSS)."
+  # --- CYBER / EU / CERT -----------------------------------------------------
+  - id: "certeu_advisories_rss"
+    name: "CERT-EU – Security Advisories (RSS)"
+    type: "rss"
+    url: "https://cert.europa.eu/publications/security-advisories-rss"
+    labels: ["D:CYBER_OT", "SRC:OFFICIAL"]
+    region_hint: "REG:OTHER"
+    priority: 85
 
-  - id: gcaptain_feedburner
-    kind: rss
-    url: "http://feeds.feedburner.com/Gcaptain"
-    labels: ["D:NEWS_INTEL","SRC:MEDIA","CONF:MED"]
-    conf_default: "CONF:MED"
-    notes: "gCaptain RSS (feedburner)."
+  - id: "certeu_threatintel_rss"
+    name: "CERT-EU – Threat Intelligence (RSS)"
+    type: "rss"
+    url: "https://cert.europa.eu/publications/threat-intelligence-rss"
+    labels: ["D:CYBER_OT", "SRC:OFFICIAL"]
+    region_hint: "REG:OTHER"
+    priority: 75
 
-  - id: bundeswehr_marine_rss
-    kind: rss
-    url: "https://www.bundeswehr.de/de/rss/marine"
-    labels: ["D:NEWS_INTEL","SRC:OFFICIAL","CONF:HIGH","REG:GER_BIGHT"]
-    conf_default: "CONF:HIGH"
-    notes: "Bundeswehr/MARINE RSS."
+  - id: "certeu_guidance_rss"
+    name: "CERT-EU – Security Guidance (RSS)"
+    type: "rss"
+    url: "https://cert.europa.eu/publications/security-guidance-rss"
+    labels: ["D:CYBER_OT", "SRC:OFFICIAL"]
+    region_hint: "REG:OTHER"
+    priority: 60
 
-  # --- SOCIAL OSINT (BLUESKY) ---
-  # Hinweis: Bluesky ist gut automatisierbar via public API:
-  # https://public.api.bsky.app/xrpc/app.bsky.feed.getAuthorFeed?actor=<handle>&limit=50
-  - id: bsky_auonsson
-    kind: bsky
-    url: "at://auonsson.bsky.social"
-    labels: ["D:NEWS_INTEL","SRC:SOCIAL","CONF:LOW"]
-    conf_default: "CONF:LOW"
-    notes: "OSINT account (Bluesky)."
+  # --- IUU / FISHING / MARITIME ECON -----------------------------------------
+  - id: "gfw_dataset_page"
+    name: "Global Fishing Watch – datasets & code (page)"
+    type: "html"
+    url: "https://globalfishingwatch.org/dataset-and-code-fishing-effort/"
+    labels: ["D:AIS_TRACK", "V:FISHING", "SRC:OSINT"]
+    region_hint: "REG:OTHER"
+    priority: 55
 
-  - id: bsky_noelreports
-    kind: bsky
-    url: "at://noelreports.bsky.social"
-    labels: ["D:NEWS_INTEL","SRC:SOCIAL","CONF:LOW"]
-    conf_default: "CONF:LOW"
-    notes: "OSINT account (Bluesky)."
+  - id: "gfw_userguide"
+    name: "Global Fishing Watch – map/user guide (page)"
+    type: "html"
+    url: "https://globalfishingwatch.org/user-guide/"
+    labels: ["D:AIS_TRACK", "V:FISHING", "SRC:OSINT"]
+    region_hint: "REG:OTHER"
+    priority: 45
 
-  - id: bsky_navylookout
-    kind: bsky
-    url: "at://navylookout.bsky.social"
-    labels: ["D:NEWS_INTEL","SRC:SOCIAL","CONF:LOW"]
-    conf_default: "CONF:LOW"
-    notes: "OSINT account (Bluesky)."
+  # --- SOCIAL (Bluesky) ------------------------------------------------------
+  - id: "auonsson_bsky"
+    name: "auonsson (Bluesky)"
+    type: "social_bsky"
+    handle: "auonsson.bsky.social"
+    bridge_path: "/bsky/auonsson.bsky.social"
+    labels: ["D:NEWS_INTEL", "SRC:SOCIAL"]
+    region_hint: "REG:OTHER"
+    priority: 70
 
-  - id: bsky_highnorthnews
-    kind: bsky
-    url: "at://highnorthnews.bsky.social"
-    labels: ["D:NEWS_INTEL","SRC:SOCIAL","CONF:LOW"]
-    conf_default: "CONF:LOW"
-    notes: "OSINT account (Bluesky)."
+  - id: "oiuye_bsky"
+    name: "oiuye (Bluesky)"
+    type: "social_bsky"
+    handle: "oiuye.bsky.social"
+    bridge_path: "/bsky/oiuye.bsky.social"
+    labels: ["D:NEWS_INTEL", "SRC:SOCIAL"]
+    region_hint: "REG:OTHER"
+    priority: 60
 
-  - id: bsky_ispk
-    kind: bsky
-    url: "at://ispk.bsky.social"
-    labels: ["D:NEWS_INTEL","SRC:SOCIAL","CONF:LOW"]
-    conf_default: "CONF:LOW"
-    notes: "ISPK Kiel (Bluesky)."
+  - id: "warontherocks_bsky"
+    name: "War on the Rocks (Bluesky)"
+    type: "social_bsky"
+    handle: "warontherocks.bsky.social"
+    bridge_path: "/bsky/warontherocks.bsky.social"
+    labels: ["D:NEWS_INTEL", "SRC:SOCIAL"]
+    region_hint: "REG:OTHER"
+    priority: 50
 
-  - id: bsky_jakobbohr
-    kind: bsky
-    url: "at://jakobbohr.bsky.social"
-    labels: ["D:NEWS_INTEL","SRC:SOCIAL","CONF:LOW"]
-    conf_default: "CONF:LOW"
-    notes: "OSINT account (Bluesky)."
+  - id: "noelreports_bsky"
+    name: "NOELREPORTS (Bluesky)"
+    type: "social_bsky"
+    handle: "noelreports.bsky.social"
+    bridge_path: "/bsky/noelreports.bsky.social"
+    labels: ["D:NEWS_INTEL", "SRC:SOCIAL"]
+    region_hint: "REG:OTHER"
+    priority: 70
 
-  - id: bsky_oiuye
-    kind: bsky
-    url: "at://oiuye.bsky.social"
-    labels: ["D:NEWS_INTEL","SRC:SOCIAL","CONF:LOW"]
-    conf_default: "CONF:LOW"
-    notes: "OSINT account (Bluesky)."
+  - id: "navylookout_bsky"
+    name: "Navy Lookout (Bluesky)"
+    type: "social_bsky"
+    handle: "navylookout.bsky.social"
+    bridge_path: "/bsky/navylookout.bsky.social"
+    labels: ["D:NEWS_INTEL", "SRC:SOCIAL"]
+    region_hint: "REG:ATLANTIC_NE"
+    priority: 70
 
-  - id: bsky_warontherocks
-    kind: bsky
-    url: "at://warontherocks.bsky.social"
-    labels: ["D:NEWS_INTEL","SRC:SOCIAL","CONF:LOW"]
-    conf_default: "CONF:LOW"
-    notes: "WOTR (Bluesky)."
+  - id: "highnorthnews_bsky"
+    name: "High North News (Bluesky)"
+    type: "social_bsky"
+    handle: "highnorthnews.bsky.social"
+    bridge_path: "/bsky/highnorthnews.bsky.social"
+    labels: ["D:NEWS_INTEL", "SRC:SOCIAL"]
+    region_hint: "REG:ATLANTIC_NE"
+    priority: 60
 
-  # --- SOCIAL OSINT (X / TWITTER) ---
-  # Ohne bezahlte X-API braucht es bei Weg 1 einen Bridge-Ansatz:
-  # - RSSHub (self-host / public instance) ODER Nitter (instabil).
-  # Du kannst hier erstmal nur "Handles" pflegen, Parser kümmert sich dann um die Bridge-URL.
-  - id: x_navylookout
-    kind: x_bridge
-    url: "x://NavyLookout"
-    labels: ["D:NEWS_INTEL","SRC:SOCIAL","CONF:LOW"]
-    conf_default: "CONF:LOW"
-    notes: "X handle; needs bridge (RSSHub/Nitter)."
+  - id: "ispk_bsky"
+    name: "ISPK (Bluesky)"
+    type: "social_bsky"
+    handle: "ispk.bsky.social"
+    bridge_path: "/bsky/ispk.bsky.social"
+    labels: ["D:NEWS_INTEL", "SRC:SOCIAL"]
+    region_hint: "REG:BALTIC"
+    priority: 55
 
-  - id: x_ukmto
-    kind: x_bridge
-    url: "x://UK_MTO"
-    labels: ["D:SECURITY_CRIME","SRC:SOCIAL","CONF:LOW"]
-    conf_default: "CONF:LOW"
-    notes: "X handle; bridge. (Offiziell, aber über Social transportiert.)"
+  - id: "jakobbohr_bsky"
+    name: "Jakob Kjøgx Bohr (Bluesky)"
+    type: "social_bsky"
+    handle: "jakobbohr.bsky.social"
+    bridge_path: "/bsky/jakobbohr.bsky.social"
+    labels: ["D:NEWS_INTEL", "SRC:SOCIAL"]
+    region_hint: "REG:BALTIC"
+    priority: 55
 
-  - id: x_tankertrackers
-    kind: x_bridge
-    url: "x://TankerTrackers"
-    labels: ["D:NEWS_INTEL","V:SHADOW_FLEET","SRC:SOCIAL","CONF:LOW"]
-    conf_default: "CONF:LOW"
-    notes: "X handle; bridge."
+  - id: "maritimekiwi_bsky"
+    name: "MaritimeKiwi / Mark Douglas (Bluesky)"
+    type: "social_bsky"
+    handle: "maritimekiwi.bsky.social"
+    bridge_path: "/bsky/maritimekiwi.bsky.social"
+    labels: ["D:NEWS_INTEL", "SRC:SOCIAL"]
+    region_hint: "REG:OTHER"
+    priority: 50
+
+  # --- SOCIAL (X) – requested extras ----------------------------------------
+  - id: "te3ej_x"
+    name: "TJ / te3ej (X)"
+    type: "social_x"
+    handle: "te3ej"
+    bridge_path: "/x/te3ej"
+    labels: ["D:NEWS_INTEL", "SRC:SOCIAL"]
+    region_hint: "REG:OTHER"
+    priority: 60
+
+  - id: "worldcrimeintel_x"
+    name: "World Crime Intel (X)"
+    type: "social_x"
+    handle: "WorldCrimeIntel"
+    bridge_path: "/x/WorldCrimeIntel"
+    labels: ["D:SECURITY_CRIME", "SRC:SOCIAL"]
+    region_hint: "REG:OTHER"
+    priority: 55
+
+  - id: "penpizzareport_x"
+    name: "Pentagon Pizza Report (X)"
+    type: "social_x"
+    handle: "PenPizzaReport"
+    bridge_path: "/x/PenPizzaReport"
+    labels: ["D:NEWS_INTEL", "SRC:SOCIAL"]
+    region_hint: "REG:OTHER"
+    priority: 40
+
+  - id: "pizzintwatch_x"
+    name: "Pizza Intelligence Watch (X)"
+    type: "social_x"
+    handle: "pizzintwatch"
+    bridge_path: "/x/pizzintwatch"
+    labels: ["D:NEWS_INTEL", "SRC:SOCIAL"]
+    region_hint: "REG:OTHER"
+    priority: 35
+
+  - id: "rijkswaterstaat_x"
+    name: "Rijkswaterstaat (X)"
+    type: "social_x"
+    handle: "Rijkswaterstaat"
+    bridge_path: "/x/Rijkswaterstaat"
+    labels: ["D:INFRA_CI", "OBJ:WATERWAY", "SRC:SOCIAL"]
+    region_hint: "REG:ATLANTIC_NE"
+    priority: 50
+
+  - id: "navylookout_x"
+    name: "Navy Lookout (X)"
+    type: "social_x"
+    handle: "NavyLookout"
+    bridge_path: "/x/NavyLookout"
+    labels: ["D:NEWS_INTEL", "SRC:SOCIAL"]
+    region_hint: "REG:ATLANTIC_NE"
+    priority: 70
