@@ -449,8 +449,6 @@
 <script>
 (() => {
   const BASE = "https://voodoo-hybrid-api.mowlsint.workers.dev";
-  document.getElementById("wkr").textContent = new URL(BASE).hostname;
-
   const API = {
     bundle:  `${BASE}/api/bundle`,
     rebuild: `${BASE}/api/rebuild`,
@@ -462,6 +460,13 @@
   };
 
   const el = (id) => document.getElementById(id);
+
+  // --- IMPORTANT: include credentials (Cloudflare Access cookies etc.)
+  const FETCH_OPTS = { cache: "no-store", credentials: "include" };
+  const apiFetch = (url, opts={}) => fetch(url, { ...FETCH_OPTS, ...opts });
+
+  // show worker host
+  try { el("wkr").textContent = new URL(BASE).hostname; } catch(_e){}
 
   const state = {
     bundle: null,
@@ -595,7 +600,6 @@
 
       points += evPts;
     }
-
     return clamp(Math.round((points / 90) * 100), 0, 100);
   }
 
@@ -626,7 +630,6 @@
 
       w += evW;
     }
-
     return clamp(Math.round((w / 70) * 100), 0, 100);
   }
 
@@ -666,7 +669,6 @@
     const dark = L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
       maxZoom: 19, attribution: '&copy; OpenStreetMap &copy; CARTO'
     });
-
     const sat = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
       maxZoom: 19, attribution: '&copy; Esri'
     });
@@ -767,7 +769,7 @@
 
     for (const s of sources){
       try{
-        const res = await fetch(s.url, { cache: "no-store" });
+        const res = await apiFetch(s.url);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const gj = await res.json();
 
@@ -807,7 +809,7 @@
   }
 
   async function loadBundle(){
-    const res = await fetch(API.bundle, { cache: "no-store" });
+    const res = await apiFetch(API.bundle);
     const data = await res.json();
     if (data?.ok === false) throw new Error(data.error || "bundle failed");
 
@@ -827,7 +829,7 @@
   }
 
   async function rebuildNow(){
-    try { await fetch(API.rebuild, { cache: "no-store" }); } catch(_e){}
+    try { await apiFetch(API.rebuild); } catch(_e){}
     await loadBundle();
     if (state.map) {
       await loadCI();
@@ -865,7 +867,7 @@
   async function loadWeather(){
     el("weatherMeta").textContent = "/api/weather";
     try{
-      const res = await fetch(API.weather, { cache: "no-store" });
+      const res = await apiFetch(API.weather);
       const data = await res.json();
       if (!res.ok || data.ok === false) throw new Error(data?.error ?? `HTTP ${res.status}`);
       el("weatherBox").textContent = JSON.stringify(data, null, 2);
@@ -877,7 +879,7 @@
   async function loadNavtex(){
     el("navtexMeta").textContent = "/api/navtex";
     try{
-      const res = await fetch(API.navtex, { cache: "no-store" });
+      const res = await apiFetch(API.navtex);
       const data = await res.json();
       if (!res.ok || data.ok === false) throw new Error(data?.error ?? `HTTP ${res.status}`);
       el("navtexBox").textContent = JSON.stringify(data, null, 2);
