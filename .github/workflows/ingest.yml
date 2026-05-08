@@ -1,0 +1,33 @@
+name: Voodoo Ingest (hourly)
+
+on:
+  schedule:
+    - cron: "0 * * * *"   # stündlich zur vollen Stunde (UTC)
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install dependencies
+        run: |
+          npm init -y
+          npm install yaml fast-xml-parser
+
+      - name: Run ingest
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node scripts/ingest.mjs
