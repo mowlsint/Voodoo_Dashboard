@@ -1107,9 +1107,23 @@ Wilhelmshaven JadeWeserPort"></textarea>
   }
 
   async function loadBundle(){
+  const list = el("list");
+
+  try {
+    list.innerHTML = `<div class="event">Loading bundle from ${escapeHtml(API.bundle)} …</div>`;
+
     const res = await apiFetch(API.bundle);
+
+    if (!res.ok) {
+      const txt = await res.text().catch(() => "");
+      throw new Error(`HTTP ${res.status} ${res.statusText}: ${txt.slice(0, 500)}`);
+    }
+
     const data = await res.json();
-    if (data?.ok === false) throw new Error(data.error || "bundle failed");
+
+    if (data?.ok === false) {
+      throw new Error(data.error || data.message || "bundle failed");
+    }
 
     state.bundle = data;
     state.events = Array.isArray(data.events) ? data.events : [];
@@ -1123,9 +1137,35 @@ Wilhelmshaven JadeWeserPort"></textarea>
     buildSelectOptions(el("domain"), domains);
     buildSelectOptions(el("region"), regions);
 
-    applyFilters();
-  }
+    if (!state.events.length) {
+      list.innerHTML = `
+        <div class="event">
+          <div class="title">Bundle geladen, aber keine Events enthalten.</div>
+          <div class="summary">Prüfe: Sind im Repo offene Issues vorhanden? Fragt der Worker das richtige Repo ab? Ist /api/rebuild gelaufen?</div>
+        </div>
+      `;
+    }
 
+    applyFilters();
+
+  } catch (err) {
+    const msg = err?.message || String(err);
+    list.innerHTML = `
+      <div class="event">
+        <div class="title">Fehler beim Laden des Bundles</div>
+        <div class="summary">${escapeHtml(msg)}
+
+API:
+${escapeHtml(API.bundle)}
+
+Nächster Test:
+Öffne diese URL direkt im Browser:
+${escapeHtml(API.bundle)}</div>
+      </div>
+    `;
+    throw err;
+  }
+}
   async function rebuildNow(){
     try { await apiFetch(API.rebuild); } catch(_e){}
     await loadBundle();
