@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v5.3 "Seismograph / Government-Weirdness / Geolokator"</title>
+  <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v5.4 "Seismograph / Government-Weirdness / Exportfenster"</title>
 
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -251,13 +251,42 @@
     .scrollbox::-webkit-scrollbar-thumb{background: rgba(176,136,0,.35); border-radius:999px}
     .monoSmall{font-size:16px; color:rgba(255,255,255,.85); white-space:pre-wrap}
 
+
+    .exportCtl{display:flex; align-items:center; gap:8px; flex-wrap:wrap;}
+    .exportCtl label{font-size:13px; color:var(--muted); letter-spacing:.05em; text-transform:uppercase}
+    .exportCtl select{
+      background:#111317; color:var(--text); border:1px solid rgba(176,136,0,.35); border-radius:10px; padding:9px 12px;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; box-shadow: inset 0 0 0 1px rgba(255,255,255,.03);
+    }
+    .seismoWrap{display:grid; grid-template-columns:minmax(0,1fr) 128px; gap:12px; align-items:stretch;}
+    .seismoLegend{display:grid; grid-template-rows:repeat(4,1fr); gap:8px; min-height:132px;}
+    .legendItem{display:flex; align-items:center; gap:8px; border:1px solid rgba(176,136,0,.22); border-radius:10px; padding:8px 10px; background:rgba(255,255,255,.02)}
+    .legendSwatch{width:16px; height:16px; border-radius:4px; flex:0 0 16px; box-shadow:0 0 0 1px rgba(255,255,255,.08) inset}
+    .legendText{display:flex; flex-direction:column; line-height:1.05}
+    .legendText .t{font-size:14px; color:var(--text);}
+    .legendText .s{font-size:12px; color:var(--muted);}
+    .sparkWrap{position:relative;}
+    .sparkSeismo{width:100%; height:132px; border:1px solid rgba(176,136,0,.30); border-radius:12px; background:linear-gradient(180deg, rgba(255,77,77,.14) 0%, rgba(255,138,0,.10) 40%, rgba(255,210,77,.08) 65%, rgba(51,209,122,.12) 100%);}
+    .sparkSeismo path,.sparkSeismo polyline,.sparkSeismo circle,.sparkSeismo line{vector-effect:non-scaling-stroke;}
+    .sparkSeismo .grid{stroke:rgba(255,255,255,.08); stroke-width:1}
+    .sparkSeismo .traceGlow{stroke:rgba(255,210,77,.18); stroke-width:6; fill:none; stroke-linejoin:round; stroke-linecap:round}
+    .sparkSeismo .trace{stroke:#ffd24d; stroke-width:2.6; fill:none; stroke-linejoin:round; stroke-linecap:round}
+    .sparkSeismo .area{fill:rgba(255,210,77,.08); stroke:none}
+    .sparkSeismo .peakMarker{fill:#b46cff; stroke:#f1dcff; stroke-width:1.4}
+    .sparkSeismo .baseLine{stroke:rgba(51,209,122,.55); stroke-width:1.1; stroke-dasharray:4 4}
+
     @media (max-width: 1100px){
       .grid{grid-template-columns:1fr;}
       #map{height:460px;}
       .controls{grid-template-columns:1fr 1fr;}
+      .seismoWrap{grid-template-columns:1fr;}
+      .seismoLegend{grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-rows:none; min-height:unset;}
     }
     @media (max-width: 560px){
       .controls{grid-template-columns:1fr;}
+      .seismoLegend{grid-template-columns:1fr;}
+      .exportCtl{width:100%;}
+      .exportCtl select{width:100%;}
       .kpis{grid-template-columns:1fr;}
     }
   </style>
@@ -269,7 +298,7 @@
       <div class="brand">
         <div class="brandLine">
           <h1>VOODOO // HYBRID MARITIME OPS</h1>
-          <span class="ver">v5.3 “Seismograph / Government-Weirdness / Geolokator”</span>
+          <span class="ver">v5.4 “Seismograph / Government-Weirdness / Exportfenster”</span>
         </div>
         <div class="sub">
           Source: <span id="src">–</span> • Stand: <span id="stand">–</span> • Worker: <span class="hint" id="wkr">–</span>
@@ -279,7 +308,15 @@
       <div class="btns">
         <button class="btn" id="btnReload">RELOAD</button>
         <button class="btn secondary" id="btnRebuild">REBUILD</button>
-        <button class="btn secondary" id="btnExport">EXPORT (FILTER)</button>
+        <div class="exportCtl">
+          <label for="exportHours">Exportfenster</label>
+          <select id="exportHours">
+            <option value="24">24 h</option>
+            <option value="48" selected>48 h</option>
+            <option value="120">120 h</option>
+          </select>
+          <button class="btn secondary" id="btnExport">REPORT EXPORT</button>
+        </div>
       </div>
     </div>
 
@@ -420,12 +457,26 @@ Wilhelmshaven JadeWeserPort"></textarea>
                     <div class="sensorCard"><div class="label">Hybrid-Index aktuell</div><div class="num"><span id="p0Pct">–</span>%</div><div class="hint">aus allen geladenen Events, nicht aus dem Filterstand</div></div>
                     <div class="sensorCard"><div class="label">72h-Spitze</div><div class="num"><span id="hybridPeak">–</span>%</div><div class="hint" id="hybridMeta">Baseline später via KV</div></div>
                   </div>
-                  <svg class="spark" id="hybridSpark" viewBox="0 0 320 118" role="img" aria-label="Hybrid Seismograph">
-                    <path d="M 0 96 H 320" stroke="rgba(255,255,255,.10)" stroke-width="1" fill="none"/>
-                    <path d="M 0 59 H 320" stroke="rgba(255,255,255,.08)" stroke-width="1" fill="none"/>
-                    <path d="M 0 22 H 320" stroke="rgba(255,255,255,.08)" stroke-width="1" fill="none"/>
-                    <polyline id="hybridLine" points="" fill="none" stroke="#ffd24d" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
-                  </svg>
+                  <div class="seismoWrap">
+                    <div class="sparkWrap">
+                      <svg class="sparkSeismo" id="hybridSpark" viewBox="0 0 320 132" role="img" aria-label="Hybrid Seismograph">
+                        <line class="grid" x1="0" y1="110" x2="320" y2="110" />
+                        <line class="grid" x1="0" y1="76" x2="320" y2="76" />
+                        <line class="grid" x1="0" y1="42" x2="320" y2="42" />
+                        <line class="baseLine" x1="0" y1="116" x2="320" y2="116" />
+                        <path class="area" id="hybridArea" d="" />
+                        <polyline class="traceGlow" id="hybridGlow" points="" />
+                        <polyline class="trace" id="hybridLine" points="" />
+                        <circle class="peakMarker" id="hybridPeakMarker" cx="0" cy="116" r="0" />
+                      </svg>
+                    </div>
+                    <div class="seismoLegend" aria-label="Seismograph Legende">
+                      <div class="legendItem"><span class="legendSwatch" style="background:#33d17a"></span><span class="legendText"><span class="t">Niedrig</span><span class="s">grün / ruhig</span></span></div>
+                      <div class="legendItem"><span class="legendSwatch" style="background:#ffd24d"></span><span class="legendText"><span class="t">Mittel</span><span class="s">gelb / erhöht</span></span></div>
+                      <div class="legendItem"><span class="legendSwatch" style="background:#ff4d4d"></span><span class="legendText"><span class="t">Hoch</span><span class="s">rot / auffällig</span></span></div>
+                      <div class="legendItem"><span class="legendSwatch" style="background:#b46cff"></span><span class="legendText"><span class="t">Peak</span><span class="s">lila / Spitze</span></span></div>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -819,18 +870,51 @@ Wilhelmshaven JadeWeserPort"></textarea>
     fill.style.height = "100%";
   }
 
-  function renderSparkline(polyId, values){
-    const poly = el(polyId);
-    if (!poly || !values.length) return;
-    const w = 320, h = 112, pad = 8;
+  function buildSparkPoints(values, opts = {}){
+    const w = opts.w ?? 320;
+    const h = opts.h ?? 112;
+    const pad = opts.pad ?? 8;
+    if (!values?.length) return { pts:"", points:[], h, pad };
     const step = values.length > 1 ? (w - pad * 2) / (values.length - 1) : 0;
-    const pts = values.map((v, i) => {
+    const points = values.map((v, i) => {
       const pct = typeof v === "number" ? v : (v.pct ?? 0);
       const x = pad + i * step;
       const y = h - pad - (clamp(pct, 0, 100) / 100) * (h - pad * 2);
-      return `${x.toFixed(1)},${y.toFixed(1)}`;
-    }).join(" ");
-    poly.setAttribute("points", pts);
+      return { x, y, pct: clamp(pct,0,100) };
+    });
+    return { pts: points.map(p => `${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(" "), points, h, pad };
+  }
+
+  function renderSparkline(polyId, values){
+    const poly = el(polyId);
+    if (!poly || !values.length) return;
+    const built = buildSparkPoints(values, { w:320, h:112, pad:8 });
+    poly.setAttribute("points", built.pts);
+  }
+
+  function renderHybridSeismograph(values){
+    const line = el("hybridLine");
+    const glow = el("hybridGlow");
+    const area = el("hybridArea");
+    const peak = el("hybridPeakMarker");
+    if (!line || !glow || !area || !peak || !values?.length) return;
+
+    const built = buildSparkPoints(values, { w:320, h:124, pad:8 });
+    line.setAttribute("points", built.pts);
+    glow.setAttribute("points", built.pts);
+
+    const areaPath = built.points.length
+      ? `M ${built.points[0].x.toFixed(1)} 116 L ${built.pts} L ${built.points[built.points.length-1].x.toFixed(1)} 116 Z`
+      : "";
+    area.setAttribute("d", areaPath);
+
+    let peakPoint = built.points[0];
+    for (const p of built.points){
+      if ((p.pct ?? 0) >= (peakPoint?.pct ?? 0)) peakPoint = p;
+    }
+    peak.setAttribute("cx", peakPoint.x.toFixed(1));
+    peak.setAttribute("cy", peakPoint.y.toFixed(1));
+    peak.setAttribute("r", String(peakPoint.pct >= 1 ? 4.8 : 0));
   }
 
   function updateKPIsAndInstruments(){
@@ -848,10 +932,10 @@ Wilhelmshaven JadeWeserPort"></textarea>
     el("p0Pct").textContent = String(hybrid);
 
     const hybridBuckets = buildHybridHourlyBuckets(instrumentEvents);
-    renderSparkline("hybridLine", hybridBuckets.map(b => b.pct));
+    renderHybridSeismograph(hybridBuckets.map(b => b.pct));
     const hPeak = hybridBuckets.length ? Math.max(...hybridBuckets.map(b => b.pct)) : 0;
     el("hybridPeak").textContent = String(hPeak);
-    el("hybridMeta").textContent = `${hybridBuckets.length} h buckets • Peak proxy`;
+    el("hybridMeta").textContent = `${hybridBuckets.length} h buckets • Seismograph proxy`;
 
     const north = scoreAuthorityWeirdness(instrumentEvents, "north");
     const baltic = scoreAuthorityWeirdness(instrumentEvents, "baltic");
@@ -1180,29 +1264,209 @@ Wilhelmshaven JadeWeserPort"></textarea>
     loadNavtex().catch(err => console.warn("NAVTEX failed", err));
   }
 
-  function exportFiltered(){
-    const blob = new Blob([JSON.stringify({
-      exported_at: new Date().toISOString(),
-      source: state.bundle?.source ?? null,
-      generated_at: state.bundle?.generated_at ?? null,
-      filters: {
-        q: el("q").value,
-        domain: el("domain").value,
-        region: el("region").value,
-        sev: el("sev").value,
-        onlyP0: el("onlyP0").checked,
-        onlyGeo: el("onlyGeo").checked
-      },
-      events: state.filtered
-    }, null, 2)], { type: "application/json" });
+  function safeElText(id){
+    const node = el(id);
+    return node ? String(node.textContent ?? "").trim() : null;
+  }
 
+  function parsePanelJson(id){
+    const txt = safeElText(id) || "";
+    if (!txt || txt === "Loading…") return null;
+    try { return JSON.parse(txt); }
+    catch(_e){ return { raw_text: txt.slice(0, 12000) }; }
+  }
+
+  function downloadJson(filename, obj){
+    const blob = new Blob([JSON.stringify(obj, null, 2)], { type: "application/json" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = "voodoo_filtered_events.json";
+    a.download = filename;
     document.body.appendChild(a);
     a.click();
     a.remove();
     URL.revokeObjectURL(a.href);
+  }
+
+  function isoStampForFile(d = new Date()){
+    const p = n => String(n).padStart(2, "0");
+    return `${d.getUTCFullYear()}${p(d.getUTCMonth()+1)}${p(d.getUTCDate())}_${p(d.getUTCHours())}${p(d.getUTCMinutes())}Z`;
+  }
+
+  function eventDate(ev){
+    const d = ev?.ts ? new Date(ev.ts) : null;
+    return d && !Number.isNaN(d.getTime()) ? d : null;
+  }
+
+  function eventsSince(hours){
+    const cutoff = Date.now() - hours * 60 * 60 * 1000;
+    return state.events.filter(ev => {
+      const d = eventDate(ev);
+      return d && d.getTime() >= cutoff;
+    }).sort((a,b)=> (b.ts || "").localeCompare(a.ts || ""));
+  }
+
+  function shortText(s, n = 900){
+    s = String(s ?? "").trim();
+    return s.length > n ? s.slice(0, n - 1) + "…" : s;
+  }
+
+  function compactEvent(ev){
+    const labels = ev.labels ?? [];
+    return {
+      number: ev.number ?? null,
+      ts: ev.ts ?? null,
+      title: ev.title ?? "",
+      url: ev.url ?? null,
+      labels,
+      category: ev.category ?? null,
+      region: ev.region ?? null,
+      severity: ev.severity ?? null,
+      confidence: ev.confidence ?? null,
+      phase0: ev.phase0 ?? null,
+      geo: ev.geo ?? null,
+      source_hint: inferSourceHint(ev),
+      report_category: inferReportCategory(ev),
+      greybook_rubric: inferGreybookRubric(ev),
+      summary: shortText(ev.summary ?? "", 1200)
+    };
+  }
+
+  function inferSourceHint(ev){
+    const s = String(ev.summary ?? "");
+    const source = s.match(/### Quelle\s*\n([^\n]+)/i);
+    const platform = s.match(/### Plattform\s*\n([^\n]+)/i);
+    const link = s.match(/### Link\s*\n([^\n]+)/i);
+    return {
+      source: source ? source[1].trim() : null,
+      platform: platform ? platform[1].trim() : null,
+      link: link ? link[1].trim() : null
+    };
+  }
+
+  function inferReportCategory(ev){
+    const labels = ev.labels ?? [];
+    const cat = ev.category ?? "";
+    if (cat === "D:CYBER_OT") return "Hafen/KRITIS/Cyber/operative Störungen";
+    if (cat === "D:INFRA_CI") return "Maritime KRITIS / Offshore-Infrastruktur";
+    if (cat === "D:RF_SIGNAL" || labels.some(l => l.startsWith("RF:"))) return "RF/GNSS/NAVWARN";
+    if (cat === "D:DRONE_UAS") return "Drohnen / UxV";
+    if (cat === "D:AIR_ACTIVITY") return "Luftaktivität / ISR / SAR";
+    if (cat === "D:AIS_TRACK") return "AIS / Schiffsmuster / Schattenflotte";
+    if (cat === "D:SECURITY_CRIME") return "Maritime Crime / Security";
+    if (cat === "D:INCIDENT") return "Zwischenfälle / Safety / Störungen";
+    if (cat === "D:SATELLITE") return "Satellit / Fernerkundung";
+    return "News / Intelligence Hinweise";
+  }
+
+  function inferGreybookRubric(ev){
+    const labels = ev.labels ?? [];
+    const cat = ev.category ?? "";
+    const text = ((ev.title ?? "") + " " + (ev.summary ?? "") + " " + labels.join(" ")).toLowerCase();
+
+    if (cat === "D:DRONE_UAS" || /\b(drone|drohne|uas|uav|usv|uuv|auv)\b/i.test(text)) return "Drohnen";
+    if (cat === "D:CYBER_OT" || /\b(cyber|ransomware|scada|ot|vts|terminal operating system)\b/i.test(text)) return "Cyber- und IT-Sicherheit";
+    if (labels.includes("V:SHADOW_FLEET") || labels.includes("V:SANCTIONS_EVASION") || /shadow fleet|dark fleet|sanktionsflotte|sanctions/i.test(text)) return "Schattenflotte/Sanktionsflotte";
+    if (cat === "D:RF_SIGNAL" || cat === "D:AIR_ACTIVITY" || cat === "D:INFRA_CI" || labels.includes("P0:SUSPECT")) return "Maritime Security/Hybride Bedrohungen";
+    if (/russia|russisch|china|iran|black sea|schwarzes meer|nato|navy|kriegsschiff|warship/i.test(text)) return "maritime Geopolitik";
+    return "Unreleased but self-confirmed";
+  }
+
+  function groupEvents(events, field){
+    const out = {};
+    for (const ev of events.map(compactEvent)) {
+      const key = ev[field] || "Unsortiert";
+      if (!out[key]) out[key] = [];
+      out[key].push(ev);
+    }
+    return out;
+  }
+
+  function currentSensorValues(){
+    return {
+      hybrid_seismograph_pct: Number(safeElText("p0Pct")) || null,
+      hybrid_72h_peak_pct: Number(safeElText("hybridPeak")) || null,
+      government_weirdness: {
+        north_sea_pct: Number(safeElText("weirdNorthPct")) || null,
+        baltic_sea_pct: Number(safeElText("weirdBalticPct")) || null
+      },
+      keyword_barometer_pct: Number(safeElText("kwPct")) || null,
+      keyword_hits_display: safeElText("kwHits"),
+      keyword_meta: safeElText("kwMeta"),
+      note: "Aktuelle Dashboard-Heuristik; 90-Tage-Baseline entsteht über data/snapshots/voodoo_sensor_snapshots.ndjson."
+    };
+  }
+
+  function buildReportExport(){
+    const exportedAt = new Date();
+    const selectedHours = Number(el("exportHours")?.value || 48);
+    const selectedEvents = eventsSince(selectedHours);
+    const filteredEvents = state.filtered.map(compactEvent);
+
+    return {
+      export_schema: "VOODOO_REPORT_EXPORT_PACK_v2",
+      exported_at: exportedAt.toISOString(),
+      intended_use: [
+        "MOwlSINT Daily Honkytonk",
+        "The Littoral Greybook",
+        "analytische Anschlussauswertung"
+      ],
+      source: state.bundle?.source ?? null,
+      generated_at: state.bundle?.generated_at ?? null,
+      export_window: {
+        selected_hours: selectedHours,
+        allowed_hours: [24, 48, 120],
+        label_de: `letzte ${selectedHours} Stunden`
+      },
+      dashboard: {
+        worker_base: BASE,
+        visible_filter_state: {
+          q: el("q")?.value ?? "",
+          domain: el("domain")?.value ?? "",
+          region: el("region")?.value ?? "",
+          sev: el("sev")?.value ?? "",
+          onlyP0: !!el("onlyP0")?.checked,
+          onlyGeo: !!el("onlyGeo")?.checked
+        },
+        counts: {
+          loaded_events: state.events.length,
+          filtered_events: state.filtered.length,
+          selected_window_events: selectedEvents.length
+        }
+      },
+      sensors_current: currentSensorValues(),
+      report_window_export: {
+        profile: "Ausgewähltes Exportfenster",
+        time_window_hours: selectedHours,
+        purpose_de: "Roh- und Arbeitsdatenpaket für Daily Honkytonk oder Littoral Greybook im gewählten Zeitfenster.",
+        events: selectedEvents.map(compactEvent),
+        events_by_report_category: groupEvents(selectedEvents, "report_category"),
+        events_by_rubric: groupEvents(selectedEvents, "greybook_rubric"),
+        hot_idea_candidates: selectedEvents
+          .filter(ev => ev.phase0?.suspect || ["SEV:3", "SEV:4"].includes(ev.severity) || ev.category === "D:CYBER_OT" || ev.category === "D:INFRA_CI")
+          .slice(0, 12)
+          .map(compactEvent)
+      },
+      current_filtered_export: {
+        profile: "Aktueller Dashboard-Filter",
+        events: filteredEvents
+      },
+      context_blocks: {
+        weather_window: parsePanelJson("weatherBox"),
+        navtex_navwarn: parsePanelJson("navtexBox")
+      },
+      machine_notes_de: [
+        "Dieses Paket ist ein strukturierter Export, keine fertige Meldung.",
+        "Für Daily Honkytonk und Greybook jetzt primär report_window_export nutzen.",
+        "Das Exportfenster kann oben rechts zwischen 24, 48 und 120 Stunden gewählt werden.",
+        "Quellenqualität, Dubletten und tatsächliche maritime Relevanz vor Veröffentlichung prüfen.",
+        "Die 90-Tage-Lernkurve liegt separat in data/snapshots/voodoo_sensor_snapshots.ndjson."
+      ]
+    };
+  }
+
+  function exportFiltered(){
+    const pack = buildReportExport();
+    downloadJson(`${isoStampForFile()}_VOODOO_report_export_pack.json`, pack);
   }
 
   async function loadWeather(){
