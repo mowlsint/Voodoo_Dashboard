@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v5 "Barometer / Geolocator"</title>
+  <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v5.3 "Seismograph / Government-Weirdness / Geolokator"</title>
 
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -269,7 +269,7 @@
       <div class="brand">
         <div class="brandLine">
           <h1>VOODOO // HYBRID MARITIME OPS</h1>
-          <span class="ver">v5 “Barometer / Geolocator”</span>
+          <span class="ver">v5.3 “Seismograph / Government-Weirdness / Geolokator”</span>
         </div>
         <div class="sub">
           Source: <span id="src">–</span> • Stand: <span id="stand">–</span> • Worker: <span class="hint" id="wkr">–</span>
@@ -381,10 +381,10 @@ Wilhelmshaven JadeWeserPort"></textarea>
                       <button class="btn secondary tinyBtn" id="btnGeoCopy">COPY GEO</button>
                       <button class="btn secondary tinyBtn" id="btnGeoClear">CLEAR</button>
                     </div>
-                    <div class="hint" style="margin-top:8px;">Klick in die Karte setzt ebenfalls den Locator.</div>
+                    <div class="hint" style="margin-top:8px;">Clicking on the map also sets the locator.</div>
                   </div>
                 </div>
-                <div class="geoResult" id="geoResult">Kein Punkt gesetzt.</div>
+                <div class="geoResult" id="geoResult">No point set.</div>
               </div>
             </div>
 
@@ -398,7 +398,7 @@ Wilhelmshaven JadeWeserPort"></textarea>
         <div class="panel">
           <div class="ph">
             <div class="title">Indicators</div>
-            <div class="meta">Hybrid • Behörden-Weirdness • Keywords</div>
+            <div class="meta">Hybrid • Government-Weirdness • Schlagwörter</div>
           </div>
 
           <div class="pc">
@@ -412,13 +412,13 @@ Wilhelmshaven JadeWeserPort"></textarea>
             <div style="display:grid; grid-template-columns:1fr; gap:12px; margin-top:12px;">
               <div class="panel" style="border-radius:12px;">
                 <div class="ph">
-                  <div class="title">HYBRID-SEISMOGRAF</div>
+                  <div class="title">HYBRID-SEISMOGRAPH</div>
                   <div class="meta">72h • stündliche Dichte</div>
                 </div>
                 <div class="pc">
                   <div class="sensorGrid">
-                    <div class="sensorCard"><div class="label">Hybrid-Index jetzt</div><div class="num"><span id="p0Pct">–</span>%</div><div class="hint">aus allen geladenen Events, nicht aus Filter</div></div>
-                    <div class="sensorCard"><div class="label">72h Peak</div><div class="num"><span id="hybridPeak">–</span>%</div><div class="hint" id="hybridMeta">Baseline später via KV</div></div>
+                    <div class="sensorCard"><div class="label">Hybrid-Index aktuell</div><div class="num"><span id="p0Pct">–</span>%</div><div class="hint">aus allen geladenen Events, nicht aus dem Filterstand</div></div>
+                    <div class="sensorCard"><div class="label">72h-Spitze</div><div class="num"><span id="hybridPeak">–</span>%</div><div class="hint" id="hybridMeta">Baseline später via KV</div></div>
                   </div>
                   <svg class="spark" id="hybridSpark" viewBox="0 0 320 118" role="img" aria-label="Hybrid Seismograph">
                     <path d="M 0 96 H 320" stroke="rgba(255,255,255,.10)" stroke-width="1" fill="none"/>
@@ -431,7 +431,7 @@ Wilhelmshaven JadeWeserPort"></textarea>
 
               <div class="panel" style="border-radius:12px;">
                 <div class="ph">
-                  <div class="title">BEHÖRDEN-WEIRDNESS</div>
+                  <div class="title">GOVERNMENT-WEIRDNESS</div>
                   <div class="meta">Nordsee / Ostsee getrennt</div>
                 </div>
                 <div class="pc">
@@ -447,21 +447,21 @@ Wilhelmshaven JadeWeserPort"></textarea>
                       <div class="meter" style="width:100%; height:22px; border-radius:999px;"><div class="fill" id="weirdBalticFill" style="height:100%; width:0%;"></div></div>
                     </div>
                   </div>
-                  <div class="hint" style="margin-top:8px;">Heuristik: Behörden-/SAR-/Navy-/Official-Aktivität, Air/RF/NAVWARN, Cluster-Ersatz über Ereignisdichte. Echte ADS-B/AIS-Baseline folgt später im Worker.</div>
+                  <div class="hint" style="margin-top:8px;">Heuristik: Government-/SAR-/Marine-/Official-Aktivität, Air-/RF-/NAVWARN-Signale und Event-Dichte als vorläufiger Cluster-Proxy. Echte ADS-B-/AIS-Baseline folgt später im Worker.</div>
                 </div>
               </div>
 
               <div class="panel" style="border-radius:12px;">
                 <div class="ph">
-                  <div class="title">KEYWORD-BAROMETER</div>
+                  <div class="title">SCHLAGWORT-BAROMETER</div>
                   <div class="meta">Social + RSS • 3h</div>
                 </div>
                 <div class="pc">
                   <div class="sensorGrid">
-                    <div class="sensorCard"><div class="label">Keyword-Spike</div><div class="num"><span id="kwPct">–</span>%</div><div class="hint">Hard/Soft Keywords, dedupliziert</div></div>
-                    <div class="sensorCard"><div class="label">Treffer / Quellen</div><div class="num"><span id="kwHits">–</span></div><div class="hint" id="kwMeta">3h Fenster</div></div>
+                    <div class="sensorCard"><div class="label">Schlagwort-Spike</div><div class="num"><span id="kwPct">–</span>%</div><div class="hint">Hard-/Soft-Schlagwörter, dedupliziert</div></div>
+                    <div class="sensorCard"><div class="label">Treffer / Quellen</div><div class="num"><span id="kwHits">–</span></div><div class="hint" id="kwMeta">3h-Fenster</div></div>
                   </div>
-                  <svg class="spark" id="kwSpark" viewBox="0 0 320 118" role="img" aria-label="Keyword Barometer History">
+                  <svg class="spark" id="kwSpark" viewBox="0 0 320 118" role="img" aria-label="Schlagwort-Barometer Verlauf">
                     <path d="M 0 96 H 320" stroke="rgba(255,255,255,.10)" stroke-width="1" fill="none"/>
                     <path d="M 0 59 H 320" stroke="rgba(255,255,255,.08)" stroke-width="1" fill="none"/>
                     <path d="M 0 22 H 320" stroke="rgba(255,255,255,.08)" stroke-width="1" fill="none"/>
@@ -476,11 +476,11 @@ Wilhelmshaven JadeWeserPort"></textarea>
 
         <div class="panel">
           <div class="ph">
-            <div class="title">Weather Window</div>
+            <div class="title">Wetterfenster</div>
             <div class="meta" id="weatherMeta">/api/weather</div>
           </div>
           <div class="pc">
-            <div class="scrollbox"><div class="monoSmall" id="weatherBox">Loading…</div></div>
+            <div class="scrollbox"><div class="monoSmall" id="weatherBox">Lädt…</div></div>
           </div>
         </div>
 
@@ -490,7 +490,7 @@ Wilhelmshaven JadeWeserPort"></textarea>
             <div class="meta" id="navtexMeta">/api/navtex</div>
           </div>
           <div class="pc">
-            <div class="scrollbox"><div class="monoSmall" id="navtexBox">Loading…</div></div>
+            <div class="scrollbox"><div class="monoSmall" id="navtexBox">Lädt…</div></div>
           </div>
         </div>
 
@@ -513,7 +513,16 @@ Wilhelmshaven JadeWeserPort"></textarea>
 
   const el = (id) => document.getElementById(id);
 
-  // --- IMPORTANT: include credentials (Cloudflare Access cookies etc.)
+  function on(id, event, handler){
+    const node = el(id);
+    if (!node) {
+      console.warn("Missing DOM element:", id);
+      return;
+    }
+    node.addEventListener(event, handler);
+  }
+
+  // Public Worker: keine Cloudflare-Access-Cookies/Credentials senden
   const FETCH_OPTS = { cache: "no-store", credentials: "omit" };
   const apiFetch = (url, opts={}) => fetch(url, { ...FETCH_OPTS, ...opts });
 
@@ -944,7 +953,7 @@ Wilhelmshaven JadeWeserPort"></textarea>
   function clearGeoLocator(){
     state.geoPoint = null;
     if (state.layers.geoLocator) state.layers.geoLocator.clearLayers();
-    el("geoResult").textContent = "Kein Punkt gesetzt.";
+    el("geoResult").textContent = "No point set.";
   }
 
   function locateFromGeoInput(){
@@ -1107,23 +1116,19 @@ Wilhelmshaven JadeWeserPort"></textarea>
   }
 
   async function loadBundle(){
-  const list = el("list");
-
-  try {
-    list.innerHTML = `<div class="event">Loading bundle from ${escapeHtml(API.bundle)} …</div>`;
+    const list = el("list");
+    if (list && !state.events.length) {
+      list.innerHTML = `<div class="event">Loading bundle from ${escapeHtml(API.bundle)} …</div>`;
+    }
 
     const res = await apiFetch(API.bundle);
-
     if (!res.ok) {
       const txt = await res.text().catch(() => "");
-      throw new Error(`HTTP ${res.status} ${res.statusText}: ${txt.slice(0, 500)}`);
+      throw new Error(`Bundle HTTP ${res.status} ${res.statusText}: ${txt.slice(0, 500)}`);
     }
 
     const data = await res.json();
-
-    if (data?.ok === false) {
-      throw new Error(data.error || data.message || "bundle failed");
-    }
+    if (data?.ok === false) throw new Error(data.error || data.message || "bundle failed");
 
     state.bundle = data;
     state.events = Array.isArray(data.events) ? data.events : [];
@@ -1137,70 +1142,43 @@ Wilhelmshaven JadeWeserPort"></textarea>
     buildSelectOptions(el("domain"), domains);
     buildSelectOptions(el("region"), regions);
 
-    if (!state.events.length) {
-      list.innerHTML = `
-        <div class="event">
-          <div class="title">Bundle geladen, aber keine Events enthalten.</div>
-          <div class="summary">Prüfe: Sind im Repo offene Issues vorhanden? Fragt der Worker das richtige Repo ab? Ist /api/rebuild gelaufen?</div>
-        </div>
-      `;
-    }
-
+    console.log("VOODOO bundle loaded", { events: state.events.length, first: state.events[0] });
     applyFilters();
-
-  } catch (err) {
-    const msg = err?.message || String(err);
-    list.innerHTML = `
-      <div class="event">
-        <div class="title">Fehler beim Laden des Bundles</div>
-        <div class="summary">${escapeHtml(msg)}
-
-API:
-${escapeHtml(API.bundle)}
-
-Nächster Test:
-Öffne diese URL direkt im Browser:
-${escapeHtml(API.bundle)}</div>
-      </div>
-    `;
-    throw err;
   }
-}
+
   async function rebuildNow(){
-  const token = localStorage.getItem("VOODOO_REBUILD_TOKEN") || "";
+    const token = localStorage.getItem("VOODOO_REBUILD_TOKEN") || "";
 
-  if (!token) {
-    alert(
-      "Kein REBUILD_TOKEN gesetzt.\n\n" +
-      "Einmal in der Browser-Konsole setzen:\n" +
-      "localStorage.setItem('VOODOO_REBUILD_TOKEN', 'DEIN_TOKEN')"
-    );
-    return;
-  }
-
-  const res = await apiFetch(API.rebuild, {
-    method: "POST",
-    headers: {
-      "Authorization": "Bearer " + token
+    if (!token) {
+      alert(
+        "Kein REBUILD_TOKEN gesetzt.\n\n" +
+        "Einmal in der Browser-Konsole setzen:\n" +
+        "localStorage.setItem('VOODOO_REBUILD_TOKEN', 'DEIN_TOKEN')"
+      );
+      return;
     }
-  });
 
-  if (!res.ok) {
-    const txt = await res.text().catch(() => "");
-    alert("REBUILD fehlgeschlagen: HTTP " + res.status + "\n" + txt.slice(0, 500));
-    return;
+    const res = await apiFetch(API.rebuild, {
+      method: "POST",
+      headers: {
+        "Authorization": "Bearer " + token
+      }
+    });
+
+    if (!res.ok) {
+      const txt = await res.text().catch(() => "");
+      alert("REBUILD fehlgeschlagen: HTTP " + res.status + "\n" + txt.slice(0, 500));
+      return;
+    }
+
+    await loadBundle();
+    if (state.map) {
+      await loadCI();
+      refreshMapLayers();
+    }
+    loadWeather().catch(err => console.warn("Weather failed", err));
+    loadNavtex().catch(err => console.warn("NAVTEX failed", err));
   }
-
-  await loadBundle();
-
-  if (state.map) {
-    await loadCI();
-    refreshMapLayers();
-  }
-
-  loadWeather();
-  loadNavtex();
-}
 
   function exportFiltered(){
     const blob = new Blob([JSON.stringify({
@@ -1270,17 +1248,31 @@ ${escapeHtml(API.bundle)}</div>
 
   // listeners
   ["q","domain","region","sev","onlyP0","onlyGeo"].forEach(id => {
-    el(id).addEventListener(id === "q" ? "input" : "change", applyFilters);
+    on(id, id === "q" ? "input" : "change", applyFilters);
   });
 
-  el("btnReload").addEventListener("click", () => loadBundle().catch(()=>{}));
-  el("btnRebuild").addEventListener("click", rebuildNow);
-  el("btnExport").addEventListener("click", exportFiltered);
-  el("btnFit").addEventListener("click", refreshMapLayers);
-  el("btnGeoLocate").addEventListener("click", locateFromGeoInput);
-  el("btnGeoSearch").addEventListener("click", searchGeoName);
-  el("btnGeoCopy").addEventListener("click", copyGeoLine);
-  el("btnGeoClear").addEventListener("click", clearGeoLocator);
+  on("btnReload", "click", () => loadBundle().catch(err => console.error("Reload failed", err)));
+  on("btnRebuild", "click", rebuildNow);
+  on("btnExport", "click", exportFiltered);
+  on("btnFit", "click", refreshMapLayers);
+  on("btnGeoLocate", "click", locateFromGeoInput);
+  on("btnGeoSearch", "click", searchGeoName);
+  on("btnGeoCopy", "click", copyGeoLine);
+  on("btnGeoClear", "click", clearGeoLocator);
+
+  const geoInput = el("geoInput");
+  if (geoInput) {
+    geoInput.addEventListener("keydown", (ev) => {
+      if (ev.key === "Enter") locateFromGeoInput();
+    });
+  }
+
+  const geoName = el("geoName");
+  if (geoName) {
+    geoName.addEventListener("keydown", (ev) => {
+      if (ev.key === "Enter") searchGeoName();
+    });
+  }
 
   document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => {
     const tab = t.dataset.tab;
@@ -1294,16 +1286,29 @@ ${escapeHtml(API.bundle)}</div>
   }));
 
   ["mapShowEvents","mapOnlyFiltered","mapShowCI"].forEach(id => {
-    el(id).addEventListener("change", refreshMapLayers);
+    on(id, "change", refreshMapLayers);
   });
 
   // boot
-  loadBundle().catch(err => {
-    el("list").innerHTML = `<div class="event">Fehler beim Laden: ${escapeHtml(err.message)}</div>`;
-  });
+  (async function boot(){
+    try {
+      console.log("VOODOO boot start");
+      if (el("foot")) el("foot").textContent = "DEBUG: boot start";
+      await loadBundle();
+      if (el("foot")) el("foot").textContent = `DEBUG: boot ok, Events: ${state.events.length}`;
+    } catch (err) {
+      console.error("BOOT/loadBundle failed", err);
+      el("list").innerHTML = `
+        <div class="event">
+          <div class="title">Fehler beim Laden</div>
+          <div class="summary">${escapeHtml(err?.message || String(err))}</div>
+        </div>
+      `;
+    }
 
-  loadWeather();
-  loadNavtex();
+    loadWeather().catch(err => console.warn("Weather failed", err));
+    loadNavtex().catch(err => console.warn("NAVTEX failed", err));
+  })();
 })();
 </script>
 </body>
