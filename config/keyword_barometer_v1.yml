@@ -1,0 +1,42 @@
+version: 1
+purpose: "Voodoo Keyword-Barometer: Social + RSS only, 3h buckets, 90d baseline later in Worker/KV"
+notes:
+  - "Hard keywords should be narrow enough to indicate maritime hybrid/security relevance."
+  - "Soft keywords are context amplifiers; they should not create high scores alone unless clustered."
+  - "Keep multilingual expansion conservative first. Add false-positive notes after 1-2 weeks of dashboard use."
+scoring:
+  hard_weight: 3
+  soft_weight: 1
+  dedupe: "url/id/title+timestamp"
+  current_frontend_window: "last 3 hours"
+  frontend_history: "72 hours as 24 x 3h buckets"
+  future_baseline: "90 days, source x domain, expected + spread"
+tiers:
+  hard:
+    sabotage:
+      terms: ["sabotage", "sabotageverdacht", "диверсия", "диверсія", "sabotaż", "sabotaje", "sabotageactie"]
+    espionage_surveillance:
+      terms: ["espionage", "spionage", "spy ship", "spionageschiff", "reconnaissance", "surveillance", "разведка", "розвідка"]
+    gnss_rf:
+      terms: ["gnss jamming", "gnss spoofing", "gps jamming", "gps spoofing", "jamming", "spoofing", "глушение", "глушіння"]
+    subsea_ci:
+      terms: ["cable cut", "cable damage", "subsea cable", "seekabel", "kabelschaden", "kabelbruch", "pipeline damage", "pipeline leak", "pipe rupture"]
+    underwater_seabed:
+      terms: ["underwater drone", "uuv", "auv", "seabed warfare", "seabed", "subsea", "unterwasser", "meeresboden"]
+    vessel_anomaly:
+      terms: ["ais spoof", "ais gap", "ais off", "dark vessel", "dark activity", "loitering", "sts", "ship-to-ship"]
+    shadow_sanctions:
+      terms: ["shadow fleet", "sanctions evasion", "sanctions avoidance", "sanktionsumgehung", "sanktionsflotte"]
+  soft:
+    anomaly_general:
+      terms: ["unusual activity", "suspicious", "auffällig", "ungewöhnlich", "verdächtig", "anomalous", "incident", "disturbance", "disruption"]
+    warnings_context:
+      terms: ["navwarn", "navtex", "security zone", "exclusion zone", "übungsgebiet", "military exercise"]
+    authority_activity:
+      terms: ["coast guard", "navy", "patrol", "sar", "mpa", "isr", "helicopter"]
+    air_drone:
+      terms: ["drone", "uas", "uav", "drohne"]
+    maritime_patterns:
+      terms: ["rendezvous", "anchoring", "route deviation"]
+    port_cyber:
+      terms: ["port disruption", "terminal outage", "cyber", "ransomware", "ot", "scada", "vts"]
