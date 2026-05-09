@@ -514,7 +514,7 @@ Wilhelmshaven JadeWeserPort"></textarea>
   const el = (id) => document.getElementById(id);
 
   // --- IMPORTANT: include credentials (Cloudflare Access cookies etc.)
-  const FETCH_OPTS = { cache: "no-store", credentials: "include" };
+  const FETCH_OPTS = { cache: "no-store", credentials: "omit" };
   const apiFetch = (url, opts={}) => fetch(url, { ...FETCH_OPTS, ...opts });
 
   // show worker host
