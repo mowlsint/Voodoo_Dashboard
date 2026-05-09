@@ -96,6 +96,16 @@ REG:MED|0052cc|Mittelmeer
 REG:ATLANTIC_NE|0052cc|NE Atlantik/Channel/Biscay
 REG:INLAND_WATERWAYS|0052cc|Binnenwasserstraßen/Schleusen/Kanäle
 
+# Compatibility aliases used by current sources.yml / ingest inference
+PAT:GNSS_JAM|fbca04|Alias/Pattern: GNSS Jamming Indizien
+PAT:GNSS_SPOOF|fbca04|Alias/Pattern: GNSS Spoofing Indizien
+PAT:RF_BURST|fbca04|RF Burst / ungewöhnliche Kurzzeit-Funkaktivität
+REG:BALTIC|0052cc|Ostsee Alias für ältere Quellenkonfiguration
+REG:GER_BIGHT|0052cc|Deutsche Bucht / German Bight
+REG:OTHER|0052cc|Andere/überregionale maritime Lage
+REG:HAMBURG|0052cc|Hamburg / Unterelbe
+REG:WILHELMSHAVEN|0052cc|Wilhelmshaven / Jade
+
 SEV:1|000000|Low
 SEV:2|000000|Moderate
 SEV:3|000000|High
