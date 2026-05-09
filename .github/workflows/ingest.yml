@@ -6,7 +6,7 @@ on:
   workflow_dispatch: {}
 
 permissions:
-  contents: read
+  contents: write
   issues: write
 
 env:
@@ -19,6 +19,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node 24
         uses: actions/setup-node@v4
@@ -37,18 +39,57 @@ jobs:
       - name: Verify required files
         run: |
           test -f scripts/ingest.mjs
+          test -f scripts/snapshot.mjs
           test -f config/sources.yml
 
       - name: Install dependencies
         run: |
           npm install yaml fast-xml-parser --no-audit --no-fund
 
-      - name: Check ingest syntax
+      - name: Check script syntax
         run: |
           node --check scripts/ingest.mjs
+          node --check scripts/snapshot.mjs
 
       - name: Run ingest
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           node scripts/ingest.mjs
+
+      - name: Decide whether to snapshot
+        id: snapcheck
+        shell: bash
+        run: |
+          HOUR="$(date -u +%H)"
+          if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "run_snapshot=true" >> "$GITHUB_OUTPUT"
+            echo "Manual run: snapshot enabled"
+          elif (( 10#$HOUR % 3 == 0 )); then
+            echo "run_snapshot=true" >> "$GITHUB_OUTPUT"
+            echo "UTC hour $HOUR: snapshot enabled"
+          else
+            echo "run_snapshot=false" >> "$GITHUB_OUTPUT"
+            echo "UTC hour $HOUR: snapshot skipped"
+          fi
+
+      - name: Run sensor snapshot
+        if: steps.snapcheck.outputs.run_snapshot == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node scripts/snapshot.mjs
+
+      - name: Commit sensor snapshot
+        if: steps.snapcheck.outputs.run_snapshot == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/snapshots/voodoo_sensor_snapshots.ndjson data/snapshots/voodoo_sensor_latest.json
+          if git diff --cached --quiet; then
+            echo "No snapshot changes to commit."
+          else
+            git commit -m "Add VOODOO sensor snapshot"
+            git pull --rebase
+            git push
+          fi
