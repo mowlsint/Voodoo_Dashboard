@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v4 "Enigma – Recovery"</title>
+  <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v5 "Barometer / Geolocator"</title>
 
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -129,7 +129,7 @@
       margin-top:10px;
     }
     label{display:block; font-size:16px; color:var(--muted); margin-bottom:6px}
-    input,select{
+    input,select,textarea{
       width:100%;
       padding:10px 10px;
       border-radius:12px;
@@ -222,6 +222,30 @@
     .meter .capline2{position:absolute; left:0; right:0; top:55%; height:1px; background: rgba(255,255,255,.12);}
     .meterLegend{color:var(--muted); font-size:16px; line-height:1.2}
 
+    .sensorGrid{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+    .sensorCard{
+      background: rgba(0,0,0,.25);
+      border:1px solid rgba(176,136,0,.35);
+      border-radius:12px;
+      padding:10px;
+      min-height:92px;
+    }
+    .sensorCard .label{color:var(--muted); font-size:16px;}
+    .sensorCard .num{font-size:30px; margin-top:4px;}
+    .spark{width:100%; height:118px; border:1px solid rgba(176,136,0,.30); border-radius:12px; background:rgba(0,0,0,.28);}
+    .spark path,.spark polyline{vector-effect:non-scaling-stroke;}
+    .geoPanel{
+      display:grid; grid-template-columns:1.35fr .65fr; gap:10px; align-items:stretch; margin-top:10px;
+    }
+    textarea{min-height:104px; resize:vertical; line-height:1.2;}
+    .geoTools{display:flex; gap:8px; flex-wrap:wrap; align-content:flex-start;}
+    .geoResult{
+      margin-top:8px; padding:8px 10px; border-radius:10px;
+      border:1px solid rgba(176,136,0,.35); background:rgba(0,0,0,.24);
+      font-size:17px; color:rgba(255,255,255,.86); white-space:pre-wrap;
+    }
+    .tinyBtn{padding:6px 8px !important; font-size:16px !important;}
+
     .scrollbox{max-height:240px; overflow:auto; padding-right:6px;}
     .scrollbox::-webkit-scrollbar{width:10px}
     .scrollbox::-webkit-scrollbar-thumb{background: rgba(176,136,0,.35); border-radius:999px}
@@ -245,7 +269,7 @@
       <div class="brand">
         <div class="brandLine">
           <h1>VOODOO // HYBRID MARITIME OPS</h1>
-          <span class="ver">v4 “Enigma – Recovery”</span>
+          <span class="ver">v5 “Barometer / Geolocator”</span>
         </div>
         <div class="sub">
           Source: <span id="src">–</span> • Stand: <span id="stand">–</span> • Worker: <span class="hint" id="wkr">–</span>
@@ -333,6 +357,37 @@
               <span class="hint" id="ciStatus">CI: idle</span>
               <span class="hint" id="mapStatus">MAP: –</span>
             </div>
+
+            <div class="panel" style="border-radius:12px; margin-top:10px;">
+              <div class="ph">
+                <div class="title">GEOLOCATOR</div>
+                <div class="meta">Koordinaten • DMS • Ortssuche</div>
+              </div>
+              <div class="pc">
+                <div class="geoPanel">
+                  <div>
+                    <label>Text / Koordinaten / Ortsname</label>
+                    <textarea id="geoInput" placeholder="Beispiele:
+Geo: 53.5100, 8.1500
+54-10.2N 007-53.2E
+53°30'36"N 008°09'00"E
+Wilhelmshaven JadeWeserPort"></textarea>
+                  </div>
+                  <div>
+                    <label>Aktion</label>
+                    <div class="geoTools">
+                      <button class="btn secondary tinyBtn" id="btnGeoLocate">LOCATE</button>
+                      <button class="btn secondary tinyBtn" id="btnGeoSearch">OSM SEARCH</button>
+                      <button class="btn secondary tinyBtn" id="btnGeoCopy">COPY GEO</button>
+                      <button class="btn secondary tinyBtn" id="btnGeoClear">CLEAR</button>
+                    </div>
+                    <div class="hint" style="margin-top:8px;">Klick in die Karte setzt ebenfalls den Locator.</div>
+                  </div>
+                </div>
+                <div class="geoResult" id="geoResult">Kein Punkt gesetzt.</div>
+              </div>
+            </div>
+
             <div class="hint">Basemap: Dark + Satellite (Layer-Button oben rechts). CI kommt vom Worker: /api/ci/*</div>
           </div>
         </div>
@@ -343,7 +398,7 @@
         <div class="panel">
           <div class="ph">
             <div class="title">Indicators</div>
-            <div class="meta">Phase Zero • Weirdness</div>
+            <div class="meta">Hybrid • Behörden-Weirdness • Keywords</div>
           </div>
 
           <div class="pc">
@@ -357,64 +412,61 @@
             <div style="display:grid; grid-template-columns:1fr; gap:12px; margin-top:12px;">
               <div class="panel" style="border-radius:12px;">
                 <div class="ph">
-                  <div class="title">PHASE ZERO BAROMETER</div>
-                  <div class="meta">0–100%</div>
+                  <div class="title">HYBRID-SEISMOGRAF</div>
+                  <div class="meta">72h • stündliche Dichte</div>
                 </div>
                 <div class="pc">
-                  <div class="gaugeWrap">
-                    <div style="min-width:340px;">
-                      <div class="gaugeValue"><span id="p0Pct">–</span>%</div>
-                      <div class="hint">Heuristik: Severity/Confidence/P0/CI/Patterns (letzte 7 Tage)</div>
-                    </div>
-                    <div class="gauge" aria-label="Phase Zero Gauge">
-                      <svg viewBox="0 0 200 100">
-                        <path d="M 20 90 A 80 80 0 0 1 180 90" fill="none" stroke="rgba(255,255,255,.10)" stroke-width="14" stroke-linecap="round"/>
-                        <defs>
-                          <linearGradient id="p0grad" x1="0" y1="0" x2="1" y2="0">
-                            <stop offset="0%" stop-color="#33d17a"/>
-                            <stop offset="55%" stop-color="#ffd24d"/>
-                            <stop offset="85%" stop-color="#ff8a00"/>
-                            <stop offset="100%" stop-color="#ff4d4d"/>
-                          </linearGradient>
-                        </defs>
-                        <path d="M 20 90 A 80 80 0 0 1 180 90" fill="none" stroke="url(#p0grad)" stroke-width="10" stroke-linecap="round" opacity="0.95"/>
-                        <g id="needle" transform="translate(100,90) rotate(-90)">
-                          <line x1="0" y1="0" x2="0" y2="-72" stroke="#f5f5f5" stroke-width="3" />
-                          <circle cx="0" cy="0" r="6" fill="#f5f5f5"/>
-                          <circle cx="0" cy="0" r="11" fill="rgba(0,0,0,.35)" stroke="rgba(176,136,0,.65)" stroke-width="2"/>
-                        </g>
-                        <text x="18" y="98" fill="rgba(255,255,255,.55)" font-size="10">0</text>
-                        <text x="94" y="18" fill="rgba(255,255,255,.55)" font-size="10">50</text>
-                        <text x="172" y="98" fill="rgba(255,255,255,.55)" font-size="10">100</text>
-                      </svg>
-                    </div>
+                  <div class="sensorGrid">
+                    <div class="sensorCard"><div class="label">Hybrid-Index jetzt</div><div class="num"><span id="p0Pct">–</span>%</div><div class="hint">aus allen geladenen Events, nicht aus Filter</div></div>
+                    <div class="sensorCard"><div class="label">72h Peak</div><div class="num"><span id="hybridPeak">–</span>%</div><div class="hint" id="hybridMeta">Baseline später via KV</div></div>
                   </div>
+                  <svg class="spark" id="hybridSpark" viewBox="0 0 320 118" role="img" aria-label="Hybrid Seismograph">
+                    <path d="M 0 96 H 320" stroke="rgba(255,255,255,.10)" stroke-width="1" fill="none"/>
+                    <path d="M 0 59 H 320" stroke="rgba(255,255,255,.08)" stroke-width="1" fill="none"/>
+                    <path d="M 0 22 H 320" stroke="rgba(255,255,255,.08)" stroke-width="1" fill="none"/>
+                    <polyline id="hybridLine" points="" fill="none" stroke="#ffd24d" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+                  </svg>
                 </div>
               </div>
 
               <div class="panel" style="border-radius:12px;">
                 <div class="ph">
-                  <div class="title">GOVERNMENT WEIRDNESS</div>
-                  <div class="meta">oben rot / unten grün</div>
+                  <div class="title">BEHÖRDEN-WEIRDNESS</div>
+                  <div class="meta">Nordsee / Ostsee getrennt</div>
                 </div>
                 <div class="pc">
-                  <div class="meterWrap">
-                    <div class="meter" aria-label="Government Weirdness Meter">
-                      <div class="fill" id="weirdFill"></div>
-                      <div class="capline"></div>
-                      <div class="capline2"></div>
+                  <div class="sensorGrid">
+                    <div class="sensorCard">
+                      <div class="label">Nordsee</div>
+                      <div class="gaugeValue"><span id="weirdNorthPct">–</span>%</div>
+                      <div class="meter" style="width:100%; height:22px; border-radius:999px;"><div class="fill" id="weirdNorthFill" style="height:100%; width:0%;"></div></div>
                     </div>
-                    <div>
-                      <div class="gaugeValue"><span id="weirdPct">–</span>%</div>
-                      <div class="meterLegend">
-                        <div>TOP: <span style="color:var(--bad)">red</span></div>
-                        <div>HIGH: <span style="color:var(--orange)">orange</span></div>
-                        <div>MID: <span style="color:var(--money)">gelb</span></div>
-                        <div>BOTTOM: <span style="color:var(--ok)">green</span></div>
-                      </div>
-                      <div class="hint" style="margin-top:8px;">Heuristik: Noise/Contradictions/InfoOps/Cyber/Clusters</div>
+                    <div class="sensorCard">
+                      <div class="label">Ostsee</div>
+                      <div class="gaugeValue"><span id="weirdBalticPct">–</span>%</div>
+                      <div class="meter" style="width:100%; height:22px; border-radius:999px;"><div class="fill" id="weirdBalticFill" style="height:100%; width:0%;"></div></div>
                     </div>
                   </div>
+                  <div class="hint" style="margin-top:8px;">Heuristik: Behörden-/SAR-/Navy-/Official-Aktivität, Air/RF/NAVWARN, Cluster-Ersatz über Ereignisdichte. Echte ADS-B/AIS-Baseline folgt später im Worker.</div>
+                </div>
+              </div>
+
+              <div class="panel" style="border-radius:12px;">
+                <div class="ph">
+                  <div class="title">KEYWORD-BAROMETER</div>
+                  <div class="meta">Social + RSS • 3h</div>
+                </div>
+                <div class="pc">
+                  <div class="sensorGrid">
+                    <div class="sensorCard"><div class="label">Keyword-Spike</div><div class="num"><span id="kwPct">–</span>%</div><div class="hint">Hard/Soft Keywords, dedupliziert</div></div>
+                    <div class="sensorCard"><div class="label">Treffer / Quellen</div><div class="num"><span id="kwHits">–</span></div><div class="hint" id="kwMeta">3h Fenster</div></div>
+                  </div>
+                  <svg class="spark" id="kwSpark" viewBox="0 0 320 118" role="img" aria-label="Keyword Barometer History">
+                    <path d="M 0 96 H 320" stroke="rgba(255,255,255,.10)" stroke-width="1" fill="none"/>
+                    <path d="M 0 59 H 320" stroke="rgba(255,255,255,.08)" stroke-width="1" fill="none"/>
+                    <path d="M 0 22 H 320" stroke="rgba(255,255,255,.08)" stroke-width="1" fill="none"/>
+                    <polyline id="kwLine" points="" fill="none" stroke="#ff8a00" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>
+                  </svg>
                 </div>
               </div>
             </div>
@@ -473,13 +525,34 @@
     events: [],
     filtered: [],
     map: null,
-    layers: { events: null, ciGroup: null },
-    ciBounds: null
+    layers: { events: null, ciGroup: null, geoLocator: null },
+    ciBounds: null,
+    geoPoint: null
   };
 
   function nowStr(){ return new Date().toLocaleString(); }
   function uniq(arr){ return [...new Set(arr)].sort(); }
   function clamp(n,a,b){ return Math.max(a, Math.min(b, n)); }
+
+
+  // First-pass keyword tiers. Keep broad; tune after we see real 90-day baseline noise.
+  const KEYWORD_TIERS = {
+    hard: [
+      "sabotage","sabotageverdacht","диверсия","диверсія","sabotaż","sabotaje","sabotage","sabotageactie",
+      "espionage","spionage","spy ship","spionageschiff","reconnaissance","surveillance","разведка","розвідка",
+      "gnss jamming","gnss spoofing","gps jamming","gps spoofing","jamming","spoofing","глушение","глушіння",
+      "cable cut","cable damage","subsea cable","seekabel","kabelschaden","kabelbruch","pipeline damage","pipeline leak","pipe rupture",
+      "underwater drone","uuv","auv","seabed warfare","seabed","subsea","unterwasser","meeresboden",
+      "ais spoof","ais gap","ais off","dark vessel","dark activity","loitering","sts","ship-to-ship",
+      "shadow fleet","sanctions evasion","sanctions avoidance","sanktionsumgehung","sanktionsflotte"
+    ],
+    soft: [
+      "unusual activity","suspicious","auffällig","ungewöhnlich","verdächtig","anomalous","incident","disturbance","disruption",
+      "navwarn","navtex","security zone","exclusion zone","übungsgebiet","military exercise","coast guard","navy","patrol",
+      "drone","uas","uav","drohne","helicopter","mpa","isr","sar","rendezvous","anchoring","route deviation",
+      "port disruption","terminal outage","cyber","ransomware","ot","scada","vts"
+    ]
+  };
 
   function escapeHtml(s){
     return (s ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -603,44 +676,152 @@
     return clamp(Math.round((points / 90) * 100), 0, 100);
   }
 
-  function scoreWeirdness(events){
-    const recent = events.filter(e => { const d = parseISO(e.ts); return d ? daysAgo(d) <= 14 : false; });
-    let w = 0;
+  function scoreAuthorityWeirdness(events, regionMode){
+    const regionLabels = regionMode === "north"
+      ? ["REG:NORTH_SEA","REG:GER_BIGHT"]
+      : ["REG:BALTIC_SEA","REG:BALTIC"];
 
+    const recent = events.filter(e => {
+      const d = parseISO(e.ts);
+      const labels = e.labels ?? [];
+      const inWindow = d ? daysAgo(d) <= 7 : false;
+      const regionHit = regionLabels.includes(e.region) || labels.some(l => regionLabels.includes(l));
+      return inWindow && regionHit;
+    });
+
+    let w = 0;
+    const seen = new Set();
     for (const e of recent){
       const labels = e.labels ?? [];
+      const key = e.url || e.id || e.number || e.title;
+      if (seen.has(key)) continue;
+      seen.add(key);
+
       const sev = (e.severity ?? "SEV:1");
       const conf = (e.confidence ?? "CONF:LOW");
+      const sevW = sev === "SEV:4" ? 7 : sev === "SEV:3" ? 5 : sev === "SEV:2" ? 2.5 : 1;
+      const confW = conf === "CONF:HIGH" ? 1.1 : conf === "CONF:MED" ? 1.0 : 0.85;
 
-      const sevW = sev === "SEV:4" ? 6 : sev === "SEV:3" ? 4 : sev === "SEV:2" ? 2 : 1;
-      const confW = conf === "CONF:HIGH" ? 1.0 : conf === "CONF:MED" ? 1.1 : 1.2;
-
-      const news = labels.includes("D:NEWS_INTEL") || labels.includes("SRC:SOCIAL");
-      const cyber = labels.includes("D:CYBER_OT");
+      const official = labels.includes("SRC:OFFICIAL");
+      const authorityVessel = labels.some(l => l.startsWith("V:AUTH_") || l === "V:SAR_UNIT" || l === "V:RUS_GOV" || l === "V:RUS_WARSHIP" || l === "V:RUS_AUXILIARY" || l === "V:RUS_RESEARCH");
+      const air = labels.includes("D:AIR_ACTIVITY");
+      const sar = labels.includes("D:SAR") || labels.includes("V:SAR_UNIT");
+      const navwarn = labels.includes("RF:NAVWARN") || labels.includes("RF:NAVTEX");
       const rf = labels.includes("D:RF_SIGNAL") || labels.some(l => l.startsWith("RF:"));
-      const p0 = labels.includes("P0:SUSPECT");
       const ci = ["OBJ:PORT","OBJ:VTS_WSV","OBJ:CABLE","OBJ:PIPELINE","OBJ:WINDFARM"].some(x => labels.includes(x));
 
       let evW = sevW * confW;
-      if (news) evW *= 1.15;
+      if (official) evW *= 1.20;
+      if (authorityVessel) evW *= 1.55;
+      if (air) evW *= 1.35;
+      if (sar) evW *= 1.20;
+      if (navwarn) evW *= 0.85; // context can explain activity; dampen slightly
       if (rf) evW *= 1.20;
-      if (cyber) evW *= 1.25;
       if (ci) evW *= 1.15;
-      if (p0) evW *= 1.10;
-
       w += evW;
     }
-    return clamp(Math.round((w / 70) * 100), 0, 100);
+
+    // Density proxy until Worker/KV provides 90-day baseline by source × domain.
+    return clamp(Math.round((w / 45) * 100), 0, 100);
   }
 
-  function setNeedle(pct){
-    const angle = -90 + (pct / 100) * 180;
-    const g = document.getElementById("needle");
-    if (g) g.setAttribute("transform", `translate(100,90) rotate(${angle})`);
+  function normalizeText(s){
+    return String(s ?? "").toLowerCase().normalize("NFKD").replace(/[\u0300-\u036f]/g, "");
   }
-  function setWeirdFill(pct){
-    const fill = el("weirdFill");
-    if (fill) fill.style.height = `${pct}%`;
+
+  function isSocialOrRss(e){
+    const labels = e.labels ?? [];
+    const text = normalizeText((e.summary ?? "") + " " + (e.title ?? ""));
+    return labels.includes("SRC:SOCIAL") || labels.includes("SRC:MEDIA") || text.includes("### plattform\nrss") || text.includes("platform: rss");
+  }
+
+  function keywordHits(text){
+    const t = normalizeText(text);
+    let hard = 0, soft = 0;
+    for (const kw of KEYWORD_TIERS.hard){ if (t.includes(normalizeText(kw))) hard++; }
+    for (const kw of KEYWORD_TIERS.soft){ if (t.includes(normalizeText(kw))) soft++; }
+    return { hard, soft, score: hard * 3 + soft };
+  }
+
+  function buildKeywordBuckets(events){
+    const now = Date.now();
+    const bucketMs = 3 * 60 * 60 * 1000;
+    const bucketCount = 24; // 72h / 3h
+    const buckets = Array.from({length: bucketCount}, (_, i) => ({ idx:i, score:0, hits:0, sources:new Set() }));
+    const dedupe = new Set();
+
+    for (const e of events){
+      if (!isSocialOrRss(e)) continue;
+      const d = parseISO(e.ts);
+      if (!d) continue;
+      const age = now - d.getTime();
+      if (age < 0 || age > bucketMs * bucketCount) continue;
+      const key = e.url || e.id || e.number || (e.title + (e.ts || ""));
+      if (dedupe.has(key)) continue;
+      dedupe.add(key);
+
+      const b = bucketCount - 1 - Math.floor(age / bucketMs);
+      if (b < 0 || b >= bucketCount) continue;
+      const kh = keywordHits((e.title ?? "") + " " + (e.summary ?? "") + " " + (e.labels ?? []).join(" "));
+      if (kh.score <= 0) continue;
+      buckets[b].score += kh.score;
+      buckets[b].hits += kh.hard + kh.soft;
+      buckets[b].sources.add((e.labels ?? []).includes("SRC:SOCIAL") ? "social" : "rss/media");
+    }
+    return buckets.map(b => ({...b, sources: b.sources.size}));
+  }
+
+  function buildHybridHourlyBuckets(events){
+    const now = Date.now();
+    const bucketMs = 60 * 60 * 1000;
+    const bucketCount = 72;
+    const buckets = Array.from({length: bucketCount}, (_, i) => ({ idx:i, score:0 }));
+    for (const e of events){
+      const d = parseISO(e.ts);
+      if (!d) continue;
+      const age = now - d.getTime();
+      if (age < 0 || age > bucketMs * bucketCount) continue;
+      const b = bucketCount - 1 - Math.floor(age / bucketMs);
+      if (b < 0 || b >= bucketCount) continue;
+      buckets[b].score += scoreEventForHybrid(e);
+    }
+    const maxScore = Math.max(12, ...buckets.map(b => b.score));
+    return buckets.map(b => ({...b, pct: clamp(Math.round((b.score / maxScore) * 100), 0, 100)}));
+  }
+
+  function scoreEventForHybrid(e){
+    const labels = e.labels ?? [];
+    const sev = (e.severity ?? "SEV:1");
+    const conf = (e.confidence ?? "CONF:LOW");
+    const sevW = sev === "SEV:4" ? 9 : sev === "SEV:3" ? 6 : sev === "SEV:2" ? 3 : 1;
+    const confW = conf === "CONF:HIGH" ? 1.2 : conf === "CONF:MED" ? 1.0 : 0.8;
+    let v = sevW * confW;
+    if (e.phase0?.suspect || labels.includes("P0:SUSPECT")) v *= 1.6;
+    if (["OBJ:CABLE","OBJ:PIPELINE","OBJ:WINDFARM","OBJ:PORT","OBJ:VTS_WSV"].some(x => labels.includes(x))) v *= 1.25;
+    if (["PAT:LOITERING","PAT:STS_SUSPECT","PAT:AIS_GAP","PAT:DARK_ACTIVITY","PAT:SURVEYING","PAT:ROUTE_DEVIATION","PAT:GNSS_JAM","PAT:GNSS_SPOOF","RF:GNSS_JAM","RF:GNSS_SPOOF"].some(x => labels.includes(x))) v *= 1.20;
+    if (["V:SHADOW_FLEET","V:RUS_RESEARCH","V:RUS_WARSHIP"].some(x => labels.includes(x))) v *= 1.15;
+    return v;
+  }
+
+  function setWeirdFill(id, pct){
+    const fill = el(id);
+    if (!fill) return;
+    fill.style.width = `${pct}%`;
+    fill.style.height = "100%";
+  }
+
+  function renderSparkline(polyId, values){
+    const poly = el(polyId);
+    if (!poly || !values.length) return;
+    const w = 320, h = 112, pad = 8;
+    const step = values.length > 1 ? (w - pad * 2) / (values.length - 1) : 0;
+    const pts = values.map((v, i) => {
+      const pct = typeof v === "number" ? v : (v.pct ?? 0);
+      const x = pad + i * step;
+      const y = h - pad - (clamp(pct, 0, 100) / 100) * (h - pad * 2);
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    }).join(" ");
+    poly.setAttribute("points", pts);
   }
 
   function updateKPIsAndInstruments(){
@@ -652,13 +833,32 @@
     el("kpiGeo").textContent = String(geoCount);
     el("kpiFetch").textContent = nowStr();
 
-    const p0 = scorePhaseZero(state.filtered);
-    el("p0Pct").textContent = String(p0);
-    setNeedle(p0);
+    // Instruments intentionally use all loaded events, not UI filters.
+    const instrumentEvents = state.events;
+    const hybrid = scorePhaseZero(instrumentEvents);
+    el("p0Pct").textContent = String(hybrid);
 
-    const weird = scoreWeirdness(state.filtered);
-    el("weirdPct").textContent = String(weird);
-    setWeirdFill(weird);
+    const hybridBuckets = buildHybridHourlyBuckets(instrumentEvents);
+    renderSparkline("hybridLine", hybridBuckets.map(b => b.pct));
+    const hPeak = hybridBuckets.length ? Math.max(...hybridBuckets.map(b => b.pct)) : 0;
+    el("hybridPeak").textContent = String(hPeak);
+    el("hybridMeta").textContent = `${hybridBuckets.length} h buckets • Peak proxy`;
+
+    const north = scoreAuthorityWeirdness(instrumentEvents, "north");
+    const baltic = scoreAuthorityWeirdness(instrumentEvents, "baltic");
+    el("weirdNorthPct").textContent = String(north);
+    el("weirdBalticPct").textContent = String(baltic);
+    setWeirdFill("weirdNorthFill", north);
+    setWeirdFill("weirdBalticFill", baltic);
+
+    const kwBuckets = buildKeywordBuckets(instrumentEvents);
+    const lastKw = kwBuckets[kwBuckets.length - 1] || { score:0, hits:0, sources:0 };
+    const maxKw = Math.max(10, ...kwBuckets.map(b => b.score));
+    const kwPct = clamp(Math.round((lastKw.score / maxKw) * 100), 0, 100);
+    el("kwPct").textContent = String(kwPct);
+    el("kwHits").textContent = `${lastKw.hits}/${lastKw.sources}`;
+    el("kwMeta").textContent = `3h • ${KEYWORD_TIERS.hard.length} hard / ${KEYWORD_TIERS.soft.length} soft`;
+    renderSparkline("kwLine", kwBuckets.map(b => clamp(Math.round((b.score / maxKw) * 100), 0, 100)));
   }
 
   function initMap(){
@@ -683,6 +883,104 @@
 
     state.layers.events = L.layerGroup().addTo(state.map);
     state.layers.ciGroup = L.layerGroup().addTo(state.map);
+    state.layers.geoLocator = L.layerGroup().addTo(state.map);
+    state.map.on("click", (ev) => setGeoLocator(ev.latlng.lat, ev.latlng.lng, "Map click"));
+  }
+
+
+  function decCommaToDot(s){ return String(s ?? "").replace(/(\d),(\d)/g, "$1.$2"); }
+  function validLatLon(lat, lon){ return Number.isFinite(lat) && Number.isFinite(lon) && Math.abs(lat) <= 90 && Math.abs(lon) <= 180; }
+  function dmToDec(deg, min, hemi){ let v = Number(deg) + (Number(min) / 60); if (/S|W/i.test(hemi)) v *= -1; return v; }
+  function dmsToDec(deg, min, sec, hemi){ let v = Number(deg) + (Number(min || 0) / 60) + (Number(sec || 0) / 3600); if (/S|W/i.test(hemi)) v *= -1; return v; }
+
+  function parseGeoText(raw){
+    const original = String(raw ?? "").trim();
+    const text = decCommaToDot(original);
+    let m;
+
+    // Decimal pair: Geo: 53.5100, 8.1500 / lat=53.51 lon=8.15
+    m = text.match(/(?:geo\s*[:=]\s*)?(-?\d{1,2}\.\d+)\s*[,;\s]+\s*(-?\d{1,3}\.\d+)/i);
+    if (m) {
+      const lat = Number(m[1]), lon = Number(m[2]);
+      if (validLatLon(lat, lon)) return { lat, lon, mode:"decimal" };
+    }
+
+    m = text.match(/lat\s*[:=]\s*(-?\d{1,2}\.\d+)\s*(?:,|;|\s)+lon\s*[:=]\s*(-?\d{1,3}\.\d+)/i);
+    if (m) {
+      const lat = Number(m[1]), lon = Number(m[2]);
+      if (validLatLon(lat, lon)) return { lat, lon, mode:"latlon" };
+    }
+
+    // NAVWARN style: 54-10.2N 007-53.2E
+    m = text.match(/(\d{1,2})[-°\s](\d{1,2}(?:\.\d+)?)\s*([NS])\s+0*(\d{1,3})[-°\s](\d{1,2}(?:\.\d+)?)\s*([EW])/i);
+    if (m) {
+      const lat = dmToDec(m[1], m[2], m[3]);
+      const lon = dmToDec(m[4], m[5], m[6]);
+      if (validLatLon(lat, lon)) return { lat, lon, mode:"deg-min" };
+    }
+
+    // DMS style: 53°30'36"N 008°09'00"E
+    m = text.match(/(\d{1,2})[°\s]+(\d{1,2})['’\s]+(\d{1,2}(?:\.\d+)?)?["”\s]*([NS])\s+0*(\d{1,3})[°\s]+(\d{1,2})['’\s]+(\d{1,2}(?:\.\d+)?)?["”\s]*([EW])/i);
+    if (m) {
+      const lat = dmsToDec(m[1], m[2], m[3] || 0, m[4]);
+      const lon = dmsToDec(m[5], m[6], m[7] || 0, m[8]);
+      if (validLatLon(lat, lon)) return { lat, lon, mode:"dms" };
+    }
+
+    return null;
+  }
+
+  function setGeoLocator(lat, lon, label){
+    initMap();
+    state.geoPoint = { lat, lon, label: label || "Locator" };
+    state.layers.geoLocator.clearLayers();
+    const marker = L.marker([lat, lon], { title: label || "Locator" })
+      .bindPopup(`<b>${escapeHtml(label || "Locator")}</b><br>Geo: ${lat.toFixed(5)}, ${lon.toFixed(5)}`);
+    marker.addTo(state.layers.geoLocator).openPopup();
+    state.map.setView([lat, lon], Math.max(state.map.getZoom(), 10));
+    el("geoResult").textContent = `Geo: ${lat.toFixed(5)}, ${lon.toFixed(5)}\nQuelle: ${label || "Koordinaten/Text"}`;
+  }
+
+  function clearGeoLocator(){
+    state.geoPoint = null;
+    if (state.layers.geoLocator) state.layers.geoLocator.clearLayers();
+    el("geoResult").textContent = "Kein Punkt gesetzt.";
+  }
+
+  function locateFromGeoInput(){
+    const raw = el("geoInput").value;
+    const p = parseGeoText(raw);
+    if (!p) { el("geoResult").textContent = "Keine Koordinaten erkannt. Versuche OSM SEARCH für Ortsnamen."; return; }
+    setGeoLocator(p.lat, p.lon, `Parsed (${p.mode})`);
+  }
+
+  async function searchGeoName(){
+    const q = el("geoInput").value.trim();
+    if (!q) { el("geoResult").textContent = "Bitte Ortsname oder Text eingeben."; return; }
+    el("geoResult").textContent = "OSM-Suche läuft…";
+    try{
+      const u = new URL("https://nominatim.openstreetmap.org/search");
+      u.searchParams.set("format", "jsonv2");
+      u.searchParams.set("limit", "1");
+      u.searchParams.set("q", q);
+      const res = await fetch(u.toString(), { headers: { "Accept": "application/json" } });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      if (!Array.isArray(data) || !data.length) { el("geoResult").textContent = "Keine OSM-Treffer."; return; }
+      const hit = data[0];
+      const lat = Number(hit.lat), lon = Number(hit.lon);
+      if (!validLatLon(lat, lon)) throw new Error("Ungültige OSM-Koordinaten");
+      setGeoLocator(lat, lon, hit.display_name || q);
+    } catch(e){
+      el("geoResult").textContent = `OSM-Suche fehlgeschlagen: ${e.message}`;
+    }
+  }
+
+  async function copyGeoLine(){
+    if (!state.geoPoint) { el("geoResult").textContent = "Kein Punkt zum Kopieren gesetzt."; return; }
+    const line = `Geo: ${state.geoPoint.lat.toFixed(5)}, ${state.geoPoint.lon.toFixed(5)}`;
+    try { await navigator.clipboard.writeText(line); el("geoResult").textContent = `${line}\nIn Zwischenablage kopiert.`; }
+    catch(_e){ el("geoResult").textContent = `${line}\nKopieren nicht erlaubt – bitte manuell kopieren.`; }
   }
 
   function eventMarkerStyle(ev){
@@ -914,6 +1212,10 @@
   el("btnRebuild").addEventListener("click", rebuildNow);
   el("btnExport").addEventListener("click", exportFiltered);
   el("btnFit").addEventListener("click", refreshMapLayers);
+  el("btnGeoLocate").addEventListener("click", locateFromGeoInput);
+  el("btnGeoSearch").addEventListener("click", searchGeoName);
+  el("btnGeoCopy").addEventListener("click", copyGeoLine);
+  el("btnGeoClear").addEventListener("click", clearGeoLocator);
 
   document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => {
     const tab = t.dataset.tab;
