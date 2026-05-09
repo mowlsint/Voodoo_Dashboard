@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v5.6 "Seismograph / Government-Weirdness / Headerfix"</title>
+  <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v5.7 "Weather Board / NAVWARN Board"</title>
 
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -277,12 +277,50 @@
     .sparkSeismo .peakMarker{fill:#b46cff; stroke:#f1dcff; stroke-width:1.4}
     .sparkSeismo .baseLine{stroke:rgba(51,209,122,.55); stroke-width:1.1; stroke-dasharray:4 4}
 
+
+    .weatherGrid{display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px;}
+    .weatherCard{
+      border:1px solid rgba(176,136,0,.32);
+      border-radius:12px;
+      background:linear-gradient(180deg, rgba(255,255,255,.025), rgba(0,0,0,.18));
+      padding:10px;
+    }
+    .weatherTop{display:flex; align-items:flex-start; justify-content:space-between; gap:8px; margin-bottom:8px;}
+    .weatherName{font-size:19px; line-height:1.05;}
+    .weatherCoord{font-size:13px; color:var(--muted); margin-top:2px;}
+    .wxRows{display:grid; gap:3px; font-size:15px; color:rgba(255,255,255,.88);}
+    .wxRows div{display:flex; justify-content:space-between; gap:8px; border-top:1px solid rgba(255,255,255,.045); padding-top:3px;}
+    .wxRows span:first-child{color:var(--muted);}
+    .statusPill{
+      display:inline-flex; align-items:center; justify-content:center;
+      min-width:64px; padding:4px 8px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.14); font-size:14px;
+      background:rgba(0,0,0,.35); white-space:nowrap;
+    }
+    .statusPill.calm{border-color:rgba(51,209,122,.6); color:#9dffc8;}
+    .statusPill.elevated{border-color:rgba(255,210,77,.7); color:#ffe58a;}
+    .statusPill.rough{border-color:rgba(255,77,77,.75); color:#ff9c9c;}
+    .weatherMetaLine{font-size:14px; color:var(--muted); margin-bottom:10px;}
+    .navwarnBoard{display:grid; gap:8px;}
+    .navwarnSummary{
+      border:1px solid rgba(176,136,0,.32); border-radius:12px; padding:10px;
+      background:rgba(0,0,0,.22);
+    }
+    .navwarnSummary .big{font-size:23px;}
+    .navwarnItem{
+      border:1px solid rgba(176,136,0,.24); border-radius:12px; padding:9px 10px;
+      background:rgba(255,255,255,.02);
+    }
+    .navwarnItem .ref{font-size:17px; color:var(--money);}
+    .navwarnItem .desc{font-size:15px; color:rgba(255,255,255,.86); margin-top:4px; line-height:1.15;}
+    .navwarnItem .mini{font-size:13px; color:var(--muted); margin-top:4px;}
+
     @media (max-width: 1100px){
       .grid{grid-template-columns:1fr;}
       #map{height:460px;}
       .controls{grid-template-columns:1fr 1fr;}
       .seismoWrap{grid-template-columns:1fr;}
-      .seismoLegend{grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-rows:none; min-height:unset;}
+      .seismoLegend{grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-rows:none; min-height:unset;}\n      .weatherGrid{grid-template-columns:1fr;}
     }
     @media (max-width: 560px){
       .controls{grid-template-columns:1fr;}
@@ -300,7 +338,7 @@
       <div class="brand">
         <div class="brandLine">
           <h1>VOODOO // HYBRID MARITIME OPS</h1>
-          <span class="ver">v5.6 “Seismograph / Government-Weirdness / Headerfix”</span>
+          <span class="ver">v5.7 “Weather Board / NAVWARN Board”</span>
         </div>
         <div class="sub">
           Source: <span id="src">–</span> • Stand: <span id="stand">–</span> • Worker: <span class="hint" id="wkr">–</span>
@@ -1453,8 +1491,8 @@ Wilhelmshaven JadeWeserPort"></textarea>
         events: filteredEvents
       },
       context_blocks: {
-        weather_window: parsePanelJson("weatherBox"),
-        navtex_navwarn: parsePanelJson("navtexBox")
+        weather_window: state.weatherData ?? parsePanelJson("weatherBox"),
+        navtex_navwarn: state.navtexData ?? parsePanelJson("navtexBox")
       },
       machine_notes_de: [
         "Dieses Paket ist ein strukturierter Export, keine fertige Meldung.",
@@ -1471,15 +1509,114 @@ Wilhelmshaven JadeWeserPort"></textarea>
     downloadJson(`${isoStampForFile()}_VOODOO_report_export_pack.json`, pack);
   }
 
+  function fmtWx(v, suffix = ""){
+    if (v === null || v === undefined || Number.isNaN(Number(v))) return "–";
+    return `${Number(v).toFixed(Number(v) % 1 ? 1 : 0)}${suffix}`;
+  }
+
+  function weatherLevel(point){
+    const now = point?.now ?? {};
+    const next = point?.next24 ?? {};
+    const wind = Number(now.wind_speed_10m ?? 0);
+    const gust = Number(next.wind_gusts_10m_max ?? now.wind_gusts_10m ?? 0);
+    const precip = Number(next.precipitation_sum ?? now.precipitation ?? 0);
+
+    if (gust >= 60 || wind >= 35 || precip >= 8) return { cls:"rough", label:"rau" };
+    if (gust >= 35 || wind >= 20 || precip >= 1) return { cls:"elevated", label:"erhöht" };
+    return { cls:"calm", label:"ruhig" };
+  }
+
+  function renderWeatherWindow(data){
+    if (!data || data.ok === false) {
+      return `<div class="navwarnSummary"><div class="big">Wetterdaten nicht verfügbar</div><div class="hint">${escapeHtml(data?.error || "Keine Daten geladen.")}</div></div>`;
+    }
+
+    const points = Array.isArray(data.points) ? data.points : [];
+    const cards = points.map(p => {
+      const lvl = weatherLevel(p);
+      const now = p.now ?? {};
+      const n24 = p.next24 ?? {};
+      return `
+        <div class="weatherCard">
+          <div class="weatherTop">
+            <div>
+              <div class="weatherName">${escapeHtml(p.name || "Unbenannt")}</div>
+              <div class="weatherCoord">${fmtWx(p.lat)} / ${fmtWx(p.lon)}</div>
+            </div>
+            <span class="statusPill ${lvl.cls}">${lvl.label}</span>
+          </div>
+          <div class="wxRows">
+            <div><span>Wind jetzt</span><b>${fmtWx(now.wind_speed_10m, " km/h")}</b></div>
+            <div><span>Böe jetzt</span><b>${fmtWx(now.wind_gusts_10m, " km/h")}</b></div>
+            <div><span>Böe 24h max</span><b>${fmtWx(n24.wind_gusts_10m_max, " km/h")}</b></div>
+            <div><span>Niederschlag 24h</span><b>${fmtWx(n24.precipitation_sum, " mm")}</b></div>
+            <div><span>Druck</span><b>${fmtWx(now.pressure_msl, " hPa")}</b></div>
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    return `
+      <div class="weatherMetaLine">
+        Quelle: ${escapeHtml(data.source || "Wetter-API")} • Stand: ${data.fetched_at ? escapeHtml(new Date(data.fetched_at).toLocaleString()) : "–"}
+      </div>
+      <div class="weatherGrid">${cards || `<div class="hint">Keine Wetterpunkte geladen.</div>`}</div>
+    `;
+  }
+
+  function renderNavwarnBoard(data){
+    if (!data || data.ok === false) {
+      return `<div class="navwarnBoard"><div class="navwarnSummary"><div class="big">NAVWARN nicht verfügbar</div><div class="hint">${escapeHtml(data?.error || "Keine Daten geladen.")}</div></div></div>`;
+    }
+
+    const items = Array.isArray(data.items) ? data.items : [];
+    const withCoord = items.filter(x => x.coord && Number.isFinite(x.coord.lat) && Number.isFinite(x.coord.lon)).length;
+
+    if (!items.length) {
+      return `
+        <div class="navwarnBoard">
+          <div class="navwarnSummary">
+            <div class="big">Keine UKHO-NAVWARN-Items im aktuellen Abruf</div>
+            <div class="hint">Quelle: ${escapeHtml(data.source || "UKHO")} • Stand: ${data.fetched_at ? escapeHtml(new Date(data.fetched_at).toLocaleString()) : "–"}</div>
+            <div class="hint" style="margin-top:6px;">Bewertung: sinnvolle Negativmeldung. Keine offizielle MSI-Stützung aus diesem Parserlauf.</div>
+          </div>
+        </div>
+      `;
+    }
+
+    const list = items.slice(0, 12).map(it => {
+      const c = it.coord ? `Koordinate: ${fmtWx(it.coord.lat)}, ${fmtWx(it.coord.lon)}` : "Koordinate: nein";
+      return `
+        <div class="navwarnItem">
+          <div class="ref">${escapeHtml(it.ref || "NAVWARN")}</div>
+          <div class="mini">${escapeHtml(it.dtg || "")} • ${escapeHtml(c)}</div>
+          <div class="desc">${escapeHtml(it.description || "")}</div>
+        </div>
+      `;
+    }).join("");
+
+    return `
+      <div class="navwarnBoard">
+        <div class="navwarnSummary">
+          <div class="big">${items.length} NAVWARN/MSI-Items • ${withCoord} mit Koordinate</div>
+          <div class="hint">Quelle: ${escapeHtml(data.source || "UKHO")} • Stand: ${data.fetched_at ? escapeHtml(new Date(data.fetched_at).toLocaleString()) : "–"}</div>
+        </div>
+        ${list}
+      </div>
+    `;
+  }
+
   async function loadWeather(){
     el("weatherMeta").textContent = "/api/weather";
     try{
       const res = await apiFetch(API.weather);
       const data = await res.json();
       if (!res.ok || data.ok === false) throw new Error(data?.error ?? `HTTP ${res.status}`);
-      el("weatherBox").textContent = JSON.stringify(data, null, 2);
+      state.weatherData = data;
+      el("weatherBox").innerHTML = renderWeatherWindow(data);
     } catch(e){
-      el("weatherBox").textContent = `Weather error: ${e.message}`;
+      state.weatherData = null;
+      el("weatherBox").innerHTML = `<div class="navwarnSummary"><div class="big">Weather error</div><div class="hint">${escapeHtml(e.message)}</div></div>`;
     }
   }
 
@@ -1489,9 +1626,11 @@ Wilhelmshaven JadeWeserPort"></textarea>
       const res = await apiFetch(API.navtex);
       const data = await res.json();
       if (!res.ok || data.ok === false) throw new Error(data?.error ?? `HTTP ${res.status}`);
-      el("navtexBox").textContent = JSON.stringify(data, null, 2);
+      state.navtexData = data;
+      el("navtexBox").innerHTML = renderNavwarnBoard(data);
     } catch(e){
-      el("navtexBox").textContent = `NAVWARN error: ${e.message}`;
+      state.navtexData = null;
+      el("navtexBox").innerHTML = `<div class="navwarnSummary"><div class="big">NAVWARN error</div><div class="hint">${escapeHtml(e.message)}</div></div>`;
     }
   }
 
