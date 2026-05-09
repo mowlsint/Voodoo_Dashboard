@@ -1167,15 +1167,40 @@ ${escapeHtml(API.bundle)}</div>
   }
 }
   async function rebuildNow(){
-    try { await apiFetch(API.rebuild); } catch(_e){}
-    await loadBundle();
-    if (state.map) {
-      await loadCI();
-      refreshMapLayers();
-    }
-    loadWeather();
-    loadNavtex();
+  const token = localStorage.getItem("VOODOO_REBUILD_TOKEN") || "";
+
+  if (!token) {
+    alert(
+      "Kein REBUILD_TOKEN gesetzt.\n\n" +
+      "Einmal in der Browser-Konsole setzen:\n" +
+      "localStorage.setItem('VOODOO_REBUILD_TOKEN', 'DEIN_TOKEN')"
+    );
+    return;
   }
+
+  const res = await apiFetch(API.rebuild, {
+    method: "POST",
+    headers: {
+      "Authorization": "Bearer " + token
+    }
+  });
+
+  if (!res.ok) {
+    const txt = await res.text().catch(() => "");
+    alert("REBUILD fehlgeschlagen: HTTP " + res.status + "\n" + txt.slice(0, 500));
+    return;
+  }
+
+  await loadBundle();
+
+  if (state.map) {
+    await loadCI();
+    refreshMapLayers();
+  }
+
+  loadWeather();
+  loadNavtex();
+}
 
   function exportFiltered(){
     const blob = new Blob([JSON.stringify({
