@@ -341,3 +341,142 @@ sources:
     labels: ["D:NEWS_INTEL", "SRC:SOCIAL"]
     region_hint: "REG:ATLANTIC_NE"
     priority: 70
+      # --- OFFICIAL / HIGH-VALUE MARITIME SECURITY / GOVERNMENT -------------------
+
+  - id: "uk_mca_org"
+    name: "UK Maritime and Coastguard Agency – GOV.UK organisation/news"
+    type: "html"
+    url: "https://www.gov.uk/government/organisations/maritime-and-coastguard-agency"
+    labels: ["D:NEWS_INTEL", "SRC:OFFICIAL", "OBJ:AUTHORITY"]
+    region_hint: "REG:BRITISH_ISLES"
+    priority: 78
+
+  - id: "hm_coastguard_news"
+    name: "HM Coastguard – News and media"
+    type: "html"
+    url: "https://hmcoastguard.uk/news"
+    labels: ["D:NEWS_INTEL", "SRC:OFFICIAL", "OBJ:COASTGUARD"]
+    region_hint: "REG:BRITISH_ISLES"
+    priority: 78
+
+  - id: "uscg_news_rss"
+    name: "US Coast Guard News – RSS"
+    type: "html"
+    url: "https://www.news.uscg.mil/RSS/"
+    labels: ["D:NEWS_INTEL", "SRC:OFFICIAL", "OBJ:COASTGUARD"]
+    region_hint: "REG:OTHER"
+    priority: 65
+
+  - id: "uscg_navcen_rss_info"
+    name: "USCG NAVCEN – RSS / navigation resources"
+    type: "html"
+    url: "https://www.navcen.uscg.gov/subscribe-email-rss-feeds"
+    labels: ["D:RF_SIGNAL", "SRC:OFFICIAL", "OBJ:NAVIGATION"]
+    region_hint: "REG:OTHER"
+    priority: 65
+
+  - id: "unsc_sanctions_rss_updates"
+    name: "UN Security Council – RSS updates UNSC Consolidated List"
+    type: "html"
+    url: "https://main.un.org/securitycouncil/en/rss-updates-unsc-consolidated-list"
+    labels: ["D:NEWS_INTEL", "SRC:OFFICIAL", "V:SANCTIONS_EVASION"]
+    region_hint: "REG:OTHER"
+    priority: 72
+
+  - id: "eu_sanctions_map"
+    name: "EU Sanctions Map"
+    type: "html"
+    url: "https://www.sanctionsmap.eu/"
+    labels: ["D:NEWS_INTEL", "SRC:OFFICIAL", "V:SANCTIONS_EVASION", "V:SHADOW_FLEET"]
+    region_hint: "REG:OTHER"
+    priority: 75
+
+  - id: "nato_shipping_centre_watch"
+    name: "NATO Shipping Centre – maritime security watch"
+    type: "html"
+    url: "https://shipping.nato.int/"
+    labels: ["D:NEWS_INTEL", "SRC:OFFICIAL", "OBJ:MARITIME_SECURITY"]
+    region_hint: "REG:ATLANTIC_NE"
+    priority: 78
+
+  # --- B SOURCES / MARITIME TRADE PRESS --------------------------------------
+
+  - id: "porttechnology_news"
+    name: "Port Technology International – News RSS page"
+    type: "html"
+    url: "https://www.porttechnology.org/rss-feeds/news/"
+    labels: ["D:NEWS_INTEL", "SRC:MEDIA", "OBJ:PORT"]
+    region_hint: "REG:OTHER"
+    priority: 62
+
+  - id: "porttechnology_security_cyber"
+    name: "Port Technology International – Security / Cyber topic"
+    type: "html"
+    url: "https://www.porttechnology.org/news-topic/safety-and-security/"
+    labels: ["D:CYBER_OT", "D:INFRA_CI", "SRC:MEDIA", "OBJ:PORT"]
+    region_hint: "REG:OTHER"
+    priority: 66
+
+  - id: "safety4sea_home"
+    name: "SAFETY4SEA – Maritime news"
+    type: "html"
+    url: "https://safety4sea.com/"
+    labels: ["D:NEWS_INTEL", "SRC:MEDIA"]
+    region_hint: "REG:OTHER"
+    priority: 64
+
+  - id: "safety4sea_psc"
+    name: "SAFETY4SEA – PSC focus"
+    type: "html"
+    url: "https://safety4sea.com/category/psc-focus/"
+    labels: ["D:NEWS_INTEL", "SRC:MEDIA", "OBJ:PSC"]
+    region_hint: "REG:OTHER"
+    priority: 66
+
+  - id: "safety4sea_cyber"
+    name: "SAFETY4SEA – Cyber security"
+    type: "html"
+    url: "https://safety4sea.com/category/cyber-security/"
+    labels: ["D:CYBER_OT", "SRC:MEDIA"]
+    region_hint: "REG:OTHER"
+    priority: 66
+
+  - id: "offshore_energy_news"
+    name: "Offshore Energy – News"
+    type: "html"
+    url: "https://www.offshore-energy.biz/"
+    labels: ["D:NEWS_INTEL", "SRC:MEDIA", "OBJ:OFFSHORE"]
+    region_hint: "REG:OTHER"
+    priority: 62
+
+  - id: "container_news"
+    name: "Container News"
+    type: "html"
+    url: "https://container-news.com/"
+    labels: ["D:NEWS_INTEL", "SRC:MEDIA", "OBJ:CONTAINER"]
+    region_hint: "REG:OTHER"
+    priority: 58
+
+  - id: "splash247_news"
+    name: "Splash247 – Maritime news"
+    type: "html"
+    url: "https://splash247.com/"
+    labels: ["D:NEWS_INTEL", "SRC:MEDIA"]
+    region_hint: "REG:OTHER"
+    priority: 60
+
+  - id: "rivieramm_news"
+    name: "Riviera Maritime Media – News"
+    type: "html"
+    url: "https://www.rivieramm.com/news-content-hub"
+    labels: ["D:NEWS_INTEL", "SRC:MEDIA"]
+    region_hint: "REG:OTHER"
+    priority: 58
+
+  - id: "the_loadstar_ocean"
+    name: "The Loadstar – Ocean freight / supply chain"
+    type: "html"
+    url: "https://theloadstar.com/"
+    labels: ["D:NEWS_INTEL", "SRC:MEDIA", "OBJ:SUPPLY_CHAIN"]
+    region_hint: "REG:OTHER"
+    priority: 54
