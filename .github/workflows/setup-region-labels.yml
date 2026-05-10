@@ -7,6 +7,9 @@ permissions:
   contents: read
   issues: write
 
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
 jobs:
   setup-labels:
     runs-on: ubuntu-latest
@@ -15,8 +18,29 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v4
 
+      - name: Show files
+        run: |
+          echo "Repo root:"
+          ls -la
+          echo "Scripts:"
+          ls -la scripts || true
+          echo "Workflow repo:"
+          echo "${{ github.repository }}"
+
+      - name: Verify script exists
+        run: |
+          test -f scripts/setup_region_labels_v1.sh
+
+      - name: Check GitHub CLI
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          which gh
+          gh --version
+          gh auth status || true
+
       - name: Setup region labels
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          bash scripts/setup_region_labels_v1.sh mowlsint/Voodoo_Dashboard
+          bash scripts/setup_region_labels_v1.sh "${{ github.repository }}"
