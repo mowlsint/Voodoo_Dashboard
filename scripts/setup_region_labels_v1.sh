@@ -15,7 +15,14 @@ upsert_label() {
   local color="$2"
   local description="$3"
 
-  if gh label view "$name" --repo "$REPO" >/dev/null 2>&1; then
+  local encoded
+  encoded="$(python3 - <<PY
+import urllib.parse
+print(urllib.parse.quote("""$name""", safe=""))
+PY
+)"
+
+  if gh api "repos/$REPO/labels/$encoded" >/dev/null 2>&1; then
     echo "exists, skipped: $name"
   else
     gh label create "$name" \
