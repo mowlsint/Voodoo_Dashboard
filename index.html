@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v5.15 "Weather Full Height"</title>
+  <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v5.16 "Linked Text/Map Selection"</title>
 
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -160,6 +160,37 @@
       background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(0,0,0,.25));
       margin-bottom:10px;
     }
+
+    .event{
+      cursor:pointer;
+      transition: border-color .12s ease, box-shadow .12s ease, background .12s ease;
+    }
+    .event:hover{
+      border-color:rgba(255,210,77,.78);
+      box-shadow:0 0 0 1px rgba(255,210,77,.10), 0 0 18px rgba(176,136,0,.16);
+    }
+    .event.selected{
+      border-color:#ffd24d;
+      box-shadow:0 0 0 2px rgba(255,210,77,.20), 0 0 24px rgba(255,210,77,.20);
+      background:linear-gradient(180deg, rgba(255,210,77,.08), rgba(0,0,0,.25));
+    }
+    .eventActions{display:flex; gap:6px; flex-wrap:wrap; align-items:center;}
+    .miniAction{
+      cursor:pointer;
+      border:1px solid rgba(176,136,0,.42);
+      border-radius:999px;
+      padding:4px 8px;
+      background:rgba(0,0,0,.35);
+      color:var(--text);
+      font-family:inherit;
+      font-size:14px;
+      text-decoration:none;
+      line-height:1;
+    }
+    .miniAction:hover{border-color:#ffd24d; color:#ffd24d;}
+    .miniAction.disabled{opacity:.45; cursor:not-allowed;}
+    .mapPopupActions{margin-top:6px; display:flex; gap:6px; flex-wrap:wrap;}
+
     .etop{display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap; align-items:flex-start}
     .title{font-size:22px}
     .meta{color:var(--muted); font-size:16px; margin-top:4px}
@@ -597,7 +628,7 @@
       <div class="brand">
         <div class="brandLine">
           <h1>VOODOO // HYBRID MARITIME OPS</h1>
-          <span class="ver">v5.15 “Weather Full Height”</span>
+          <span class="ver">v5.16 “Linked Text/Map Selection”</span>
         </div>
         <div class="sub">
           Source: <span id="src">–</span> • Stand: <span id="stand">–</span> • Worker: <span class="hint" id="wkr">–</span>
@@ -985,14 +1016,24 @@ Wilhelmshaven JadeWeserPort"></textarea>
 
       const when = ev.ts ? new Date(ev.ts).toLocaleString() : "–";
       const geoTxt = ev.geo ? `${ev.geo.lat.toFixed(4)}, ${ev.geo.lon.toFixed(4)}` : "";
-      const meta = [`#${ev.number ?? "?"}`, when, geoTxt ? `Geo: ${geoTxt}` : null].filter(Boolean).join(" • ");
+      const geoMeta = ev.geo?.matched_name ? `${ev.geo.matched_name} (${ev.geo.precision || "geo"})` : (geoTxt ? `Geo: ${geoTxt}` : null);
+      const meta = [`#${ev.number ?? "?"}`, when, geoMeta].filter(Boolean).join(" • ");
+      const selectedCls = String(state.selectedEventId ?? "") === String(ev.id) ? " selected" : "";
+      const mapBtn = ev.geo
+        ? `<button class="miniAction" type="button" data-action="map" data-event-id="${escapeHtml(ev.id)}">KARTE</button>`
+        : `<button class="miniAction disabled" type="button" title="Keine Koordinate vorhanden">KARTE</button>`;
 
       return `
-        <div class="event">
+        <div class="event${selectedCls}" id="event-card-${escapeHtml(ev.id)}" data-event-id="${escapeHtml(ev.id)}">
           <div class="etop">
             <div>
-              <div class="title"><a href="${ev.url}" target="_blank" rel="noreferrer">${escapeHtml(ev.title)}</a></div>
+              <div class="title">${escapeHtml(ev.title)}</div>
               <div class="meta">${escapeHtml(meta)}</div>
+            </div>
+            <div class="eventActions">
+              <button class="miniAction" type="button" data-action="text" data-event-id="${escapeHtml(ev.id)}">TEXT</button>
+              ${mapBtn}
+              <a class="miniAction" href="${ev.url}" target="_blank" rel="noreferrer" data-action="github">GITHUB</a>
             </div>
           </div>
           <div class="badges">${badgesHtml}</div>
@@ -1001,11 +1042,87 @@ Wilhelmshaven JadeWeserPort"></textarea>
       `;
     }).join("");
 
-    el("foot").textContent = `Angezeigt: ${state.filtered.length} / ${state.events.length} Events`;
+    list.querySelectorAll(".event").forEach(card => {
+      card.addEventListener("click", (e) => {
+        const actionEl = e.target.closest("[data-action]");
+        const eventId = card.dataset.eventId;
+
+        if (actionEl?.dataset.action === "github") return;
+
+        if (actionEl?.dataset.action === "map") {
+          e.preventDefault();
+          e.stopPropagation();
+          selectEvent(eventId, { showMap:true, openPopup:true, scrollText:false });
+          return;
+        }
+
+        e.preventDefault();
+        selectEvent(eventId, { showMap:false, openPopup:true, scrollText:false });
+      });
+    });
+
+    el("foot").textContent = `Angezeigt: ${state.filtered.length} / geladen: ${state.events.length}`;
   }
 
-  function parseISO(ts){ const d = ts ? new Date(ts) : null; return (d && !isNaN(d)) ? d : null; }
-  function daysAgo(d){ return (Date.now() - d.getTime()) / (1000*60*60*24); }
+  function getEventById(eventId){
+    return state.events.find(e => String(e.id) === String(eventId)) ||
+           state.filtered.find(e => String(e.id) === String(eventId)) ||
+           null;
+  }
+
+  function switchTab(name){
+    const tabEl = document.querySelector(`.tab[data-tab="${name}"]`);
+    setTab(name, tabEl || null);
+  }
+
+  function markSelectedCard(eventId, scrollText = false){
+    document.querySelectorAll(".event.selected").forEach(x => x.classList.remove("selected"));
+    const card = document.getElementById(`event-card-${CSS.escape(String(eventId))}`);
+    if (card) {
+      card.classList.add("selected");
+      if (scrollText) card.scrollIntoView({ behavior:"smooth", block:"center" });
+    }
+  }
+
+  function selectEvent(eventId, opts = {}){
+    const ev = getEventById(eventId);
+    if (!ev) return;
+
+    state.selectedEventId = String(ev.id);
+    markSelectedCard(ev.id, !!opts.scrollText);
+
+    if (opts.showText) {
+      switchTab("events");
+      setTimeout(() => markSelectedCard(ev.id, true), 60);
+    }
+
+    if (ev.geo && opts.showMap) {
+      switchTab("map");
+      setTimeout(() => {
+        focusEventOnMap(ev.id, { openPopup: opts.openPopup !== false });
+      }, 180);
+    } else if (ev.geo && state.map) {
+      focusEventOnMap(ev.id, { openPopup: opts.openPopup !== false, panOnly:true });
+    }
+  }
+
+  function focusEventOnMap(eventId, opts = {}){
+    if (!state.map) return;
+    const marker = state.eventMarkers.get(String(eventId));
+    const ev = getEventById(eventId);
+
+    if (marker) {
+      const ll = marker.getLatLng();
+      state.map.setView(ll, Math.max(state.map.getZoom(), 8), { animate:true });
+      marker.setStyle({ weight:5, radius:(marker.options.radius || 9) + 3, color:"#ffffff" });
+      if (opts.openPopup) marker.openPopup();
+      return;
+    }
+
+    if (ev?.geo) {
+      state.map.setView([ev.geo.lat, ev.geo.lon], Math.max(state.map.getZoom(), 8), { animate:true });
+    }
+  }
 
   function scorePhaseZero(events){
     const recent = events.filter(e => { const d = parseISO(e.ts); return d ? daysAgo(d) <= 7 : false; });
@@ -1411,6 +1528,7 @@ Wilhelmshaven JadeWeserPort"></textarea>
     const showCI = el("mapShowCI").checked;
 
     state.layers.events.clearLayers();
+    state.eventMarkers.clear();
 
     const src = showEvents ? (onlyFiltered ? state.filtered : state.events) : [];
     const pts = src.filter(e => e.geo && typeof e.geo.lat === "number" && typeof e.geo.lon === "number");
@@ -1420,8 +1538,25 @@ Wilhelmshaven JadeWeserPort"></textarea>
 
     let bounds = null;
     for (const ev of pts){
-      const m = L.circleMarker([ev.geo.lat, ev.geo.lon], eventMarkerStyle(ev));
-      m.bindPopup(`<b>${escapeHtml(ev.title)}</b><br><a href="${ev.url}" target="_blank" rel="noreferrer">Open Issue</a>`);
+      const style = eventMarkerStyle(ev);
+      if (String(state.selectedEventId ?? "") === String(ev.id)) {
+        style.weight = 5;
+        style.radius = (style.radius || 9) + 3;
+        style.color = "#ffffff";
+      }
+
+      const m = L.circleMarker([ev.geo.lat, ev.geo.lon], style);
+      state.eventMarkers.set(String(ev.id), m);
+
+      const place = ev.geo?.matched_name ? `<br><span>${escapeHtml(ev.geo.matched_name)} • ${escapeHtml(ev.geo.precision || "")}</span>` : "";
+      m.bindPopup(`
+        <b>${escapeHtml(ev.title)}</b>${place}<br>
+        <div class="mapPopupActions">
+          <button class="miniAction" type="button" data-map-action="show-text" data-event-id="${escapeHtml(ev.id)}">Meldung anzeigen</button>
+          <a class="miniAction" href="${ev.url}" target="_blank" rel="noreferrer">GitHub</a>
+        </div>
+      `);
+      m.on("click", () => selectEvent(ev.id, { showMap:false, openPopup:false, scrollText:false }));
       m.addTo(state.layers.events);
       bounds = bounds ? bounds.extend([ev.geo.lat, ev.geo.lon]) : L.latLngBounds([[ev.geo.lat, ev.geo.lon],[ev.geo.lat, ev.geo.lon]]);
     }
@@ -1951,6 +2086,13 @@ Wilhelmshaven JadeWeserPort"></textarea>
 
   ["mapShowEvents","mapOnlyFiltered","mapShowCI"].forEach(id => {
     on(id, "change", refreshMapLayers);
+  });
+
+  document.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-map-action='show-text']");
+    if (!btn) return;
+    e.preventDefault();
+    selectEvent(btn.dataset.eventId, { showText:true, openPopup:false, scrollText:true });
   });
 
   // boot
