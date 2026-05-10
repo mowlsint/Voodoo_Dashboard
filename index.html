@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v5.14 "Expanded Right Panels"</title>
+  <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v5.15 "Weather Full Height"</title>
 
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -540,6 +540,33 @@
     .weatherPanel .pc{max-height:2880px !important;}   /* 4x v5.13 */
     .navwarnPanel .pc{max-height:560px !important;}    /* + ca. 1/3 */
 
+
+    /* v5.15: show all weather mini-windows; no inner weather scroll */
+    .weatherPanel .pc{
+      max-height:none !important;
+      overflow:visible !important;
+      padding-right:10px !important;
+    }
+    .weatherPanel .scrollbox{
+      max-height:none !important;
+      overflow:visible !important;
+      padding-right:0 !important;
+    }
+    .sideGrid .weatherGrid{
+      grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+      gap:8px !important;
+    }
+    .sideGrid .weatherCard{
+      min-height:122px !important;
+    }
+    .sideGrid .weatherName{
+      font-size:15px !important;
+      line-height:1.05 !important;
+    }
+    .sideGrid .wxRows{
+      font-size:12px !important;
+    }
+
     @media (max-width: 1100px){
       .grid{grid-template-columns:1fr;}
       #map{height:460px;}
@@ -570,7 +597,7 @@
       <div class="brand">
         <div class="brandLine">
           <h1>VOODOO // HYBRID MARITIME OPS</h1>
-          <span class="ver">v5.14 “Expanded Right Panels”</span>
+          <span class="ver">v5.15 “Weather Full Height”</span>
         </div>
         <div class="sub">
           Source: <span id="src">–</span> • Stand: <span id="stand">–</span> • Worker: <span class="hint" id="wkr">–</span>
