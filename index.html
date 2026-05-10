@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v5.20 "Original Links Only"</title>
+  <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v5.21 "Map Time Window"</title>
 
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -190,6 +190,17 @@
     }
     .mapbar{display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-top:10px;}
     .hint{color:var(--muted); font-size:16px}
+
+    .mapbar select{
+      background:#111317;
+      color:var(--text);
+      border:1px solid rgba(176,136,0,.35);
+      border-radius:10px;
+      padding:7px 10px;
+      font-family:inherit;
+      font-size:16px;
+    }
+
 
     .sideGrid{display:grid; grid-template-columns:1fr; gap:12px;}
     .kpis{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
@@ -597,7 +608,7 @@
       <div class="brand">
         <div class="brandLine">
           <h1>VOODOO // HYBRID MARITIME OPS</h1>
-          <span class="ver">v5.20 “Original Links Only”</span>
+          <span class="ver">v5.21 “Map Time Window”</span>
         </div>
         <div class="sub">
           Source: <span id="src">–</span> • Stand: <span id="stand">–</span> • Worker: <span class="hint" id="wkr">–</span>
@@ -689,6 +700,17 @@
               <label class="toggle"><input type="checkbox" id="mapShowEvents" checked> show event markers</label>
               <label class="toggle"><input type="checkbox" id="mapOnlyFiltered" checked> map uses filters</label>
               <label class="toggle"><input type="checkbox" id="mapShowCI" checked> show CI overlays</label>
+              <label class="toggle">Zeitraum
+                <select id="mapTimeWindow">
+                  <option value="24">24h</option>
+                  <option value="48">48h</option>
+                  <option value="72" selected>72h</option>
+                  <option value="168">7 Tage</option>
+                  <option value="720">30 Tage</option>
+                  <option value="2160">90 Tage</option>
+                  <option value="all">alle offenen</option>
+                </select>
+              </label>
               <button class="btn secondary" id="btnFit" style="padding:8px 10px; font-size:18px;">FIT</button>
               <span class="hint" id="ciStatus">CI: idle</span>
               <span class="hint" id="mapStatus">MAP: –</span>
@@ -1461,21 +1483,34 @@ Wilhelmshaven JadeWeserPort"></textarea>
 
     state.layers.events.clearLayers();
 
-    const src = showEvents ? (onlyFiltered ? state.filtered : state.events) : [];
-    const pts = src.filter(e => e.geo && typeof e.geo.lat === "number" && typeof e.geo.lon === "number");
+    const baseSrc = showEvents ? (onlyFiltered ? state.filtered : state.events) : [];
+    const tw = el("mapTimeWindow")?.value || "72";
+    const now = new Date();
+
+    const src = tw === "all"
+      ? baseSrc
+      : baseSrc.filter(e => {
+          const d = parseISO(e.ts);
+          return d ? hoursAgo(d, now) <= Number(tw) : false;
+        });
+
+    const pts = src.filter(e => e.geo && Number.isFinite(Number(e.geo.lat)) && Number.isFinite(Number(e.geo.lon)));
 
     const ms = el("mapStatus");
-    if (ms) ms.textContent = `MAP: src=${src.length} geo=${pts.length}`;
+    const label = tw === "all" ? "alle offenen" : (tw === "168" ? "7 Tage" : tw === "720" ? "30 Tage" : tw === "2160" ? "90 Tage" : `${tw}h`);
+    if (ms) ms.textContent = `MAP: ${label} • src=${src.length}/${baseSrc.length} geo=${pts.length}`;
 
     let bounds = null;
     for (const ev of pts){
-      const m = L.circleMarker([ev.geo.lat, ev.geo.lon], eventMarkerStyle(ev));
+      const lat = Number(ev.geo.lat);
+      const lon = Number(ev.geo.lon);
+      const m = L.circleMarker([lat, lon], eventMarkerStyle(ev));
       const originalUrl = originalUrlFromEvent(ev);
       const popupUrl = originalUrl || ev.url;
       const popupLabel = originalUrl ? "Originalmeldung öffnen" : "GitHub Issue öffnen";
       m.bindPopup(`<b>${escapeHtml(ev.title)}</b><br><a href="${escapeHtml(popupUrl)}" target="_blank" rel="noreferrer">${popupLabel}</a>`);
       m.addTo(state.layers.events);
-      bounds = bounds ? bounds.extend([ev.geo.lat, ev.geo.lon]) : L.latLngBounds([[ev.geo.lat, ev.geo.lon],[ev.geo.lat, ev.geo.lon]]);
+      bounds = bounds ? bounds.extend([lat, lon]) : L.latLngBounds([[lat, lon],[lat, lon]]);
     }
 
     if (showCI) {
@@ -2001,7 +2036,7 @@ Wilhelmshaven JadeWeserPort"></textarea>
     setTab(tab, t);
   }));
 
-  ["mapShowEvents","mapOnlyFiltered","mapShowCI"].forEach(id => {
+  ["mapShowEvents","mapOnlyFiltered","mapShowCI","mapTimeWindow"].forEach(id => {
     on(id, "change", refreshMapLayers);
   });
 
