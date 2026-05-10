@@ -1,7 +1,7 @@
 {
-  "version": 1,
+  "version": 2,
   "name": "VOODOO Maritime Gazetteer",
-  "description": "Controlled maritime gazetteer for inferred geolocation. Exact issue-body coordinates override inferred places.",
+  "description": "Controlled maritime gazetteer for inferred geolocation. Expanded global v2: Europe, Middle East, Indian Ocean, Africa, Americas, Indo-Pacific and Arctic. Exact issue-body coordinates override inferred places.",
   "places": [
     {
       "id": "strait_gibraltar",
@@ -573,6 +573,1019 @@
         ],
         "en": [
           "Bremerhaven"
+        ]
+      }
+    },
+    {
+      "id": "port_jask_iran",
+      "canonical_name": "Jask",
+      "type": "port_coastal_place",
+      "precision": "port",
+      "center": {
+        "lat": 25.64,
+        "lon": 57.77
+      },
+      "radius_km": 18,
+      "regions": [
+        "REG:GULF_OF_OMAN",
+        "REG:ARABIAN_SEA",
+        "REG:IRAN_COAST"
+      ],
+      "aliases": {
+        "de": [
+          "Jask",
+          "Dschask"
+        ],
+        "en": [
+          "Jask",
+          "Bandar-e Jask",
+          "Bandar Jask",
+          "Jask port"
+        ],
+        "fa_latin": [
+          "Bandar-e Jask",
+          "Bandar Jask",
+          "Jask"
+        ]
+      }
+    },
+    {
+      "id": "strait_hormuz",
+      "canonical_name": "Strait of Hormuz",
+      "type": "strait",
+      "precision": "area",
+      "center": {
+        "lat": 26.56,
+        "lon": 56.25
+      },
+      "radius_km": 85,
+      "regions": [
+        "REG:PERSIAN_GULF",
+        "REG:GULF_OF_OMAN",
+        "REG:STRAIT_HORMUZ"
+      ],
+      "aliases": {
+        "de": [
+          "Straße von Hormus",
+          "Strasse von Hormus",
+          "Hormusstraße",
+          "Hormuzstraße"
+        ],
+        "en": [
+          "Strait of Hormuz",
+          "Hormuz Strait"
+        ],
+        "fa_latin": [
+          "Tangeh-ye Hormoz",
+          "Tange-ye Hormoz"
+        ],
+        "ar_latin": [
+          "Madīq Hurmuz",
+          "Madiq Hurmuz"
+        ]
+      }
+    },
+    {
+      "id": "gulf_of_oman",
+      "canonical_name": "Gulf of Oman",
+      "type": "sea_area",
+      "precision": "area",
+      "center": {
+        "lat": 24.7,
+        "lon": 58.5
+      },
+      "radius_km": 350,
+      "regions": [
+        "REG:GULF_OF_OMAN",
+        "REG:ARABIAN_SEA"
+      ],
+      "aliases": {
+        "de": [
+          "Golf von Oman"
+        ],
+        "en": [
+          "Gulf of Oman"
+        ],
+        "fa_latin": [
+          "Daryaye Oman"
+        ],
+        "ar_latin": [
+          "Khalij Uman"
+        ]
+      }
+    },
+    {
+      "id": "persian_gulf",
+      "canonical_name": "Persian Gulf",
+      "type": "sea_area",
+      "precision": "area",
+      "center": {
+        "lat": 27.3,
+        "lon": 51.6
+      },
+      "radius_km": 520,
+      "regions": [
+        "REG:PERSIAN_GULF"
+      ],
+      "aliases": {
+        "de": [
+          "Persischer Golf",
+          "Arabischer Golf"
+        ],
+        "en": [
+          "Persian Gulf",
+          "Arabian Gulf",
+          "The Gulf"
+        ],
+        "fa_latin": [
+          "Khalij-e Fars"
+        ],
+        "ar_latin": [
+          "Al-Khalij al-Arabi",
+          "Al Khalij al Arabi"
+        ]
+      }
+    },
+    {
+      "id": "arabian_sea",
+      "canonical_name": "Arabian Sea",
+      "type": "sea_area",
+      "precision": "area",
+      "center": {
+        "lat": 15.0,
+        "lon": 63.0
+      },
+      "radius_km": 1250,
+      "regions": [
+        "REG:ARABIAN_SEA",
+        "REG:INDIAN_OCEAN"
+      ],
+      "aliases": {
+        "de": [
+          "Arabisches Meer"
+        ],
+        "en": [
+          "Arabian Sea"
+        ],
+        "ar_latin": [
+          "Bahr al-Arab"
+        ],
+        "hi_latin": [
+          "Arab Sagar"
+        ]
+      }
+    },
+    {
+      "id": "gulf_of_aden",
+      "canonical_name": "Gulf of Aden",
+      "type": "sea_area",
+      "precision": "area",
+      "center": {
+        "lat": 12.3,
+        "lon": 48.5
+      },
+      "radius_km": 520,
+      "regions": [
+        "REG:GULF_OF_ADEN",
+        "REG:HORN_OF_AFRICA",
+        "REG:INDIAN_OCEAN"
+      ],
+      "aliases": {
+        "de": [
+          "Golf von Aden"
+        ],
+        "en": [
+          "Gulf of Aden"
+        ],
+        "ar_latin": [
+          "Khalij Adan"
+        ]
+      }
+    },
+    {
+      "id": "bab_el_mandeb",
+      "canonical_name": "Bab el-Mandeb",
+      "type": "strait",
+      "precision": "area",
+      "center": {
+        "lat": 12.6,
+        "lon": 43.35
+      },
+      "radius_km": 80,
+      "regions": [
+        "REG:BAB_EL_MANDEB",
+        "REG:RED_SEA",
+        "REG:GULF_OF_ADEN",
+        "REG:HORN_OF_AFRICA"
+      ],
+      "aliases": {
+        "de": [
+          "Bab el-Mandeb",
+          "Bab al-Mandab"
+        ],
+        "en": [
+          "Bab el-Mandeb",
+          "Bab al-Mandab",
+          "Bab el Mandeb",
+          "Bab al Mandab"
+        ],
+        "ar_latin": [
+          "Bab al-Mandab"
+        ]
+      }
+    },
+    {
+      "id": "red_sea",
+      "canonical_name": "Red Sea",
+      "type": "sea_area",
+      "precision": "area",
+      "center": {
+        "lat": 20.0,
+        "lon": 38.0
+      },
+      "radius_km": 980,
+      "regions": [
+        "REG:RED_SEA"
+      ],
+      "aliases": {
+        "de": [
+          "Rotes Meer"
+        ],
+        "en": [
+          "Red Sea"
+        ],
+        "ar_latin": [
+          "Al-Bahr al-Ahmar",
+          "Al Bahr al Ahmar"
+        ]
+      }
+    },
+    {
+      "id": "suez_canal",
+      "canonical_name": "Suez Canal",
+      "type": "canal",
+      "precision": "area",
+      "center": {
+        "lat": 30.6,
+        "lon": 32.3
+      },
+      "radius_km": 120,
+      "regions": [
+        "REG:SUEZ_APPROACHES",
+        "REG:RED_SEA",
+        "REG:MEDITERRANEAN"
+      ],
+      "aliases": {
+        "de": [
+          "Suezkanal",
+          "Sueskanal",
+          "Suez-Kanal"
+        ],
+        "en": [
+          "Suez Canal",
+          "Suez"
+        ],
+        "fr": [
+          "Canal de Suez"
+        ],
+        "ar_latin": [
+          "Qanat as-Suways"
+        ]
+      }
+    },
+    {
+      "id": "port_chabahar",
+      "canonical_name": "Chabahar",
+      "type": "port",
+      "precision": "port",
+      "center": {
+        "lat": 25.29,
+        "lon": 60.62
+      },
+      "radius_km": 18,
+      "regions": [
+        "REG:GULF_OF_OMAN",
+        "REG:IRAN_COAST",
+        "REG:ARABIAN_SEA"
+      ],
+      "aliases": {
+        "de": [
+          "Tschahbahar",
+          "Chabahar"
+        ],
+        "en": [
+          "Chabahar",
+          "Chabahar port",
+          "Chabahar Port"
+        ],
+        "fa_latin": [
+          "Chabahar",
+          "Chah Bahar"
+        ]
+      }
+    },
+    {
+      "id": "port_bandar_abbas",
+      "canonical_name": "Bandar Abbas",
+      "type": "port",
+      "precision": "port",
+      "center": {
+        "lat": 27.18,
+        "lon": 56.28
+      },
+      "radius_km": 20,
+      "regions": [
+        "REG:PERSIAN_GULF",
+        "REG:STRAIT_HORMUZ",
+        "REG:IRAN_COAST"
+      ],
+      "aliases": {
+        "de": [
+          "Bandar Abbas"
+        ],
+        "en": [
+          "Bandar Abbas",
+          "Bandar Abbas port",
+          "Shahid Rajaee",
+          "Shahid Rajaei"
+        ],
+        "fa_latin": [
+          "Bandar Abbas",
+          "Shahid Rajaee"
+        ]
+      }
+    },
+    {
+      "id": "gulf_of_guinea",
+      "canonical_name": "Gulf of Guinea",
+      "type": "sea_area",
+      "precision": "area",
+      "center": {
+        "lat": 1.5,
+        "lon": 3.0
+      },
+      "radius_km": 900,
+      "regions": [
+        "REG:GULF_OF_GUINEA",
+        "REG:WEST_AFRICA",
+        "REG:ATLANTIC"
+      ],
+      "aliases": {
+        "de": [
+          "Golf von Guinea"
+        ],
+        "en": [
+          "Gulf of Guinea"
+        ],
+        "fr": [
+          "Golfe de Guinée"
+        ],
+        "pt": [
+          "Golfo da Guiné"
+        ],
+        "es": [
+          "Golfo de Guinea"
+        ]
+      }
+    },
+    {
+      "id": "cape_verde_approaches",
+      "canonical_name": "Cape Verde Approaches",
+      "type": "sea_area",
+      "precision": "area",
+      "center": {
+        "lat": 15.3,
+        "lon": -23.6
+      },
+      "radius_km": 350,
+      "regions": [
+        "REG:CAPE_VERDE_APPROACHES",
+        "REG:WEST_AFRICA",
+        "REG:ATLANTIC"
+      ],
+      "aliases": {
+        "de": [
+          "Kap Verde",
+          "Kapverden",
+          "Kapverdische Inseln"
+        ],
+        "en": [
+          "Cape Verde",
+          "Cabo Verde",
+          "Cape Verde approaches"
+        ],
+        "pt": [
+          "Cabo Verde"
+        ],
+        "fr": [
+          "Cap-Vert"
+        ]
+      }
+    },
+    {
+      "id": "senegal_dakar_approaches",
+      "canonical_name": "Dakar / Senegal Approaches",
+      "type": "sea_area",
+      "precision": "area",
+      "center": {
+        "lat": 14.65,
+        "lon": -17.45
+      },
+      "radius_km": 160,
+      "regions": [
+        "REG:WEST_AFRICA",
+        "REG:ATLANTIC"
+      ],
+      "aliases": {
+        "de": [
+          "Dakar",
+          "Senegal Küste"
+        ],
+        "en": [
+          "Dakar",
+          "Senegal approaches",
+          "Dakar approaches"
+        ],
+        "fr": [
+          "Dakar",
+          "côte sénégalaise"
+        ],
+        "pt": [
+          "Dacar"
+        ]
+      }
+    },
+    {
+      "id": "port_lagos",
+      "canonical_name": "Lagos",
+      "type": "port",
+      "precision": "port",
+      "center": {
+        "lat": 6.43,
+        "lon": 3.4
+      },
+      "radius_km": 25,
+      "regions": [
+        "REG:GULF_OF_GUINEA",
+        "REG:WEST_AFRICA"
+      ],
+      "aliases": {
+        "de": [
+          "Lagos"
+        ],
+        "en": [
+          "Lagos",
+          "Lagos port",
+          "Apapa",
+          "Tin Can Island"
+        ],
+        "fr": [
+          "Lagos"
+        ]
+      }
+    },
+    {
+      "id": "port_tema",
+      "canonical_name": "Tema",
+      "type": "port",
+      "precision": "port",
+      "center": {
+        "lat": 5.64,
+        "lon": 0.01
+      },
+      "radius_km": 15,
+      "regions": [
+        "REG:GULF_OF_GUINEA",
+        "REG:WEST_AFRICA"
+      ],
+      "aliases": {
+        "de": [
+          "Tema"
+        ],
+        "en": [
+          "Tema",
+          "Port of Tema",
+          "Tema port"
+        ],
+        "fr": [
+          "Tema"
+        ]
+      }
+    },
+    {
+      "id": "port_abidjan",
+      "canonical_name": "Abidjan",
+      "type": "port",
+      "precision": "port",
+      "center": {
+        "lat": 5.3,
+        "lon": -4.02
+      },
+      "radius_km": 18,
+      "regions": [
+        "REG:GULF_OF_GUINEA",
+        "REG:WEST_AFRICA"
+      ],
+      "aliases": {
+        "de": [
+          "Abidjan"
+        ],
+        "en": [
+          "Abidjan",
+          "Port of Abidjan",
+          "Abidjan port"
+        ],
+        "fr": [
+          "Abidjan",
+          "Port d'Abidjan"
+        ]
+      }
+    },
+    {
+      "id": "caribbean_sea",
+      "canonical_name": "Caribbean Sea",
+      "type": "sea_area",
+      "precision": "area",
+      "center": {
+        "lat": 15.0,
+        "lon": -75.0
+      },
+      "radius_km": 1250,
+      "regions": [
+        "REG:CARIBBEAN",
+        "REG:ATLANTIC"
+      ],
+      "aliases": {
+        "de": [
+          "Karibik",
+          "Karibisches Meer"
+        ],
+        "en": [
+          "Caribbean",
+          "Caribbean Sea"
+        ],
+        "es": [
+          "Caribe",
+          "Mar Caribe"
+        ],
+        "fr": [
+          "Caraïbes",
+          "Mer des Caraïbes"
+        ],
+        "nl": [
+          "Caribische Zee"
+        ]
+      }
+    },
+    {
+      "id": "panama_canal",
+      "canonical_name": "Panama Canal",
+      "type": "canal",
+      "precision": "area",
+      "center": {
+        "lat": 9.08,
+        "lon": -79.68
+      },
+      "radius_km": 80,
+      "regions": [
+        "REG:CARIBBEAN",
+        "REG:PACIFIC_CENTRAL_AMERICA"
+      ],
+      "aliases": {
+        "de": [
+          "Panamakanal",
+          "Panama-Kanal"
+        ],
+        "en": [
+          "Panama Canal",
+          "Canal Zone"
+        ],
+        "es": [
+          "Canal de Panamá",
+          "Canal de Panama"
+        ],
+        "fr": [
+          "Canal de Panama"
+        ]
+      }
+    },
+    {
+      "id": "port_santa_marta",
+      "canonical_name": "Santa Marta",
+      "type": "port",
+      "precision": "port",
+      "center": {
+        "lat": 11.25,
+        "lon": -74.22
+      },
+      "radius_km": 18,
+      "regions": [
+        "REG:CARIBBEAN",
+        "REG:SOUTH_AMERICA_EAST"
+      ],
+      "aliases": {
+        "de": [
+          "Santa Marta"
+        ],
+        "en": [
+          "Santa Marta",
+          "Port of Santa Marta",
+          "Santa Marta port"
+        ],
+        "es": [
+          "Santa Marta",
+          "Puerto de Santa Marta"
+        ]
+      }
+    },
+    {
+      "id": "port_cartagena_colombia",
+      "canonical_name": "Cartagena, Colombia",
+      "type": "port",
+      "precision": "port",
+      "center": {
+        "lat": 10.4,
+        "lon": -75.53
+      },
+      "radius_km": 25,
+      "regions": [
+        "REG:CARIBBEAN",
+        "REG:SOUTH_AMERICA_EAST"
+      ],
+      "aliases": {
+        "de": [
+          "Cartagena Kolumbien",
+          "Cartagena de Indias"
+        ],
+        "en": [
+          "Cartagena Colombia",
+          "Cartagena de Indias",
+          "Port of Cartagena Colombia"
+        ],
+        "es": [
+          "Cartagena",
+          "Cartagena de Indias",
+          "Puerto de Cartagena"
+        ]
+      }
+    },
+    {
+      "id": "port_guayaquil",
+      "canonical_name": "Guayaquil",
+      "type": "port",
+      "precision": "port",
+      "center": {
+        "lat": -2.28,
+        "lon": -79.9
+      },
+      "radius_km": 35,
+      "regions": [
+        "REG:SOUTH_AMERICA_WEST",
+        "REG:PACIFIC_SOUTH_AMERICA"
+      ],
+      "aliases": {
+        "de": [
+          "Guayaquil"
+        ],
+        "en": [
+          "Guayaquil",
+          "Port of Guayaquil",
+          "Guayaquil port"
+        ],
+        "es": [
+          "Guayaquil",
+          "Puerto de Guayaquil"
+        ]
+      }
+    },
+    {
+      "id": "port_callao",
+      "canonical_name": "Callao",
+      "type": "port",
+      "precision": "port",
+      "center": {
+        "lat": -12.05,
+        "lon": -77.15
+      },
+      "radius_km": 20,
+      "regions": [
+        "REG:SOUTH_AMERICA_WEST",
+        "REG:PACIFIC_SOUTH_AMERICA"
+      ],
+      "aliases": {
+        "de": [
+          "Callao"
+        ],
+        "en": [
+          "Callao",
+          "Port of Callao",
+          "Callao port"
+        ],
+        "es": [
+          "Callao",
+          "Puerto del Callao"
+        ]
+      }
+    },
+    {
+      "id": "port_santos",
+      "canonical_name": "Santos",
+      "type": "port",
+      "precision": "port",
+      "center": {
+        "lat": -23.96,
+        "lon": -46.33
+      },
+      "radius_km": 30,
+      "regions": [
+        "REG:SOUTH_AMERICA_EAST",
+        "REG:ATLANTIC"
+      ],
+      "aliases": {
+        "de": [
+          "Santos"
+        ],
+        "en": [
+          "Santos",
+          "Port of Santos",
+          "Santos port"
+        ],
+        "pt": [
+          "Santos",
+          "Porto de Santos"
+        ],
+        "es": [
+          "Santos"
+        ]
+      }
+    },
+    {
+      "id": "malacca_strait",
+      "canonical_name": "Malacca Strait",
+      "type": "strait",
+      "precision": "area",
+      "center": {
+        "lat": 3.0,
+        "lon": 100.5
+      },
+      "radius_km": 500,
+      "regions": [
+        "REG:MALACCA_STRAIT",
+        "REG:INDO_PACIFIC",
+        "REG:SOUTH_CHINA_SEA"
+      ],
+      "aliases": {
+        "de": [
+          "Straße von Malakka",
+          "Strasse von Malakka",
+          "Malakkastraße"
+        ],
+        "en": [
+          "Malacca Strait",
+          "Strait of Malacca"
+        ],
+        "id": [
+          "Selat Malaka"
+        ],
+        "ms": [
+          "Selat Melaka"
+        ]
+      }
+    },
+    {
+      "id": "singapore_strait",
+      "canonical_name": "Singapore Strait",
+      "type": "strait",
+      "precision": "area",
+      "center": {
+        "lat": 1.2,
+        "lon": 103.85
+      },
+      "radius_km": 90,
+      "regions": [
+        "REG:SINGAPORE_STRAIT",
+        "REG:INDO_PACIFIC",
+        "REG:SOUTH_CHINA_SEA"
+      ],
+      "aliases": {
+        "de": [
+          "Straße von Singapur",
+          "Strasse von Singapur"
+        ],
+        "en": [
+          "Singapore Strait",
+          "Strait of Singapore"
+        ],
+        "ms": [
+          "Selat Singapura"
+        ],
+        "id": [
+          "Selat Singapura"
+        ]
+      }
+    },
+    {
+      "id": "south_china_sea",
+      "canonical_name": "South China Sea",
+      "type": "sea_area",
+      "precision": "area",
+      "center": {
+        "lat": 12.0,
+        "lon": 114.0
+      },
+      "radius_km": 1500,
+      "regions": [
+        "REG:SOUTH_CHINA_SEA",
+        "REG:INDO_PACIFIC"
+      ],
+      "aliases": {
+        "de": [
+          "Südchinesisches Meer",
+          "Suedchinesisches Meer"
+        ],
+        "en": [
+          "South China Sea"
+        ],
+        "zh_latin": [
+          "Nanhai"
+        ],
+        "vi_latin": [
+          "Bien Dong",
+          "Biển Đông"
+        ]
+      }
+    },
+    {
+      "id": "taiwan_strait",
+      "canonical_name": "Taiwan Strait",
+      "type": "strait",
+      "precision": "area",
+      "center": {
+        "lat": 24.0,
+        "lon": 119.5
+      },
+      "radius_km": 280,
+      "regions": [
+        "REG:TAIWAN_STRAIT",
+        "REG:EAST_ASIA",
+        "REG:INDO_PACIFIC"
+      ],
+      "aliases": {
+        "de": [
+          "Taiwanstraße",
+          "Taiwanstrasse",
+          "Straße von Taiwan"
+        ],
+        "en": [
+          "Taiwan Strait",
+          "Strait of Taiwan"
+        ],
+        "zh_latin": [
+          "Taiwan Haixia"
+        ]
+      }
+    },
+    {
+      "id": "east_china_sea",
+      "canonical_name": "East China Sea",
+      "type": "sea_area",
+      "precision": "area",
+      "center": {
+        "lat": 29.0,
+        "lon": 125.0
+      },
+      "radius_km": 900,
+      "regions": [
+        "REG:EAST_CHINA_SEA",
+        "REG:EAST_ASIA",
+        "REG:INDO_PACIFIC"
+      ],
+      "aliases": {
+        "de": [
+          "Ostchinesisches Meer"
+        ],
+        "en": [
+          "East China Sea"
+        ],
+        "zh_latin": [
+          "Donghai"
+        ]
+      }
+    },
+    {
+      "id": "korean_strait",
+      "canonical_name": "Korea Strait",
+      "type": "strait",
+      "precision": "area",
+      "center": {
+        "lat": 34.8,
+        "lon": 129.5
+      },
+      "radius_km": 250,
+      "regions": [
+        "REG:EAST_ASIA",
+        "REG:KOREA_STRAIT"
+      ],
+      "aliases": {
+        "de": [
+          "Koreastraße",
+          "Koreastrasse",
+          "Straße von Korea"
+        ],
+        "en": [
+          "Korea Strait",
+          "Korean Strait",
+          "Tsushima Strait"
+        ],
+        "ja_latin": [
+          "Tsushima Kaikyo"
+        ],
+        "ko_latin": [
+          "Daehan Haehyeop"
+        ]
+      }
+    },
+    {
+      "id": "greenland_iceland_uk_gap",
+      "canonical_name": "GIUK Gap",
+      "type": "sea_area",
+      "precision": "area",
+      "center": {
+        "lat": 62.5,
+        "lon": -20.0
+      },
+      "radius_km": 800,
+      "regions": [
+        "REG:GIUK_GAP",
+        "REG:HIGH_NORTH_ARCTIC",
+        "REG:ATLANTIC"
+      ],
+      "aliases": {
+        "de": [
+          "GIUK-Lücke",
+          "GIUK Lücke",
+          "GIUK Gap"
+        ],
+        "en": [
+          "GIUK Gap",
+          "Greenland-Iceland-UK Gap",
+          "Greenland Iceland UK Gap"
+        ]
+      }
+    },
+    {
+      "id": "northwest_passage",
+      "canonical_name": "Northwest Passage",
+      "type": "sea_area",
+      "precision": "area",
+      "center": {
+        "lat": 73.0,
+        "lon": -95.0
+      },
+      "radius_km": 1400,
+      "regions": [
+        "REG:ARCTIC",
+        "REG:NORTH_AMERICA"
+      ],
+      "aliases": {
+        "de": [
+          "Nordwestpassage"
+        ],
+        "en": [
+          "Northwest Passage",
+          "North-West Passage"
+        ],
+        "fr": [
+          "Passage du Nord-Ouest"
+        ]
+      }
+    },
+    {
+      "id": "baltimore_chesapeake",
+      "canonical_name": "Baltimore / Chesapeake Bay",
+      "type": "port_area",
+      "precision": "area",
+      "center": {
+        "lat": 39.23,
+        "lon": -76.55
+      },
+      "radius_km": 80,
+      "regions": [
+        "REG:NORTH_AMERICA",
+        "REG:US_EAST_COAST"
+      ],
+      "aliases": {
+        "de": [
+          "Baltimore",
+          "Chesapeake Bay"
+        ],
+        "en": [
+          "Baltimore",
+          "Port of Baltimore",
+          "Chesapeake Bay"
+        ],
+        "fr": [
+          "Baltimore"
         ]
       }
     }
