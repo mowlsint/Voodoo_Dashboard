@@ -1,0 +1,455 @@
+version: 1
+name: "VOODOO Maritime Key Regions"
+description: >
+  Analytical key regions and subregions for VOODOO maritime OSINT.
+  These regions may also exist as GitHub labels where useful.
+  They are not exact event locations. Use them for filtering, clustering,
+  reporting and regional sensor logic.
+
+regions:
+  - id: "REG:NORTH_SEA"
+    canonical_name_de: "Nordsee"
+    canonical_name_en: "North Sea"
+    type: "key_region"
+    center: { lat: 56.0, lon: 3.0 }
+    radius_km: 650
+    aliases:
+      de: ["Nordsee"]
+      en: ["North Sea"]
+      nl: ["Noordzee"]
+      da: ["Nordsøen"]
+      no: ["Nordsjøen"]
+      sv: ["Nordsjön"]
+    subregions:
+      - "REG:GER_BIGHT"
+      - "REG:SOUTHERN_NORTH_SEA"
+      - "REG:DOGGER_BANK"
+      - "REG:SKAGERRAK"
+      - "REG:KATTEGAT"
+      - "REG:WADDEN_SEA"
+      - "REG:NORWEGIAN_COAST_SOUTH"
+
+  - id: "REG:BRITISH_ISLES"
+    canonical_name_de: "Britische Inseln / maritime Zugänge"
+    canonical_name_en: "British Isles maritime approaches"
+    type: "key_region"
+    center: { lat: 55.0, lon: -4.0 }
+    radius_km: 850
+    aliases:
+      de: ["Britische Inseln", "britische Gewässer", "Großbritannien", "Vereinigtes Königreich"]
+      en: ["British Isles", "UK waters", "United Kingdom waters", "Great Britain"]
+    subregions:
+      - "REG:ORKNEY_SHETLAND"
+      - "REG:HEBRIDES"
+      - "REG:IRISH_SEA"
+      - "REG:CELTIC_SEA"
+      - "REG:WESTERN_APPROACHES"
+      - "REG:CHANNEL"
+
+  - id: "REG:IRISH_SEA"
+    canonical_name_de: "Irische See"
+    canonical_name_en: "Irish Sea"
+    type: "key_region"
+    center: { lat: 53.5, lon: -5.3 }
+    radius_km: 360
+    aliases:
+      de: ["Irische See"]
+      en: ["Irish Sea"]
+      ga: ["Muir Éireann"]
+      cy: ["Môr Iwerddon"]
+    subregions:
+      - "REG:CELTIC_SEA"
+      - "REG:WESTERN_APPROACHES"
+
+  - id: "REG:BALTIC"
+    canonical_name_de: "Ostsee"
+    canonical_name_en: "Baltic Sea"
+    type: "key_region"
+    center: { lat: 57.5, lon: 19.5 }
+    radius_km: 850
+    aliases:
+      de: ["Ostsee"]
+      en: ["Baltic Sea", "Baltic"]
+      da: ["Østersøen"]
+      sv: ["Östersjön"]
+      fi: ["Itämeri"]
+      pl: ["Morze Bałtyckie", "Bałtyk"]
+      ru_latin: ["Baltiyskoye more"]
+    subregions:
+      - "REG:DANISH_STRAITS"
+      - "REG:ORESUND"
+      - "REG:GREAT_BELT"
+      - "REG:LITTLE_BELT"
+      - "REG:FEHMARNBELT"
+      - "REG:BORNHOLM"
+      - "REG:GOTLAND_SEA"
+      - "REG:GULF_OF_FINLAND"
+      - "REG:GULF_OF_BOTHNIA"
+      - "REG:KALININGRAD_APPROACHES"
+
+  - id: "REG:HIGH_NORTH_ARCTIC"
+    canonical_name_de: "Nordmeer / Nordpolarmeer"
+    canonical_name_en: "High North / Arctic Ocean"
+    type: "key_region"
+    center: { lat: 72.0, lon: 10.0 }
+    radius_km: 1400
+    aliases:
+      de: ["Nordmeer", "Nordpolarmeer", "Arktis", "arktische Gewässer"]
+      en: ["High North", "Arctic Ocean", "Arctic waters", "Norwegian Sea", "Barents Sea"]
+      no: ["Nordområdene", "Barentshavet", "Norskehavet"]
+    subregions:
+      - "REG:ORKNEY_SHETLAND"
+
+  - id: "REG:CHANNEL"
+    canonical_name_de: "Ärmelkanal"
+    canonical_name_en: "English Channel"
+    type: "key_region"
+    center: { lat: 50.2, lon: -1.0 }
+    radius_km: 420
+    aliases:
+      de: ["Ärmelkanal", "Aermelkanal"]
+      en: ["English Channel", "Channel"]
+      fr: ["La Manche", "Manche"]
+    subregions:
+      - "REG:DOVER_STRAIT"
+      - "REG:WESTERN_CHANNEL"
+      - "REG:SOLENT_PORTSMOUTH"
+
+  - id: "REG:BISCAY_ATLANTIC_APPROACHES"
+    canonical_name_de: "Biskaya / Atlantikzugänge"
+    canonical_name_en: "Bay of Biscay / Atlantic approaches"
+    type: "key_region"
+    center: { lat: 46.0, lon: -6.0 }
+    radius_km: 750
+    aliases:
+      de: ["Biskaya", "Atlantikzugänge", "westliche Zugänge"]
+      en: ["Bay of Biscay", "Biscay", "Atlantic approaches", "Western Approaches"]
+      fr: ["Golfe de Gascogne"]
+      es: ["Golfo de Vizcaya"]
+    subregions:
+      - "REG:BAY_OF_BISCAY"
+      - "REG:WESTERN_APPROACHES"
+      - "REG:USHANT_OUESSANT"
+      - "REG:IBERIAN_ATLANTIC"
+
+  - id: "REG:MEDITERRANEAN"
+    canonical_name_de: "Mittelmeer"
+    canonical_name_en: "Mediterranean Sea"
+    type: "key_region"
+    center: { lat: 36.0, lon: 18.0 }
+    radius_km: 1700
+    aliases:
+      de: ["Mittelmeer"]
+      en: ["Mediterranean", "Mediterranean Sea", "Med"]
+      fr: ["Méditerranée", "Mer Méditerranée"]
+      es: ["Mediterráneo", "Mar Mediterráneo"]
+      it: ["Mediterraneo", "Mar Mediterraneo"]
+      tr: ["Akdeniz"]
+    subregions:
+      - "REG:STRAIT_GIBRALTAR"
+      - "REG:ALBORAN_SEA"
+      - "REG:WESTERN_MED"
+      - "REG:CENTRAL_MED"
+      - "REG:ADRIATIC"
+      - "REG:IONIAN"
+      - "REG:AEGEAN"
+      - "REG:EASTERN_MED"
+      - "REG:CYPRUS_LEVANT"
+      - "REG:SUEZ_APPROACHES"
+
+  - id: "REG:BLACK_SEA"
+    canonical_name_de: "Schwarzes Meer"
+    canonical_name_en: "Black Sea"
+    type: "key_region"
+    center: { lat: 43.3, lon: 35.0 }
+    radius_km: 650
+    aliases:
+      de: ["Schwarzes Meer"]
+      en: ["Black Sea"]
+      tr: ["Karadeniz"]
+      ru_latin: ["Chernoye more", "Chyornoye more"]
+      uk_latin: ["Chorne more"]
+      bg: ["Черно море"]
+    subregions:
+      - "REG:BOSPORUS"
+      - "REG:DARDANELLES"
+      - "REG:SEA_OF_MARMARA"
+      - "REG:BLACK_SEA_WEST"
+      - "REG:BLACK_SEA_NORTH"
+      - "REG:CRIMEA_APPROACHES"
+      - "REG:SEA_OF_AZOV"
+
+subregions:
+  # North Sea / NW Europe
+  - id: "REG:GER_BIGHT"
+    canonical_name_de: "Deutsche Bucht"
+    canonical_name_en: "German Bight"
+    parent: "REG:NORTH_SEA"
+    type: "subregion"
+    center: { lat: 54.2, lon: 7.8 }
+    radius_km: 220
+    aliases:
+      de: ["Deutsche Bucht"]
+      en: ["German Bight"]
+
+  - id: "REG:SOUTHERN_NORTH_SEA"
+    canonical_name_de: "Südliche Nordsee"
+    canonical_name_en: "Southern North Sea"
+    parent: "REG:NORTH_SEA"
+    type: "subregion"
+    center: { lat: 53.2, lon: 2.5 }
+    radius_km: 360
+    aliases:
+      de: ["Südliche Nordsee", "suedliche Nordsee"]
+      en: ["Southern North Sea"]
+
+  - id: "REG:DOGGER_BANK"
+    canonical_name_de: "Doggerbank"
+    canonical_name_en: "Dogger Bank"
+    parent: "REG:NORTH_SEA"
+    type: "subregion"
+    center: { lat: 55.1, lon: 2.3 }
+    radius_km: 220
+    aliases:
+      de: ["Doggerbank"]
+      en: ["Dogger Bank"]
+
+  - id: "REG:SKAGERRAK"
+    canonical_name_de: "Skagerrak"
+    canonical_name_en: "Skagerrak"
+    parent: "REG:NORTH_SEA"
+    type: "subregion"
+    center: { lat: 58.0, lon: 9.0 }
+    radius_km: 220
+    aliases:
+      de: ["Skagerrak"]
+      en: ["Skagerrak"]
+      da: ["Skagerrak"]
+      sv: ["Skagerrak"]
+      no: ["Skagerrak"]
+
+  - id: "REG:KATTEGAT"
+    canonical_name_de: "Kattegat"
+    canonical_name_en: "Kattegat"
+    parent: "REG:BALTIC"
+    type: "subregion"
+    center: { lat: 56.8, lon: 11.5 }
+    radius_km: 210
+    aliases:
+      de: ["Kattegat"]
+      en: ["Kattegat"]
+      da: ["Kattegat"]
+      sv: ["Kattegatt"]
+
+  # Baltic
+  - id: "REG:DANISH_STRAITS"
+    canonical_name_de: "Dänische Meerengen"
+    canonical_name_en: "Danish Straits"
+    parent: "REG:BALTIC"
+    type: "subregion"
+    center: { lat: 55.6, lon: 11.5 }
+    radius_km: 260
+    aliases:
+      de: ["Dänische Meerengen", "Daenische Meerengen"]
+      en: ["Danish Straits"]
+      da: ["De danske stræder"]
+      sv: ["Danska sunden"]
+
+  - id: "REG:ORESUND"
+    canonical_name_de: "Öresund"
+    canonical_name_en: "Øresund"
+    parent: "REG:BALTIC"
+    type: "subregion"
+    center: { lat: 55.9, lon: 12.75 }
+    radius_km: 45
+    aliases:
+      de: ["Öresund", "Oeresund"]
+      en: ["Oresund", "The Sound"]
+      da: ["Øresund"]
+      sv: ["Öresund"]
+
+  - id: "REG:GREAT_BELT"
+    canonical_name_de: "Großer Belt"
+    canonical_name_en: "Great Belt"
+    parent: "REG:BALTIC"
+    type: "subregion"
+    center: { lat: 55.35, lon: 11.0 }
+    radius_km: 90
+    aliases:
+      de: ["Großer Belt", "Grosser Belt"]
+      en: ["Great Belt"]
+      da: ["Storebælt", "Store Baelt"]
+
+  - id: "REG:LITTLE_BELT"
+    canonical_name_de: "Kleiner Belt"
+    canonical_name_en: "Little Belt"
+    parent: "REG:BALTIC"
+    type: "subregion"
+    center: { lat: 55.3, lon: 9.8 }
+    radius_km: 85
+    aliases:
+      de: ["Kleiner Belt"]
+      en: ["Little Belt"]
+      da: ["Lillebælt", "Lille Baelt"]
+
+  - id: "REG:FEHMARNBELT"
+    canonical_name_de: "Fehmarnbelt"
+    canonical_name_en: "Fehmarn Belt"
+    parent: "REG:BALTIC"
+    type: "subregion"
+    center: { lat: 54.65, lon: 11.25 }
+    radius_km: 55
+    aliases:
+      de: ["Fehmarnbelt", "Fehmarn Belt"]
+      en: ["Fehmarn Belt"]
+      da: ["Femern Bælt", "Femern Baelt"]
+
+  - id: "REG:BORNHOLM"
+    canonical_name_de: "Bornholm / Bornholmbecken"
+    canonical_name_en: "Bornholm / Bornholm Basin"
+    parent: "REG:BALTIC"
+    type: "subregion"
+    center: { lat: 55.1, lon: 14.8 }
+    radius_km: 140
+    aliases:
+      de: ["Bornholm", "Bornholmbecken"]
+      en: ["Bornholm", "Bornholm Basin"]
+      da: ["Bornholm"]
+
+  - id: "REG:GOTLAND_SEA"
+    canonical_name_de: "Gotlandsee"
+    canonical_name_en: "Gotland Sea"
+    parent: "REG:BALTIC"
+    type: "subregion"
+    center: { lat: 57.5, lon: 19.0 }
+    radius_km: 220
+    aliases:
+      de: ["Gotlandsee", "Gotland"]
+      en: ["Gotland Sea", "Gotland"]
+      sv: ["Gotland", "Gotlandshavet"]
+
+  - id: "REG:GULF_OF_FINLAND"
+    canonical_name_de: "Finnischer Meerbusen"
+    canonical_name_en: "Gulf of Finland"
+    parent: "REG:BALTIC"
+    type: "subregion"
+    center: { lat: 59.8, lon: 25.0 }
+    radius_km: 280
+    aliases:
+      de: ["Finnischer Meerbusen"]
+      en: ["Gulf of Finland"]
+      fi: ["Suomenlahti"]
+      et: ["Soome laht"]
+      ru_latin: ["Finskiy zaliv"]
+
+  - id: "REG:GULF_OF_BOTHNIA"
+    canonical_name_de: "Bottnischer Meerbusen"
+    canonical_name_en: "Gulf of Bothnia"
+    parent: "REG:BALTIC"
+    type: "subregion"
+    center: { lat: 63.0, lon: 21.0 }
+    radius_km: 500
+    aliases:
+      de: ["Bottnischer Meerbusen"]
+      en: ["Gulf of Bothnia"]
+      sv: ["Bottniska viken"]
+      fi: ["Pohjanlahti"]
+
+  # Channel / Biscay / Med / Black Sea
+  - id: "REG:DOVER_STRAIT"
+    canonical_name_de: "Straße von Dover"
+    canonical_name_en: "Dover Strait"
+    parent: "REG:CHANNEL"
+    type: "subregion"
+    center: { lat: 51.0, lon: 1.45 }
+    radius_km: 55
+    aliases:
+      de: ["Straße von Dover", "Strasse von Dover"]
+      en: ["Dover Strait", "Strait of Dover"]
+      fr: ["Pas de Calais"]
+
+  - id: "REG:BAY_OF_BISCAY"
+    canonical_name_de: "Biskaya"
+    canonical_name_en: "Bay of Biscay"
+    parent: "REG:BISCAY_ATLANTIC_APPROACHES"
+    type: "subregion"
+    center: { lat: 45.5, lon: -4.5 }
+    radius_km: 450
+    aliases:
+      de: ["Biskaya"]
+      en: ["Bay of Biscay", "Biscay"]
+      fr: ["Golfe de Gascogne"]
+      es: ["Golfo de Vizcaya"]
+
+  - id: "REG:STRAIT_GIBRALTAR"
+    canonical_name_de: "Straße von Gibraltar"
+    canonical_name_en: "Strait of Gibraltar"
+    parent: "REG:MEDITERRANEAN"
+    type: "subregion"
+    center: { lat: 35.96, lon: -5.55 }
+    radius_km: 45
+    aliases:
+      de: ["Straße von Gibraltar", "Strasse von Gibraltar", "Gibraltarstraße"]
+      en: ["Strait of Gibraltar", "Gibraltar Strait"]
+      es: ["Estrecho de Gibraltar"]
+      fr: ["Détroit de Gibraltar"]
+
+  - id: "REG:EASTERN_MED"
+    canonical_name_de: "Östliches Mittelmeer"
+    canonical_name_en: "Eastern Mediterranean"
+    parent: "REG:MEDITERRANEAN"
+    type: "subregion"
+    center: { lat: 34.7, lon: 29.5 }
+    radius_km: 650
+    aliases:
+      de: ["Östliches Mittelmeer", "Oestliches Mittelmeer"]
+      en: ["Eastern Mediterranean", "East Med"]
+      tr: ["Doğu Akdeniz"]
+
+  - id: "REG:CYPRUS_LEVANT"
+    canonical_name_de: "Zypern / Levante"
+    canonical_name_en: "Cyprus / Levant"
+    parent: "REG:MEDITERRANEAN"
+    type: "subregion"
+    center: { lat: 34.7, lon: 33.2 }
+    radius_km: 350
+    aliases:
+      de: ["Zypern", "Levante"]
+      en: ["Cyprus", "Levant", "Cyprus approaches"]
+      tr: ["Kıbrıs"]
+
+  - id: "REG:BOSPORUS"
+    canonical_name_de: "Bosporus"
+    canonical_name_en: "Bosporus"
+    parent: "REG:BLACK_SEA"
+    type: "subregion"
+    center: { lat: 41.12, lon: 29.08 }
+    radius_km: 35
+    aliases:
+      de: ["Bosporus"]
+      en: ["Bosporus", "Bosphorus"]
+      tr: ["İstanbul Boğazı", "Istanbul Bogazi"]
+
+  - id: "REG:DARDANELLES"
+    canonical_name_de: "Dardanellen"
+    canonical_name_en: "Dardanelles"
+    parent: "REG:BLACK_SEA"
+    type: "subregion"
+    center: { lat: 40.2, lon: 26.4 }
+    radius_km: 75
+    aliases:
+      de: ["Dardanellen"]
+      en: ["Dardanelles"]
+      tr: ["Çanakkale Boğazı", "Canakkale Bogazi"]
+
+  - id: "REG:BLACK_SEA_NORTH"
+    canonical_name_de: "Nördliches Schwarzes Meer / Ukrainezugänge"
+    canonical_name_en: "Northern Black Sea / Ukraine approaches"
+    parent: "REG:BLACK_SEA"
+    type: "subregion"
+    center: { lat: 46.2, lon: 31.0 }
+    radius_km: 260
+    aliases:
+      de: ["nördliches Schwarzes Meer", "noerdliches Schwarzes Meer", "Ukrainezugänge", "Ukrainezugaenge"]
+      en: ["northern Black Sea", "Ukraine approaches", "Odesa approaches", "Odessa approaches"]
+      uk_latin: ["Odeski pidkhody"]
