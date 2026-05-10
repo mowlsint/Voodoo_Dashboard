@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v5.11 "Indicators Outer Frame Fix"</title>
+  <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v5.12 "Right Stack Layout Fix"</title>
 
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -317,7 +317,7 @@
 
 
     .indicatorsPanel{
-      max-height: 650px;
+      max-height: 760px;
       display:flex;
       flex-direction:column;
     }
@@ -494,6 +494,34 @@
       padding:6px 8px;
     }
 
+
+    /* v5.12: right sidebar must stack by visible box height, not by CSS-grid row reservation */
+    .sideGrid{
+      display:flex !important;
+      flex-direction:column;
+      gap:12px;
+      align-content:stretch;
+    }
+    .sideGrid > .panel{
+      width:100%;
+      flex:0 0 auto;
+    }
+    .indicatorsPanel{
+      max-height: 760px;
+      display:flex;
+      flex-direction:column;
+    }
+    .indicatorsPanel > .pc{
+      overflow:auto;
+      flex:1 1 auto;
+      min-height:0;
+      padding-right:8px;
+    }
+    .weatherPanel,
+    .navwarnPanel{
+      margin-top:0;
+    }
+
     @media (max-width: 1100px){
       .grid{grid-template-columns:1fr;}
       #map{height:460px;}
@@ -524,7 +552,7 @@
       <div class="brand">
         <div class="brandLine">
           <h1>VOODOO // HYBRID MARITIME OPS</h1>
-          <span class="ver">v5.11 “Indicators Outer Frame Fix”</span>
+          <span class="ver">v5.12 “Right Stack Layout Fix”</span>
         </div>
         <div class="sub">
           Source: <span id="src">–</span> • Stand: <span id="stand">–</span> • Worker: <span class="hint" id="wkr">–</span>
