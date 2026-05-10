@@ -1,0 +1,30 @@
+name: Setup VOODOO Global Region Labels
+
+on:
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  issues: write
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  setup-global-labels:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Show script
+        run: |
+          ls -la scripts
+          sed -n '1,40p' scripts/setup_global_region_labels_v2.sh
+
+      - name: Setup global region labels
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          bash scripts/setup_global_region_labels_v2.sh "${{ github.repository }}"
