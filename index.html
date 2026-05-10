@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v5.17 "parseISO Fix / Linked Selection"</title>
+  <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v5.19 "Tab Return Fix"</title>
 
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -628,7 +628,7 @@
       <div class="brand">
         <div class="brandLine">
           <h1>VOODOO // HYBRID MARITIME OPS</h1>
-          <span class="ver">v5.17 “parseISO Fix / Linked Selection”</span>
+          <span class="ver">v5.19 “Tab Return Fix”</span>
         </div>
         <div class="sub">
           Source: <span id="src">–</span> • Stand: <span id="stand">–</span> • Worker: <span class="hint" id="wkr">–</span>
@@ -938,6 +938,18 @@ Wilhelmshaven JadeWeserPort"></textarea>
     return hoursAgo(date, now) / 24;
   }
 
+  function eventGeoPoint(ev){
+    if (!ev || !ev.geo) return null;
+
+    const lat = Number(ev.geo.lat);
+    const lon = Number(ev.geo.lon);
+
+    if (!Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+    if (lat < -90 || lat > 90 || lon < -180 || lon > 180) return null;
+
+    return { lat, lon };
+  }
+
 
   // First-pass keyword tiers. Keep broad; tune after we see real 90-day baseline noise.
   const KEYWORD_TIERS = {
@@ -1029,11 +1041,12 @@ Wilhelmshaven JadeWeserPort"></textarea>
       const badgesHtml = ordered.slice(0, 22).map(badge).join("");
 
       const when = ev.ts ? new Date(ev.ts).toLocaleString() : "–";
-      const geoTxt = ev.geo ? `${ev.geo.lat.toFixed(4)}, ${ev.geo.lon.toFixed(4)}` : "";
+      const gp = eventGeoPoint(ev);
+      const geoTxt = gp ? `${gp.lat.toFixed(4)}, ${gp.lon.toFixed(4)}` : "";
       const geoMeta = ev.geo?.matched_name ? `${ev.geo.matched_name} (${ev.geo.precision || "geo"})` : (geoTxt ? `Geo: ${geoTxt}` : null);
       const meta = [`#${ev.number ?? "?"}`, when, geoMeta].filter(Boolean).join(" • ");
       const selectedCls = String(state.selectedEventId ?? "") === String(ev.id) ? " selected" : "";
-      const mapBtn = ev.geo
+      const mapBtn = eventGeoPoint(ev)
         ? `<button class="miniAction" type="button" data-action="map" data-event-id="${escapeHtml(ev.id)}">KARTE</button>`
         : `<button class="miniAction disabled" type="button" title="Keine Koordinate vorhanden">KARTE</button>`;
 
@@ -1085,8 +1098,9 @@ Wilhelmshaven JadeWeserPort"></textarea>
   }
 
   function switchTab(name){
-    const tabEl = document.querySelector(`.tab[data-tab="${name}"]`);
-    setTab(name, tabEl || null);
+    if (name === "events") return showEventsTab("", null);
+    if (name === "map") return showMapTab(null);
+    setTab(name, null);
   }
 
   function markSelectedCard(eventId, scrollText = false){
@@ -1110,12 +1124,12 @@ Wilhelmshaven JadeWeserPort"></textarea>
       setTimeout(() => markSelectedCard(ev.id, true), 60);
     }
 
-    if (ev.geo && opts.showMap) {
+    if (eventGeoPoint(ev) && opts.showMap) {
       switchTab("map");
       setTimeout(() => {
         focusEventOnMap(ev.id, { openPopup: opts.openPopup !== false });
       }, 180);
-    } else if (ev.geo && state.map) {
+    } else if (eventGeoPoint(ev) && state.map) {
       focusEventOnMap(ev.id, { openPopup: opts.openPopup !== false, panOnly:true });
     }
   }
@@ -1133,8 +1147,9 @@ Wilhelmshaven JadeWeserPort"></textarea>
       return;
     }
 
-    if (ev?.geo) {
-      state.map.setView([ev.geo.lat, ev.geo.lon], Math.max(state.map.getZoom(), 8), { animate:true });
+    const gp = eventGeoPoint(ev);
+    if (gp) {
+      state.map.setView([gp.lat, gp.lon], Math.max(state.map.getZoom(), 8), { animate:true });
     }
   }
 
@@ -1545,13 +1560,15 @@ Wilhelmshaven JadeWeserPort"></textarea>
     state.eventMarkers.clear();
 
     const src = showEvents ? (onlyFiltered ? state.filtered : state.events) : [];
-    const pts = src.filter(e => e.geo && typeof e.geo.lat === "number" && typeof e.geo.lon === "number");
+    const pts = src
+      .map(ev => ({ ev, gp: eventGeoPoint(ev) }))
+      .filter(x => !!x.gp);
 
     const ms = el("mapStatus");
     if (ms) ms.textContent = `MAP: src=${src.length} geo=${pts.length}`;
 
     let bounds = null;
-    for (const ev of pts){
+    for (const { ev, gp } of pts){
       const style = eventMarkerStyle(ev);
       if (String(state.selectedEventId ?? "") === String(ev.id)) {
         style.weight = 5;
@@ -1559,7 +1576,7 @@ Wilhelmshaven JadeWeserPort"></textarea>
         style.color = "#ffffff";
       }
 
-      const m = L.circleMarker([ev.geo.lat, ev.geo.lon], style);
+      const m = L.circleMarker([gp.lat, gp.lon], style);
       state.eventMarkers.set(String(ev.id), m);
 
       const place = ev.geo?.matched_name ? `<br><span>${escapeHtml(ev.geo.matched_name)} • ${escapeHtml(ev.geo.precision || "")}</span>` : "";
@@ -1572,7 +1589,7 @@ Wilhelmshaven JadeWeserPort"></textarea>
       `);
       m.on("click", () => selectEvent(ev.id, { showMap:false, openPopup:false, scrollText:false }));
       m.addTo(state.layers.events);
-      bounds = bounds ? bounds.extend([ev.geo.lat, ev.geo.lon]) : L.latLngBounds([[ev.geo.lat, ev.geo.lon],[ev.geo.lat, ev.geo.lon]]);
+      bounds = bounds ? bounds.extend([gp.lat, gp.lon]) : L.latLngBounds([[gp.lat, gp.lon],[gp.lat, gp.lon]]);
     }
 
     if (showCI) {
@@ -2042,21 +2059,46 @@ Wilhelmshaven JadeWeserPort"></textarea>
     }
   }
 
-  function setTab(name, clickedEl){
-    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-    if (clickedEl) clickedEl.classList.add("active");
+  function setTab(name, clickedEl = null){
+    const tabEvents = el("tab-events");
+    const tabMap = el("tab-map");
 
-    el("tab-events").style.display = (name === "events") ? "" : "none";
-    el("tab-map").style.display = (name === "map") ? "" : "none";
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+
+    if (clickedEl) {
+      clickedEl.classList.add("active");
+    } else {
+      const fallback = document.querySelector(`.tab[data-tab="${CSS.escape(String(name))}"]`);
+      if (fallback) fallback.classList.add("active");
+    }
+
+    if (tabEvents) tabEvents.style.display = (name === "events") ? "" : "none";
+    if (tabMap) tabMap.style.display = (name === "map") ? "" : "none";
 
     if (name === "map"){
       initMap();
       setTimeout(async () => {
-        state.map.invalidateSize();
+        if (state.map) state.map.invalidateSize();
         await loadCI();
         refreshMapLayers();
       }, 120);
     }
+  }
+
+  function showEventsTab(domain = "", clickedEl = null){
+    const domainSelect = el("domain");
+    if (domainSelect) domainSelect.value = domain || "";
+    applyFilters();
+
+    const fallback = clickedEl || document.querySelector(`.tab[data-tab="events"][data-domain="${CSS.escape(String(domain || ""))}"]`) ||
+      document.querySelector(`.tab[data-tab="events"][data-domain=""]`);
+
+    setTab("events", fallback);
+  }
+
+  function showMapTab(clickedEl = null){
+    const fallback = clickedEl || document.querySelector(`.tab[data-tab="map"]`);
+    setTab("map", fallback);
   }
 
   // listeners
@@ -2087,16 +2129,25 @@ Wilhelmshaven JadeWeserPort"></textarea>
     });
   }
 
-  document.querySelectorAll(".tab").forEach(t => t.addEventListener("click", () => {
-    const tab = t.dataset.tab;
-    const dom = (t.dataset.domain ?? "");
+  const tabsEl = document.querySelector(".tabs");
+  if (tabsEl) {
+    tabsEl.addEventListener("click", (ev) => {
+      const t = ev.target.closest(".tab");
+      if (!t || !tabsEl.contains(t)) return;
 
-    if (tab === "events") {
-      el("domain").value = dom;
-      applyFilters();
-    }
-    setTab(tab, t);
-  }));
+      ev.preventDefault();
+      ev.stopPropagation();
+
+      const tab = t.dataset.tab;
+      const dom = (t.dataset.domain ?? "");
+
+      if (tab === "events") {
+        showEventsTab(dom, t);
+      } else if (tab === "map") {
+        showMapTab(t);
+      }
+    }, true);
+  }
 
   ["mapShowEvents","mapOnlyFiltered","mapShowCI"].forEach(id => {
     on(id, "change", refreshMapLayers);
