@@ -1,0 +1,163 @@
+{
+  "version": 1,
+  "name": "VOODOO NAVTEX / NAVWARN Sources",
+  "description": "Official MSI/NAVTEX/NAVWARN sources for /api/navtex. Context layer, not normal noisy issue ingest.",
+  "defaults": {
+    "enabled": true,
+    "timeout_ms": 12000,
+    "max_items_per_source": 40,
+    "cache_ttl_seconds": 1800,
+    "labels": [
+      "SRC:OFFICIAL",
+      "RF:NAVWARN",
+      "D:NEWS_INTEL"
+    ]
+  },
+  "sources": [
+    {
+      "id": "bsh_warnings",
+      "name": "BSH – Warnungen und Nachrichten",
+      "country": "DE",
+      "type": "html",
+      "url": "https://www.bsh.de/DE/THEMEN/Schifffahrt/Nautische_Informationen/Warnungen_und_Nachrichten/warnungen_und_nachrichten_node.html",
+      "parser": "generic_warning_page",
+      "related_regions": [
+        "REG:GER_BIGHT",
+        "REG:NORTH_SEA",
+        "REG:BALTIC"
+      ],
+      "navtex_context": [
+        "NAVTEX_GERMAN_BIGHT",
+        "NAVTEX_BALTIC_WEST"
+      ],
+      "priority": 95,
+      "enabled": true
+    },
+    {
+      "id": "elwis_seewarndienst",
+      "name": "ELWIS / Seewarndienst Emden – Nautischer Warn- und Nachrichtendienst",
+      "country": "DE",
+      "type": "html",
+      "url": "https://www.elwis.de/DE/Seeschifffahrt/Nautischer-Warn-und-Nachrichtendienst/Nautischer-Warn-und-Nachrichtendienst-node.html",
+      "parser": "generic_warning_page",
+      "related_regions": [
+        "REG:GER_BIGHT",
+        "REG:NORTH_SEA",
+        "REG:BALTIC"
+      ],
+      "navtex_context": [
+        "NAVTEX_GERMAN_BIGHT",
+        "NAVTEX_BALTIC_WEST"
+      ],
+      "priority": 95,
+      "enabled": true
+    },
+    {
+      "id": "sjofartsverket_navtex",
+      "name": "Sjöfartsverket – NAVTEX warnings in force",
+      "country": "SE",
+      "type": "html",
+      "url": "https://navvarn.sjofartsverket.se/en/Navigationsvarningar/Navtex",
+      "parser": "generic_warning_page",
+      "related_regions": [
+        "REG:BALTIC",
+        "REG:GOTLAND_SEA",
+        "REG:GULF_OF_BOTHNIA",
+        "REG:SKAGERRAK",
+        "REG:KATTEGAT"
+      ],
+      "navtex_context": [
+        "NAVTEX_BALTIC_WEST"
+      ],
+      "priority": 90,
+      "enabled": true
+    },
+    {
+      "id": "dma_nautical_information",
+      "name": "Danish Maritime Authority – Nautical information / warnings",
+      "country": "DK",
+      "type": "html",
+      "url": "https://www.dma.dk/safety-at-sea/navigational-information/nautical-information",
+      "parser": "generic_warning_page",
+      "related_regions": [
+        "REG:BALTIC",
+        "REG:DANISH_STRAITS",
+        "REG:ORESUND",
+        "REG:GREAT_BELT",
+        "REG:LITTLE_BELT",
+        "REG:FEHMARNBELT",
+        "REG:SKAGERRAK",
+        "REG:KATTEGAT"
+      ],
+      "navtex_context": [
+        "NAVTEX_BALTIC_WEST"
+      ],
+      "priority": 90,
+      "enabled": true
+    },
+    {
+      "id": "traficom_finland_ntm",
+      "name": "Finland / Traficom – Notices to Mariners / warnings",
+      "country": "FI",
+      "type": "html",
+      "url": "https://www.traficom.fi/en/transport/maritime/notices-mariners",
+      "parser": "generic_warning_page",
+      "related_regions": [
+        "REG:BALTIC",
+        "REG:GULF_OF_FINLAND",
+        "REG:GULF_OF_BOTHNIA"
+      ],
+      "navtex_context": [
+        "NAVTEX_BALTIC_WEST"
+      ],
+      "priority": 75,
+      "enabled": true
+    },
+    {
+      "id": "ukho_msi_radio_navwarnings",
+      "name": "UKHO / Admiralty MSI – Radio Navigational Warnings",
+      "country": "UK",
+      "type": "html",
+      "url": "https://msi.admiralty.co.uk/RadioNavigationalWarnings",
+      "parser": "ukho_msi",
+      "related_regions": [
+        "REG:CHANNEL",
+        "REG:DOVER_STRAIT",
+        "REG:WESTERN_CHANNEL",
+        "REG:BRITISH_ISLES",
+        "REG:IRISH_SEA",
+        "REG:BISCAY_ATLANTIC_APPROACHES",
+        "REG:HIGH_NORTH_ARCTIC"
+      ],
+      "navarea": [
+        "NAVAREA_I"
+      ],
+      "priority": 95,
+      "enabled": true
+    },
+    {
+      "id": "navarea_iii_context",
+      "name": "NAVAREA III context placeholder",
+      "country": "MULTI",
+      "type": "html",
+      "url": "https://wwmiws.wmo.int/",
+      "parser": "generic_warning_page",
+      "related_regions": [
+        "REG:MEDITERRANEAN",
+        "REG:BLACK_SEA"
+      ],
+      "navarea": [
+        "NAVAREA_III"
+      ],
+      "priority": 40,
+      "enabled": false
+    }
+  ],
+  "routing_policy": {
+    "create_issues_by_default": false,
+    "show_in_dashboard_board": true,
+    "show_on_map_if_coordinate": true,
+    "use_as_context_for_reports": true,
+    "negative_report_if_empty": true
+  }
+}
