@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v5.9 "Top Context Band"</title>
+  <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v5.10 "Right Sidebar Compact Context"</title>
 
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -316,41 +316,86 @@
     .navwarnItem .mini{font-size:13px; color:var(--muted); margin-top:4px;}
 
 
-    .topContext{
-      display:grid;
-      grid-template-columns: minmax(0, 1.55fr) minmax(320px, .75fr);
-      gap:12px;
-      margin:10px 0 12px;
+    .indicatorsPanel .pc{
+      max-height: 560px;
+      overflow:auto;
+      padding-right:8px;
     }
-    .topContext .scrollbox{
-      max-height:none;
-      overflow:visible;
-      padding-right:0;
+    .indicatorsPanel .pc::-webkit-scrollbar,
+    .weatherPanel .pc::-webkit-scrollbar,
+    .navwarnPanel .pc::-webkit-scrollbar{width:8px}
+    .indicatorsPanel .pc::-webkit-scrollbar-thumb,
+    .weatherPanel .pc::-webkit-scrollbar-thumb,
+    .navwarnPanel .pc::-webkit-scrollbar-thumb{
+      background:rgba(176,136,0,.35);
+      border-radius:999px;
     }
-    .topContext .weatherGrid{
-      grid-template-columns:repeat(4,minmax(170px,1fr));
-      gap:8px;
+    .weatherPanel .pc{
+      max-height: 500px;
+      overflow:auto;
+      padding-right:8px;
     }
-    .topContext .weatherCard{
-      min-height:132px;
-      padding:9px;
+    .navwarnPanel .pc{
+      max-height: 260px;
+      overflow:auto;
+      padding-right:8px;
     }
-    .topContext .weatherName{
-      font-size:17px;
+    .sideGrid .weatherGrid{
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:7px;
     }
-    .topContext .wxRows{
+    .sideGrid .weatherCard{
+      padding:7px;
+      min-height:108px;
+    }
+    .sideGrid .weatherTop{
+      margin-bottom:5px;
+    }
+    .sideGrid .weatherName{
+      font-size:15px;
+      line-height:1;
+    }
+    .sideGrid .weatherCoord{
+      font-size:11px;
+    }
+    .sideGrid .wxRows{
+      font-size:12px;
+      gap:1px;
+    }
+    .sideGrid .wxRows div{
+      padding-top:2px;
+    }
+    .sideGrid .statusPill{
+      min-width:48px;
+      padding:3px 6px;
+      font-size:12px;
+    }
+    .sideGrid .weatherMetaLine{
+      font-size:13px;
+      margin-bottom:7px;
+    }
+    .sideGrid .navwarnSummary .big{
+      font-size:19px;
+      line-height:1.05;
+    }
+    .sideGrid .navwarnItem .desc{
       font-size:14px;
     }
-    .topContext .navwarnBoard{
-      max-height:314px;
-      overflow:auto;
-      padding-right:4px;
+    .sideGrid .sensorGrid{
+      gap:8px;
     }
-    .topContext .navwarnSummary{
-      min-height:132px;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
+    .sideGrid .sensorCard{
+      padding:8px;
+    }
+    .sideGrid .sparkSeismo{
+      height:112px;
+    }
+    .sideGrid .seismoLegend{
+      min-height:112px;
+      gap:6px;
+    }
+    .sideGrid .legendItem{
+      padding:6px 8px;
     }
 
     @media (max-width: 1100px){
@@ -358,17 +403,17 @@
       #map{height:460px;}
       .controls{grid-template-columns:1fr 1fr;}
       .seismoWrap{grid-template-columns:1fr;}
-      .seismoLegend{grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-rows:none; min-height:unset;}\n      .weatherGrid{grid-template-columns:1fr;}
-      .topContext{grid-template-columns:1fr;}
-      .topContext .weatherGrid{grid-template-columns:repeat(2,minmax(220px,1fr));}
+      .seismoLegend{grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-rows:none; min-height:unset;}
+      .indicatorsPanel .pc,.weatherPanel .pc,.navwarnPanel .pc{max-height:none; overflow:visible;}
+      .sideGrid .weatherGrid{grid-template-columns:repeat(2,minmax(220px,1fr));}\n      .weatherGrid{grid-template-columns:1fr;}
     }
     @media (max-width: 560px){
       .controls{grid-template-columns:1fr;}
       .seismoLegend{grid-template-columns:1fr;}
+      .sideGrid .weatherGrid{grid-template-columns:1fr;}
       .exportCtl{width:100%; flex-wrap:wrap;}
       .exportCtl select{width:100%;}
       .kpis{grid-template-columns:1fr;}
-      .topContext .weatherGrid{grid-template-columns:1fr;}
     }
   </style>
 </head>
@@ -379,7 +424,7 @@
       <div class="brand">
         <div class="brandLine">
           <h1>VOODOO // HYBRID MARITIME OPS</h1>
-          <span class="ver">v5.9 “Top Context Band”</span>
+          <span class="ver">v5.10 “Right Sidebar Compact Context”</span>
         </div>
         <div class="sub">
           Source: <span id="src">–</span> • Stand: <span id="stand">–</span> • Worker: <span class="hint" id="wkr">–</span>
@@ -397,28 +442,6 @@
             <option value="120">120 h</option>
           </select>
           <button class="btn secondary" id="btnExport">REPORT EXPORT</button>
-        </div>
-      </div>
-    </div>
-
-    <div class="topContext">
-      <div class="panel">
-        <div class="ph">
-          <div class="title">Wetterfenster</div>
-          <div class="meta" id="weatherMeta">/api/weather</div>
-        </div>
-        <div class="pc">
-          <div class="scrollbox"><div class="monoSmall" id="weatherBox">Lädt…</div></div>
-        </div>
-      </div>
-
-      <div class="panel">
-        <div class="ph">
-          <div class="title">NAVTEX / NAVWARN</div>
-          <div class="meta" id="navtexMeta">/api/navtex</div>
-        </div>
-        <div class="pc">
-          <div class="scrollbox"><div class="monoSmall" id="navtexBox">Lädt…</div></div>
         </div>
       </div>
     </div>
@@ -535,7 +558,7 @@ Wilhelmshaven JadeWeserPort"></textarea>
 
       <!-- RIGHT -->
       <div class="sideGrid">
-        <div class="panel">
+        <div class="panel indicatorsPanel">
           <div class="ph">
             <div class="title">Indicators</div>
             <div class="meta">Hybrid • Government-Weirdness • Schlagwörter</div>
@@ -625,6 +648,26 @@ Wilhelmshaven JadeWeserPort"></textarea>
               </div>
             </div>
 
+          </div>
+        </div>
+
+        <div class="panel weatherPanel">
+          <div class="ph">
+            <div class="title">Wetterfenster</div>
+            <div class="meta" id="weatherMeta">/api/weather</div>
+          </div>
+          <div class="pc">
+            <div class="scrollbox"><div class="monoSmall" id="weatherBox">Lädt…</div></div>
+          </div>
+        </div>
+
+        <div class="panel navwarnPanel">
+          <div class="ph">
+            <div class="title">NAVTEX / NAVWARN</div>
+            <div class="meta" id="navtexMeta">/api/navtex</div>
+          </div>
+          <div class="pc">
+            <div class="scrollbox"><div class="monoSmall" id="navtexBox">Lädt…</div></div>
           </div>
         </div>
 
