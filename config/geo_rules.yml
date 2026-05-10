@@ -1,0 +1,100 @@
+version: 1
+name: "VOODOO Geo Rules"
+description: >
+  Rules for event geolocation. Prevents false precision by separating exact
+  coordinates, gazetteer inference, region hints and NAVTEX/NAVAREA context.
+
+priority:
+  - explicit_geo_coordinate
+  - navwarn_coordinate
+  - port_unlocode
+  - gazetteer_port_or_place
+  - gazetteer_sea_area_or_strait
+  - navtex_context
+  - navarea_context
+  - region_hint_only
+
+precision_policy:
+  explicit_geo_coordinate:
+    precision: "exact"
+    confidence: "high"
+    map_marker: "solid"
+    may_write_geo: true
+
+  navwarn_coordinate:
+    precision: "exact_or_warning_coordinate"
+    confidence: "high"
+    map_marker: "solid"
+    may_write_geo: true
+
+  port_unlocode:
+    precision: "port"
+    confidence: "high"
+    map_marker: "solid"
+    may_write_geo: true
+
+  gazetteer_port_or_place:
+    precision: "port_or_place"
+    confidence: "medium_high"
+    map_marker: "solid_soft"
+    may_write_geo: true
+
+  gazetteer_sea_area_or_strait:
+    precision: "area"
+    confidence: "medium"
+    map_marker: "circle"
+    may_write_geo: true
+
+  navtex_context:
+    precision: "warning_context"
+    confidence: "medium"
+    map_marker: "soft_area"
+    may_write_geo: false
+
+  navarea_context:
+    precision: "warning_area"
+    confidence: "low_without_specific_place"
+    map_marker: "none_or_large_area"
+    may_write_geo: false
+
+  region_hint_only:
+    precision: "region"
+    confidence: "low"
+    map_marker: "no_exact_marker"
+    may_write_geo: false
+
+ambiguity_policy:
+  multiple_matches:
+    action: "store_candidates_do_not_pin"
+    field: "geo_candidates"
+  generic_terms:
+    - "Channel"
+    - "Sound"
+    - "Belt"
+    - "Bay"
+    - "Port"
+    - "Strait"
+  require_maritime_context_for_generic_terms: true
+  if_title_and_body_disagree:
+    action: "store_candidates_do_not_pin"
+
+output_shape:
+  inferred_geo:
+    geo:
+      lat: "number"
+      lon: "number"
+      precision: "exact|port|area|region|warning_context"
+      method: "explicit_coordinate|navwarn_coordinate|gazetteer_alias|unlocode|navtex_context|navarea_context"
+      matched_name: "string"
+      matched_id: "string"
+      radius_km: "number|null"
+      confidence: "high|medium_high|medium|low"
+    region_labels:
+      - "REG:*"
+
+safety_notes:
+  - "Do not infer exact coordinates from broad regions."
+  - "Do not pin NAVAREA-only matches."
+  - "Do not pin generic place names without maritime context."
+  - "Show area matches as circles or soft markers."
+  - "Keep source evidence visible in reports."
