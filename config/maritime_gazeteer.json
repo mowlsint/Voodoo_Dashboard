@@ -1,0 +1,580 @@
+{
+  "version": 1,
+  "name": "VOODOO Maritime Gazetteer",
+  "description": "Controlled maritime gazetteer for inferred geolocation. Exact issue-body coordinates override inferred places.",
+  "places": [
+    {
+      "id": "strait_gibraltar",
+      "canonical_name": "Strait of Gibraltar",
+      "type": "strait",
+      "precision": "area",
+      "display_shape": "circle",
+      "center": {
+        "lat": 35.96,
+        "lon": -5.55
+      },
+      "radius_km": 45,
+      "regions": [
+        "REG:MEDITERRANEAN",
+        "REG:STRAIT_GIBRALTAR",
+        "REG:BISCAY_ATLANTIC_APPROACHES"
+      ],
+      "aliases": {
+        "de": [
+          "Straße von Gibraltar",
+          "Strasse von Gibraltar",
+          "Gibraltarstraße"
+        ],
+        "en": [
+          "Strait of Gibraltar",
+          "Gibraltar Strait"
+        ],
+        "es": [
+          "Estrecho de Gibraltar"
+        ],
+        "fr": [
+          "Détroit de Gibraltar"
+        ]
+      }
+    },
+    {
+      "id": "oresund",
+      "canonical_name": "Øresund",
+      "type": "strait",
+      "precision": "area",
+      "display_shape": "circle",
+      "center": {
+        "lat": 55.9,
+        "lon": 12.75
+      },
+      "radius_km": 45,
+      "regions": [
+        "REG:BALTIC",
+        "REG:DANISH_STRAITS",
+        "REG:ORESUND"
+      ],
+      "aliases": {
+        "de": [
+          "Öresund",
+          "Oeresund"
+        ],
+        "en": [
+          "Oresund",
+          "The Sound"
+        ],
+        "da": [
+          "Øresund"
+        ],
+        "sv": [
+          "Öresund"
+        ],
+        "no_diacritics": [
+          "Oresund",
+          "Oeresund"
+        ]
+      }
+    },
+    {
+      "id": "great_belt",
+      "canonical_name": "Great Belt",
+      "type": "strait",
+      "precision": "area",
+      "center": {
+        "lat": 55.35,
+        "lon": 11.0
+      },
+      "radius_km": 90,
+      "regions": [
+        "REG:BALTIC",
+        "REG:DANISH_STRAITS",
+        "REG:GREAT_BELT"
+      ],
+      "aliases": {
+        "de": [
+          "Großer Belt",
+          "Grosser Belt"
+        ],
+        "en": [
+          "Great Belt"
+        ],
+        "da": [
+          "Storebælt",
+          "Store Baelt"
+        ]
+      }
+    },
+    {
+      "id": "little_belt",
+      "canonical_name": "Little Belt",
+      "type": "strait",
+      "precision": "area",
+      "center": {
+        "lat": 55.3,
+        "lon": 9.8
+      },
+      "radius_km": 85,
+      "regions": [
+        "REG:BALTIC",
+        "REG:DANISH_STRAITS",
+        "REG:LITTLE_BELT"
+      ],
+      "aliases": {
+        "de": [
+          "Kleiner Belt"
+        ],
+        "en": [
+          "Little Belt"
+        ],
+        "da": [
+          "Lillebælt",
+          "Lille Baelt"
+        ]
+      }
+    },
+    {
+      "id": "fehmarnbelt",
+      "canonical_name": "Fehmarn Belt",
+      "type": "strait",
+      "precision": "area",
+      "center": {
+        "lat": 54.65,
+        "lon": 11.25
+      },
+      "radius_km": 55,
+      "regions": [
+        "REG:BALTIC",
+        "REG:DANISH_STRAITS",
+        "REG:FEHMARNBELT"
+      ],
+      "aliases": {
+        "de": [
+          "Fehmarnbelt",
+          "Fehmarn Belt"
+        ],
+        "en": [
+          "Fehmarn Belt"
+        ],
+        "da": [
+          "Femern Bælt",
+          "Femern Baelt"
+        ]
+      }
+    },
+    {
+      "id": "dover_strait",
+      "canonical_name": "Dover Strait",
+      "type": "strait",
+      "precision": "area",
+      "center": {
+        "lat": 51.0,
+        "lon": 1.45
+      },
+      "radius_km": 55,
+      "regions": [
+        "REG:CHANNEL",
+        "REG:DOVER_STRAIT"
+      ],
+      "aliases": {
+        "de": [
+          "Straße von Dover",
+          "Strasse von Dover"
+        ],
+        "en": [
+          "Dover Strait",
+          "Strait of Dover"
+        ],
+        "fr": [
+          "Pas de Calais"
+        ]
+      }
+    },
+    {
+      "id": "bay_of_biscay",
+      "canonical_name": "Bay of Biscay",
+      "type": "sea_area",
+      "precision": "area",
+      "center": {
+        "lat": 45.5,
+        "lon": -4.5
+      },
+      "radius_km": 450,
+      "regions": [
+        "REG:BISCAY_ATLANTIC_APPROACHES",
+        "REG:BAY_OF_BISCAY"
+      ],
+      "aliases": {
+        "de": [
+          "Biskaya"
+        ],
+        "en": [
+          "Bay of Biscay",
+          "Biscay"
+        ],
+        "fr": [
+          "Golfe de Gascogne"
+        ],
+        "es": [
+          "Golfo de Vizcaya"
+        ]
+      }
+    },
+    {
+      "id": "northern_black_sea_odesa",
+      "canonical_name": "NW Black Sea / Odesa Approaches",
+      "type": "sea_area",
+      "precision": "area",
+      "center": {
+        "lat": 46.2,
+        "lon": 30.95
+      },
+      "radius_km": 260,
+      "regions": [
+        "REG:BLACK_SEA",
+        "REG:BLACK_SEA_NORTH"
+      ],
+      "aliases": {
+        "de": [
+          "nördliches Schwarzes Meer",
+          "noerdliches Schwarzes Meer",
+          "Odessa-Zugänge",
+          "Odesa-Zugänge"
+        ],
+        "en": [
+          "NW Black Sea",
+          "northwestern Black Sea",
+          "Odesa approaches",
+          "Odessa approaches",
+          "Ukraine approaches"
+        ],
+        "uk_latin": [
+          "Odesa",
+          "Chorne more"
+        ],
+        "ru_latin": [
+          "Odessa",
+          "Chernoye more"
+        ]
+      }
+    },
+    {
+      "id": "cyprus_eastern_med",
+      "canonical_name": "Cyprus / Eastern Mediterranean",
+      "type": "sea_area",
+      "precision": "area",
+      "center": {
+        "lat": 34.7,
+        "lon": 33.2
+      },
+      "radius_km": 350,
+      "regions": [
+        "REG:MEDITERRANEAN",
+        "REG:EASTERN_MED",
+        "REG:CYPRUS_LEVANT"
+      ],
+      "aliases": {
+        "de": [
+          "Zypern",
+          "östliches Mittelmeer",
+          "Oestliches Mittelmeer"
+        ],
+        "en": [
+          "Cyprus",
+          "Eastern Mediterranean",
+          "East Med",
+          "Cyprus approaches"
+        ],
+        "tr": [
+          "Kıbrıs",
+          "Dogu Akdeniz",
+          "Doğu Akdeniz"
+        ]
+      }
+    },
+    {
+      "id": "port_helgoland",
+      "canonical_name": "Helgoland",
+      "type": "island_port",
+      "precision": "port",
+      "center": {
+        "lat": 54.182,
+        "lon": 7.887
+      },
+      "radius_km": 8,
+      "regions": [
+        "REG:NORTH_SEA",
+        "REG:GER_BIGHT"
+      ],
+      "aliases": {
+        "de": [
+          "Helgoland"
+        ],
+        "en": [
+          "Heligoland",
+          "Helgoland"
+        ]
+      }
+    },
+    {
+      "id": "port_copenhagen",
+      "canonical_name": "Copenhagen",
+      "type": "port",
+      "precision": "port",
+      "center": {
+        "lat": 55.68,
+        "lon": 12.6
+      },
+      "radius_km": 12,
+      "regions": [
+        "REG:BALTIC",
+        "REG:DANISH_STRAITS",
+        "REG:ORESUND"
+      ],
+      "aliases": {
+        "de": [
+          "Kopenhagen"
+        ],
+        "en": [
+          "Copenhagen"
+        ],
+        "da": [
+          "København",
+          "Koebenhavn"
+        ]
+      }
+    },
+    {
+      "id": "port_gdansk",
+      "canonical_name": "Gdańsk",
+      "type": "port",
+      "precision": "port",
+      "center": {
+        "lat": 54.45,
+        "lon": 18.75
+      },
+      "radius_km": 18,
+      "regions": [
+        "REG:BALTIC"
+      ],
+      "aliases": {
+        "de": [
+          "Danzig"
+        ],
+        "en": [
+          "Gdansk",
+          "Gdańsk"
+        ],
+        "pl": [
+          "Gdańsk",
+          "Gdansk"
+        ]
+      }
+    },
+    {
+      "id": "island_gotland",
+      "canonical_name": "Gotland",
+      "type": "island_area",
+      "precision": "area",
+      "center": {
+        "lat": 57.63,
+        "lon": 18.3
+      },
+      "radius_km": 85,
+      "regions": [
+        "REG:BALTIC",
+        "REG:GOTLAND_SEA"
+      ],
+      "aliases": {
+        "de": [
+          "Gotland"
+        ],
+        "en": [
+          "Gotland"
+        ],
+        "sv": [
+          "Gotland"
+        ]
+      }
+    },
+    {
+      "id": "port_kalundborg",
+      "canonical_name": "Kalundborg",
+      "type": "port",
+      "precision": "port",
+      "center": {
+        "lat": 55.68,
+        "lon": 11.09
+      },
+      "radius_km": 8,
+      "regions": [
+        "REG:BALTIC",
+        "REG:DANISH_STRAITS",
+        "REG:GREAT_BELT"
+      ],
+      "aliases": {
+        "da": [
+          "Kalundborg"
+        ],
+        "en": [
+          "Kalundborg"
+        ],
+        "de": [
+          "Kalundborg"
+        ]
+      }
+    },
+    {
+      "id": "port_oskarshamn",
+      "canonical_name": "Oskarshamn",
+      "type": "port",
+      "precision": "port",
+      "center": {
+        "lat": 57.27,
+        "lon": 16.45
+      },
+      "radius_km": 10,
+      "regions": [
+        "REG:BALTIC",
+        "REG:GOTLAND_SEA"
+      ],
+      "aliases": {
+        "sv": [
+          "Oskarshamn"
+        ],
+        "en": [
+          "Oskarshamn"
+        ],
+        "de": [
+          "Oskarshamn"
+        ]
+      }
+    },
+    {
+      "id": "port_kiel",
+      "canonical_name": "Kiel",
+      "type": "port",
+      "precision": "port",
+      "center": {
+        "lat": 54.323,
+        "lon": 10.123
+      },
+      "radius_km": 12,
+      "regions": [
+        "REG:BALTIC",
+        "REG:FEHMARNBELT"
+      ],
+      "aliases": {
+        "de": [
+          "Kiel",
+          "Nord-Ostsee-Kanal",
+          "Kieler Förde",
+          "Kieler Foerde"
+        ],
+        "en": [
+          "Kiel",
+          "Kiel Canal"
+        ]
+      }
+    },
+    {
+      "id": "port_rostock",
+      "canonical_name": "Rostock",
+      "type": "port",
+      "precision": "port",
+      "center": {
+        "lat": 54.092,
+        "lon": 12.14
+      },
+      "radius_km": 12,
+      "regions": [
+        "REG:BALTIC"
+      ],
+      "aliases": {
+        "de": [
+          "Rostock",
+          "Warnemünde",
+          "Warnemuende"
+        ],
+        "en": [
+          "Rostock",
+          "Warnemunde",
+          "Warnemünde"
+        ]
+      }
+    },
+    {
+      "id": "port_hamburg",
+      "canonical_name": "Hamburg",
+      "type": "port",
+      "precision": "port",
+      "center": {
+        "lat": 53.54,
+        "lon": 9.98
+      },
+      "radius_km": 22,
+      "regions": [
+        "REG:NORTH_SEA",
+        "REG:GER_BIGHT"
+      ],
+      "aliases": {
+        "de": [
+          "Hamburg",
+          "Hamburger Hafen"
+        ],
+        "en": [
+          "Hamburg",
+          "Port of Hamburg"
+        ]
+      }
+    },
+    {
+      "id": "port_wilhelmshaven",
+      "canonical_name": "Wilhelmshaven",
+      "type": "port",
+      "precision": "port",
+      "center": {
+        "lat": 53.53,
+        "lon": 8.16
+      },
+      "radius_km": 18,
+      "regions": [
+        "REG:NORTH_SEA",
+        "REG:GER_BIGHT"
+      ],
+      "aliases": {
+        "de": [
+          "Wilhelmshaven",
+          "JadeWeserPort",
+          "Jade-Weser-Port"
+        ],
+        "en": [
+          "Wilhelmshaven",
+          "JadeWeserPort",
+          "Jade Weser Port"
+        ]
+      }
+    },
+    {
+      "id": "port_bremerhaven",
+      "canonical_name": "Bremerhaven",
+      "type": "port",
+      "precision": "port",
+      "center": {
+        "lat": 53.54,
+        "lon": 8.58
+      },
+      "radius_km": 15,
+      "regions": [
+        "REG:NORTH_SEA",
+        "REG:GER_BIGHT"
+      ],
+      "aliases": {
+        "de": [
+          "Bremerhaven"
+        ],
+        "en": [
+          "Bremerhaven"
+        ]
+      }
+    }
+  ]
+}
