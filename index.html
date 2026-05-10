@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v5.16 "Linked Text/Map Selection"</title>
+  <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v5.17 "parseISO Fix / Linked Selection"</title>
 
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -628,7 +628,7 @@
       <div class="brand">
         <div class="brandLine">
           <h1>VOODOO // HYBRID MARITIME OPS</h1>
-          <span class="ver">v5.16 “Linked Text/Map Selection”</span>
+          <span class="ver">v5.17 “parseISO Fix / Linked Selection”</span>
         </div>
         <div class="sub">
           Source: <span id="src">–</span> • Stand: <span id="stand">–</span> • Worker: <span class="hint" id="wkr">–</span>
@@ -923,6 +923,20 @@ Wilhelmshaven JadeWeserPort"></textarea>
   function nowStr(){ return new Date().toLocaleString(); }
   function uniq(arr){ return [...new Set(arr)].sort(); }
   function clamp(n,a,b){ return Math.max(a, Math.min(b, n)); }
+
+  function parseISO(value){
+    if (!value) return null;
+    const d = new Date(value);
+    return Number.isNaN(d.getTime()) ? null : d;
+  }
+
+  function hoursAgo(date, now = new Date()){
+    return (now.getTime() - date.getTime()) / (1000 * 60 * 60);
+  }
+
+  function daysAgo(date, now = new Date()){
+    return hoursAgo(date, now) / 24;
+  }
 
 
   // First-pass keyword tiers. Keep broad; tune after we see real 90-day baseline noise.
