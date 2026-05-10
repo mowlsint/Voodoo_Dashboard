@@ -1,0 +1,89 @@
+version: 1
+name: "VOODOO NAVAREA / NAVTEX Context Map"
+description: >
+  Operational warning-context mapping. Use this to interpret MSI/NAVTEX/NAVWARN
+  hints and to provide regional context. Do not use NAVAREA/NAVTEX as exact
+  geolocation by itself.
+
+navareas:
+  - id: "NAVAREA_I"
+    name: "NAVAREA I"
+    coordinator_hint: "United Kingdom / UKHO context"
+    related_regions:
+      - "REG:NORTH_SEA"
+      - "REG:BRITISH_ISLES"
+      - "REG:IRISH_SEA"
+      - "REG:CHANNEL"
+      - "REG:BISCAY_ATLANTIC_APPROACHES"
+      - "REG:BALTIC"
+      - "REG:HIGH_NORTH_ARCTIC"
+    use_as:
+      - "warning_context"
+      - "source_region_hint"
+    notes:
+      - "Very broad MSI context; do not infer exact location from NAVAREA alone."
+
+  - id: "NAVAREA_III"
+    name: "NAVAREA III"
+    coordinator_hint: "Mediterranean / Black Sea MSI context"
+    related_regions:
+      - "REG:MEDITERRANEAN"
+      - "REG:BLACK_SEA"
+    use_as:
+      - "warning_context"
+      - "source_region_hint"
+    notes:
+      - "Broad MSI context for Mediterranean and Black Sea; not an exact event location."
+
+navtex_contexts:
+  - id: "NAVTEX_GERMAN_BIGHT"
+    name: "German Bight / Deutsche Bucht NAVTEX context"
+    related_regions: ["REG:GER_BIGHT", "REG:NORTH_SEA"]
+    aliases:
+      de: ["Deutsche Bucht", "BSH Warnnachrichten", "Nautische Warnnachrichten"]
+      en: ["German Bight", "German navigational warnings"]
+
+  - id: "NAVTEX_BALTIC_WEST"
+    name: "Western Baltic NAVTEX context"
+    related_regions: ["REG:BALTIC", "REG:DANISH_STRAITS", "REG:FEHMARNBELT", "REG:ORESUND"]
+    aliases:
+      de: ["Westliche Ostsee", "Dänische Meerengen"]
+      en: ["Western Baltic", "Danish Straits"]
+
+  - id: "NAVTEX_CHANNEL"
+    name: "English Channel NAVTEX context"
+    related_regions: ["REG:CHANNEL", "REG:DOVER_STRAIT", "REG:WESTERN_CHANNEL"]
+    aliases:
+      de: ["Ärmelkanal", "Dover", "Straße von Dover"]
+      en: ["English Channel", "Dover Strait", "Western Channel"]
+      fr: ["La Manche", "Pas de Calais"]
+
+  - id: "NAVTEX_BLACK_SEA"
+    name: "Black Sea NAVTEX context"
+    related_regions: ["REG:BLACK_SEA", "REG:BLACK_SEA_NORTH", "REG:BLACK_SEA_WEST"]
+    aliases:
+      de: ["Schwarzes Meer"]
+      en: ["Black Sea"]
+      tr: ["Karadeniz"]
+
+  - id: "NAVTEX_EASTERN_MED"
+    name: "Eastern Mediterranean NAVTEX context"
+    related_regions: ["REG:MEDITERRANEAN", "REG:EASTERN_MED", "REG:CYPRUS_LEVANT"]
+    aliases:
+      de: ["Östliches Mittelmeer", "Zypern"]
+      en: ["Eastern Mediterranean", "Cyprus", "Levant"]
+      tr: ["Doğu Akdeniz", "Kıbrıs"]
+
+policy:
+  navarea_match:
+    precision: "warning_area"
+    map_marker: "none_or_large_area"
+    confidence: "low_without_specific_place"
+  navtex_match:
+    precision: "warning_context"
+    map_marker: "soft_area"
+    confidence: "medium_if_specific_context"
+  coordinate_in_warning:
+    precision: "exact_or_navwarn_coordinate"
+    map_marker: "solid"
+    confidence: "high_if_parsed"
