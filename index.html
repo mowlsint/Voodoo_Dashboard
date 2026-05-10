@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v5.21 "Map Time Window"</title>
+  <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v5.22 "Map Time Window Hotfix"</title>
 
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -608,7 +608,7 @@
       <div class="brand">
         <div class="brandLine">
           <h1>VOODOO // HYBRID MARITIME OPS</h1>
-          <span class="ver">v5.21 “Map Time Window”</span>
+          <span class="ver">v5.22 “Map Time Window Hotfix”</span>
         </div>
         <div class="sub">
           Source: <span id="src">–</span> • Stand: <span id="stand">–</span> • Worker: <span class="hint" id="wkr">–</span>
@@ -1077,6 +1077,7 @@ Wilhelmshaven JadeWeserPort"></textarea>
 
   function parseISO(ts){ const d = ts ? new Date(ts) : null; return (d && !isNaN(d)) ? d : null; }
   function daysAgo(d){ return (Date.now() - d.getTime()) / (1000*60*60*24); }
+  function hoursAgo(d, now = new Date()){ return (now.getTime() - d.getTime()) / (1000*60*60); }
 
   function scorePhaseZero(events){
     const recent = events.filter(e => { const d = parseISO(e.ts); return d ? daysAgo(d) <= 7 : false; });
@@ -2037,7 +2038,8 @@ Wilhelmshaven JadeWeserPort"></textarea>
   }));
 
   ["mapShowEvents","mapOnlyFiltered","mapShowCI","mapTimeWindow"].forEach(id => {
-    on(id, "change", refreshMapLayers);
+    const node = el(id);
+    if (node) node.addEventListener("change", refreshMapLayers);
   });
 
   // boot
