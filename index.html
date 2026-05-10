@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v5.10 "Right Sidebar Compact Context"</title>
+  <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v5.11 "Indicators Outer Frame Fix"</title>
 
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -316,20 +316,116 @@
     .navwarnItem .mini{font-size:13px; color:var(--muted); margin-top:4px;}
 
 
-    .indicatorsPanel .pc{
-      max-height: 560px;
+    .indicatorsPanel{
+      max-height: 650px;
+      display:flex;
+      flex-direction:column;
+    }
+    .indicatorsPanel > .pc{
+      max-height:none;
       overflow:auto;
+      flex:1 1 auto;
+      min-height:0;
       padding-right:8px;
     }
-    .indicatorsPanel .pc::-webkit-scrollbar,
+    .indicatorsPanel > .pc::-webkit-scrollbar,
     .weatherPanel .pc::-webkit-scrollbar,
     .navwarnPanel .pc::-webkit-scrollbar{width:8px}
-    .indicatorsPanel .pc::-webkit-scrollbar-thumb,
+    .indicatorsPanel > .pc::-webkit-scrollbar-thumb,
     .weatherPanel .pc::-webkit-scrollbar-thumb,
     .navwarnPanel .pc::-webkit-scrollbar-thumb{
       background:rgba(176,136,0,.35);
       border-radius:999px;
     }
+
+    .indicatorsPanel .pc{
+      padding-top:10px;
+      padding-bottom:10px;
+    }
+    .indicatorsPanel .kpis{
+      grid-template-columns:repeat(4,minmax(0,1fr));
+      gap:6px;
+    }
+    .indicatorsPanel .kpi{
+      padding:7px;
+      min-width:0;
+    }
+    .indicatorsPanel .kpi .k{
+      font-size:12px;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+    }
+    .indicatorsPanel .kpi .v{
+      font-size:19px;
+      margin-top:3px;
+    }
+    .indicatorsPanel .panel{
+      border-radius:10px !important;
+    }
+    .indicatorsPanel .panel .ph{
+      padding:7px 9px;
+    }
+    .indicatorsPanel .panel .ph .title{
+      font-size:17px;
+    }
+    .indicatorsPanel .panel .ph .meta{
+      font-size:13px;
+    }
+    .indicatorsPanel .sensorGrid{
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:6px;
+      margin-bottom:8px;
+    }
+    .indicatorsPanel .sensorCard{
+      padding:7px;
+      min-width:0;
+    }
+    .indicatorsPanel .sensorCard .label{
+      font-size:13px;
+    }
+    .indicatorsPanel .sensorCard .num,
+    .indicatorsPanel .sensorCard .gaugeValue{
+      font-size:22px;
+      line-height:1;
+    }
+    .indicatorsPanel .sensorCard .hint{
+      font-size:12px;
+    }
+    .indicatorsPanel .seismoWrap{
+      grid-template-columns:minmax(0,1fr) 108px;
+      gap:8px;
+    }
+    .indicatorsPanel .sparkSeismo{
+      height:96px;
+    }
+    .indicatorsPanel .seismoLegend{
+      min-height:96px;
+      gap:4px;
+    }
+    .indicatorsPanel .legendItem{
+      padding:4px 6px;
+      border-radius:8px;
+    }
+    .indicatorsPanel .legendSwatch{
+      width:12px;
+      height:12px;
+      flex-basis:12px;
+    }
+    .indicatorsPanel .legendText .t{
+      font-size:12px;
+    }
+    .indicatorsPanel .legendText .s{
+      font-size:10px;
+    }
+    .indicatorsPanel .spark{
+      height:82px;
+    }
+    .indicatorsPanel > .pc > div[style*="grid-template-columns"]{
+      gap:8px !important;
+      margin-top:8px !important;
+    }
+
     .weatherPanel .pc{
       max-height: 500px;
       overflow:auto;
@@ -404,8 +500,12 @@
       .controls{grid-template-columns:1fr 1fr;}
       .seismoWrap{grid-template-columns:1fr;}
       .seismoLegend{grid-template-columns:repeat(2,minmax(0,1fr)); grid-template-rows:none; min-height:unset;}
-      .indicatorsPanel .pc,.weatherPanel .pc,.navwarnPanel .pc{max-height:none; overflow:visible;}
-      .sideGrid .weatherGrid{grid-template-columns:repeat(2,minmax(220px,1fr));}\n      .weatherGrid{grid-template-columns:1fr;}
+      .indicatorsPanel{max-height:none;}
+      .indicatorsPanel > .pc,.weatherPanel .pc,.navwarnPanel .pc{max-height:none; overflow:visible;}
+      .indicatorsPanel .kpis{grid-template-columns:1fr 1fr;}
+      .indicatorsPanel .seismoWrap{grid-template-columns:1fr;}
+      .sideGrid .weatherGrid{grid-template-columns:repeat(2,minmax(220px,1fr));}
+      .weatherGrid{grid-template-columns:1fr;}
     }
     @media (max-width: 560px){
       .controls{grid-template-columns:1fr;}
@@ -424,7 +524,7 @@
       <div class="brand">
         <div class="brandLine">
           <h1>VOODOO // HYBRID MARITIME OPS</h1>
-          <span class="ver">v5.10 “Right Sidebar Compact Context”</span>
+          <span class="ver">v5.11 “Indicators Outer Frame Fix”</span>
         </div>
         <div class="sub">
           Source: <span id="src">–</span> • Stand: <span id="stand">–</span> • Worker: <span class="hint" id="wkr">–</span>
