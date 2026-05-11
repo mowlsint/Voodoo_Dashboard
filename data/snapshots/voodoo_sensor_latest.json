@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "ts": "2026-05-11T06:34:20.784Z",
-  "bucket_start_utc": "2026-05-11T06:00:00.000Z",
-  "bucket_end_utc": "2026-05-11T09:00:00.000Z",
+  "ts": "2026-05-11T18:54:15.654Z",
+  "bucket_start_utc": "2026-05-11T18:00:00.000Z",
+  "bucket_end_utc": "2026-05-11T21:00:00.000Z",
   "bucket_hours": 3,
   "source": {
     "type": "github_issues",
@@ -11,26 +11,26 @@
     "state": "open"
   },
   "counts": {
-    "open_events_total": 239,
-    "recent_72h_events": 184,
-    "current_bucket_events": 1,
+    "open_events_total": 283,
+    "recent_72h_events": 176,
+    "current_bucket_events": 8,
     "p0_suspect_72h": 0,
     "geo_total": 0,
     "geo_72h": 0
   },
   "sensors": {
     "hybrid_seismograph_pct": 100,
-    "keyword_barometer_pct": 10,
+    "keyword_barometer_pct": 5,
     "government_weirdness": {
       "north_sea_pct": 3,
       "baltic_sea_pct": 7
     }
   },
   "diagnostics": {
-    "hybrid_weighted_points_72h": 163.75,
-    "keyword_weighted_hits_bucket": 2,
-    "keyword_raw_hits_bucket": 2,
-    "keyword_deduped_events_bucket": 1,
+    "hybrid_weighted_points_72h": 150.85,
+    "keyword_weighted_hits_bucket": 1,
+    "keyword_raw_hits_bucket": 1,
+    "keyword_deduped_events_bucket": 8,
     "government_weirdness_north_sea_points": 1.26,
     "government_weirdness_baltic_sea_points": 3.24,
     "government_weirdness_north_sea_events": 1,
@@ -41,13 +41,7 @@
   },
   "top_terms": [
     {
-      "term": "drones",
-      "tier": "A",
-      "count": 1,
-      "weighted": 1
-    },
-    {
-      "term": "maritime drone",
+      "term": "offshore platform",
       "tier": "A",
       "count": 1,
       "weighted": 1
@@ -55,28 +49,28 @@
   ],
   "top_sources_72h": [
     {
+      "source_id": "warontherocks_bsky",
+      "count": 31
+    },
+    {
       "source_id": "unknown",
-      "count": 61
+      "count": 31
     },
     {
       "source_id": "auonsson_bsky",
-      "count": 30
+      "count": 31
+    },
+    {
+      "source_id": "gcaptain_rss",
+      "count": 17
     },
     {
       "source_id": "worldcrimeintel_x",
       "count": 16
     },
     {
-      "source_id": "gcaptain_rss",
-      "count": 15
-    },
-    {
-      "source_id": "warontherocks_bsky",
-      "count": 14
-    },
-    {
       "source_id": "oiuye_bsky",
-      "count": 10
+      "count": 12
     },
     {
       "source_id": "certeu_guidance_rss",
@@ -92,11 +86,11 @@
     },
     {
       "source_id": "highnorthnews_bsky",
-      "count": 4
+      "count": 3
     },
     {
       "source_id": "maritimekiwi_bsky",
-      "count": 2
+      "count": 3
     },
     {
       "source_id": "navylookout_bsky",
@@ -106,16 +100,14 @@
   "domain_counts_72h": {
     "D:CYBER_OT": 30,
     "D:DRONE_UAS": 1,
-    "D:INCIDENT": 3,
-    "D:INFRA_CI": 7,
-    "D:NEWS_INTEL": 126,
-    "D:SECURITY_CRIME": 17
+    "D:INFRA_CI": 5,
+    "D:NEWS_INTEL": 124,
+    "D:SECURITY_CRIME": 16
   },
   "region_counts_72h": {
-    "REG:ATLANTIC_NE": 6,
-    "REG:MED": 1,
+    "REG:ATLANTIC_NE": 5,
     "REG:NORTH_SEA": 1,
-    "REG:OTHER": 117,
-    "REG:UNKNOWN": 59
+    "REG:OTHER": 140,
+    "REG:UNKNOWN": 30
   }
 }
