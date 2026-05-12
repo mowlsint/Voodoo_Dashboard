@@ -464,6 +464,168 @@ function regionCounts(events) {
   return Object.fromEntries(Array.from(m.entries()).sort((a, b) => a[0].localeCompare(b[0])));
 }
 
+function mapToSortedObject(m) {
+  return Object.fromEntries(
+    Array.from(m.entries()).sort((a, b) => String(a[0]).localeCompare(String(b[0])))
+  );
+}
+
+function normalizeUrlForDedupe(url) {
+  const raw = norm(url);
+  if (!raw) return "";
+
+  try {
+    const u = new URL(raw);
+    u.hash = "";
+
+    for (const p of [
+      "utm_source",
+      "utm_medium",
+      "utm_campaign",
+      "utm_term",
+      "utm_content",
+      "fbclid",
+      "gclid",
+      "mc_cid",
+      "mc_eid",
+    ]) {
+      u.searchParams.delete(p);
+    }
+
+    return u.toString().replace(/\/+$/, "").toLowerCase();
+  } catch {
+    return raw.replace(/\/+$/, "").toLowerCase();
+  }
+}
+
+function simpleHash(s) {
+  let h = 2166136261;
+  const str = String(s || "");
+  for (let i = 0; i < str.length; i++) {
+    h ^= str.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return (h >>> 0).toString(16);
+}
+
+function extractTextSection(body) {
+  const b = String(body || "");
+  const m = b.match(/###\s*Text\s*\n([\s\S]*?)(?:\n\n###|\n###\s*Extra|<!--|$)/i);
+  return (m ? m[1] : b)
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 2500);
+}
+
+function sourceKey(e) {
+  return e.source_id || e.source_line || "unknown";
+}
+
+function sourceKind(e) {
+  const labels = e.labels || [];
+  const p = String(e.platform || "").toLowerCase();
+  const title = String(e.title || "");
+
+  if (labels.includes("SRC:SOCIAL") || p === "x" || p === "bsky" || p === "mastodon") {
+    return "social";
+  }
+
+  if (p === "rss" || /^\[RSS\]/i.test(title)) {
+    return "rss";
+  }
+
+  if (labels.includes("SRC:OFFICIAL")) {
+    return "official";
+  }
+
+  if (labels.includes("SRC:MEDIA")) {
+    return "media";
+  }
+
+  if (labels.includes("SRC:OSINT")) {
+    return "osint";
+  }
+
+  return "unknown";
+}
+
+function isSocialOrRss(e) {
+  const k = sourceKind(e);
+  return k === "social" || k === "rss";
+}
+
+function eventFingerprint(e) {
+  const link = normalizeUrlForDedupe(e.link || "");
+  if (link) return `link:${link}`;
+
+  const ingest = String(e.body || "").match(/VOODOO_INGEST:\s*([a-f0-9]+)\s+SOURCE=([A-Za-z0-9_-]+)/i);
+  if (ingest) return `ingest:${ingest[2]}:${ingest[1]}`;
+
+  const text = `${e.title}\n${extractTextSection(e.body)}`
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim();
+
+  return `text:${simpleHash(text)}`;
+}
+
+function dedupeEventList(events) {
+  const seen = new Set();
+  const kept = [];
+  const duplicateBySource = new Map();
+
+  for (const e of events || []) {
+    const fp = eventFingerprint(e);
+    if (seen.has(fp)) {
+      const src = sourceKey(e);
+      duplicateBySource.set(src, (duplicateBySource.get(src) || 0) + 1);
+      continue;
+    }
+
+    seen.add(fp);
+    kept.push(e);
+  }
+
+  return {
+    events: kept,
+    duplicate_count: Math.max(0, (events || []).length - kept.length),
+    duplicates_by_source: mapToSortedObject(duplicateBySource),
+  };
+}
+
+function sourceKindCounts(events) {
+  const m = new Map();
+
+  for (const e of events || []) {
+    const key = sourceKind(e);
+    m.set(key, (m.get(key) || 0) + 1);
+  }
+
+  return mapToSortedObject(m);
+}
+
+function sourceDomainCounts(events) {
+  const m = new Map();
+
+  for (const e of events || []) {
+    const key = `${sourceKey(e)}|${e.category || "D:UNKNOWN"}`;
+    m.set(key, (m.get(key) || 0) + 1);
+  }
+
+  return mapToSortedObject(m);
+}
+
+function sourceRegionCounts(events) {
+  const m = new Map();
+
+  for (const e of events || []) {
+    const key = `${sourceKey(e)}|${e.region || "REG:UNKNOWN"}`;
+    m.set(key, (m.get(key) || 0) + 1);
+  }
+
+  return mapToSortedObject(m);
+}
+
 function readExistingSnapshots(filePath) {
   if (!fs.existsSync(filePath)) return [];
 
@@ -516,6 +678,13 @@ async function main() {
     return d && d >= start && d < end;
   });
 
+  const dedupeAll = dedupeEventList(events);
+  const dedupe72 = dedupeEventList(recent72);
+  const dedupeBucket = dedupeEventList(currentBucket);
+
+  const socialRssBucket = currentBucket.filter(isSocialOrRss);
+  const socialRss72 = recent72.filter(isSocialOrRss);
+
   const keywordCfg = loadKeywordConfig();
 
   const hybrid = scoreHybridSeismograph(recent72);
@@ -524,7 +693,7 @@ async function main() {
   const govBaltic = scoreGovernmentWeirdness(recent72, "baltic_sea");
 
   const snapshot = {
-    schema_version: 1,
+    schema_version: 2,
     ts: now.toISOString(),
     bucket_start_utc: start.toISOString(),
     bucket_end_utc: end.toISOString(),
@@ -537,11 +706,23 @@ async function main() {
     },
     counts: {
       open_events_total: events.length,
+      open_events_deduped_total: dedupeAll.events.length,
       recent_72h_events: recent72.length,
+      recent_72h_deduped_events: dedupe72.events.length,
       current_bucket_events: currentBucket.length,
+      current_bucket_deduped_events: dedupeBucket.events.length,
+      duplicate_events_total: dedupeAll.duplicate_count,
+      duplicate_events_72h: dedupe72.duplicate_count,
+      duplicate_events_bucket: dedupeBucket.duplicate_count,
+      social_rss_events_72h: socialRss72.length,
+      social_rss_events_bucket: socialRssBucket.length,
       p0_suspect_72h: recent72.filter((e) => e.phase0_suspect).length,
+
+      // Achtung: snapshot.mjs erkennt derzeit nur explizite Koordinaten im Issue-Text.
+      // Gazetteer-/Text-Geocoding läuft im Worker und wird in Punkt 5 harmonisiert.
       geo_total: events.filter((e) => !!e.geo).length,
       geo_72h: recent72.filter((e) => !!e.geo).length,
+      geo_count_method: "explicit_coordinates_only",
     },
     sensors: {
       hybrid_seismograph_pct: hybrid.score,
@@ -568,6 +749,17 @@ async function main() {
     top_sources_72h: topSources(recent72),
     domain_counts_72h: domainCounts(recent72),
     region_counts_72h: regionCounts(recent72),
+
+    baseline_observations: {
+      note: "Raw baseline observations for later 90-day normalization. Scores are not yet baseline-normalized.",
+      source_kind_counts_bucket: sourceKindCounts(currentBucket),
+      source_kind_counts_72h: sourceKindCounts(recent72),
+      source_domain_counts_bucket: sourceDomainCounts(currentBucket),
+      source_domain_counts_72h: sourceDomainCounts(recent72),
+      source_region_counts_72h: sourceRegionCounts(recent72),
+      duplicate_sources_bucket: dedupeBucket.duplicates_by_source,
+      duplicate_sources_72h: dedupe72.duplicates_by_source,
+    },
   };
 
   const cutoff = new Date(now.getTime() - SNAPSHOT_KEEP_DAYS * 24 * 60 * 60 * 1000);
