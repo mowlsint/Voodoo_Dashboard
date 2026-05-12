@@ -189,6 +189,26 @@ def safe_labels(wanted, existing):
     return sorted(set(out))
 
 
+def is_rss_like_url(url):
+    u = str(url or "").lower()
+    return (
+        u.endswith(".rss")
+        or u.endswith(".xml")
+        or u.endswith("/feed/")
+        or "feedburner" in u
+        or "rss" in u
+    )
+
+
+def feed_platform(feed):
+    explicit = str(feed.get("platform") or feed.get("type") or "").strip().lower()
+    if explicit in {"rss", "atom", "social", "x", "bsky", "html"}:
+        return "rss" if explicit == "atom" else explicit
+
+    url = feed.get("url", "")
+    return "rss" if is_rss_like_url(url) else "html"
+
+
 REG_RULES = [
     (re.compile(r"\b(north sea|nordsee|german bight|deutsche bucht)\b", re.I), "REG:NORTH_SEA"),
     (re.compile(r"\b(baltic|ostsee|kiel bight|fehmarn)\b", re.I), "REG:BALTIC_SEA"),
@@ -368,6 +388,7 @@ def main():
             break
 
         feed_name = feed.get("name", feed.get("url", "(unknown)"))
+        platform = feed_platform(feed)
         base_labels = feed.get("base_labels", ["D:NEWS_INTEL", "CONF:LOW", "SEV:1", "SRC:OSINT"])
 
         try:
@@ -377,7 +398,7 @@ def main():
             print(f"WARN: feed skipped after parser error: {feed_name}: {exc}")
             continue
 
-        print(f"Feed: {feed_name} items={len(items)}")
+        print(f"Feed: {feed_name} platform={platform} items={len(items)}")
 
         for item in items:
             if created >= max_new:
@@ -408,6 +429,7 @@ def main():
 
             body = (
                 f"### Source\n{feed_name}\n\n"
+                f"### Plattform\n{platform}\n\n"
                 f"### Link\n{link}\n\n"
                 f"### Published\n{published if published else '(unknown)'}\n\n"
                 f"### Auto-Labels\n" + ", ".join(labels) + "\n"
@@ -418,9 +440,10 @@ def main():
                 f"<!-- VOODOO_FEED_INGEST: {ingest_id} -->"
             )
 
+            title_prefix = "[RSS]" if platform == "rss" else "[AUTO]"
             gh_post(
                 f"{GH_API}/repos/{owner}/{repo}/issues",
-                {"title": f"[AUTO] {title[:180]}", "body": body, "labels": labels},
+                {"title": f"{title_prefix} {title[:180]}", "body": body, "labels": labels},
             )
 
             created += 1
