@@ -2,17 +2,6 @@
   "version": 1,
   "name": "VOODOO NAVTEX / NAVWARN Sources",
   "description": "Official MSI/NAVTEX/NAVWARN sources for /api/navtex. Context layer, not normal noisy issue ingest.",
-  "defaults": {
-    "enabled": true,
-    "timeout_ms": 12000,
-    "max_items_per_source": 40,
-    "cache_ttl_seconds": 1800,
-    "labels": [
-      "SRC:OFFICIAL",
-      "RF:NAVWARN",
-      "D:NEWS_INTEL"
-    ]
-  },
   "sources": [
     {
       "id": "bsh_warnings",
@@ -21,6 +10,8 @@
       "type": "html",
       "url": "https://www.bsh.de/DE/THEMEN/Schifffahrt/Nautische_Informationen/Warnungen_und_Nachrichten/warnungen_und_nachrichten_node.html",
       "parser": "generic_warning_page",
+      "enabled": true,
+      "priority": 95,
       "related_regions": [
         "REG:GER_BIGHT",
         "REG:NORTH_SEA",
@@ -29,9 +20,7 @@
       "navtex_context": [
         "NAVTEX_GERMAN_BIGHT",
         "NAVTEX_BALTIC_WEST"
-      ],
-      "priority": 95,
-      "enabled": true
+      ]
     },
     {
       "id": "elwis_seewarndienst",
@@ -40,6 +29,8 @@
       "type": "html",
       "url": "https://www.elwis.de/DE/Seeschifffahrt/Nautischer-Warn-und-Nachrichtendienst/Nautischer-Warn-und-Nachrichtendienst-node.html",
       "parser": "generic_warning_page",
+      "enabled": true,
+      "priority": 95,
       "related_regions": [
         "REG:GER_BIGHT",
         "REG:NORTH_SEA",
@@ -48,9 +39,7 @@
       "navtex_context": [
         "NAVTEX_GERMAN_BIGHT",
         "NAVTEX_BALTIC_WEST"
-      ],
-      "priority": 95,
-      "enabled": true
+      ]
     },
     {
       "id": "sjofartsverket_navtex",
@@ -59,6 +48,8 @@
       "type": "html",
       "url": "https://navvarn.sjofartsverket.se/en/Navigationsvarningar/Navtex",
       "parser": "generic_warning_page",
+      "enabled": true,
+      "priority": 90,
       "related_regions": [
         "REG:BALTIC",
         "REG:GOTLAND_SEA",
@@ -68,9 +59,7 @@
       ],
       "navtex_context": [
         "NAVTEX_BALTIC_WEST"
-      ],
-      "priority": 90,
-      "enabled": true
+      ]
     },
     {
       "id": "dma_nautical_information",
@@ -79,6 +68,8 @@
       "type": "html",
       "url": "https://www.dma.dk/safety-at-sea/navigational-information/nautical-information",
       "parser": "generic_warning_page",
+      "enabled": true,
+      "priority": 90,
       "related_regions": [
         "REG:BALTIC",
         "REG:DANISH_STRAITS",
@@ -91,9 +82,7 @@
       ],
       "navtex_context": [
         "NAVTEX_BALTIC_WEST"
-      ],
-      "priority": 90,
-      "enabled": true
+      ]
     },
     {
       "id": "traficom_finland_ntm",
@@ -102,6 +91,8 @@
       "type": "html",
       "url": "https://www.traficom.fi/en/transport/maritime/notices-mariners",
       "parser": "generic_warning_page",
+      "enabled": true,
+      "priority": 75,
       "related_regions": [
         "REG:BALTIC",
         "REG:GULF_OF_FINLAND",
@@ -109,9 +100,7 @@
       ],
       "navtex_context": [
         "NAVTEX_BALTIC_WEST"
-      ],
-      "priority": 75,
-      "enabled": true
+      ]
     },
     {
       "id": "ukho_msi_radio_navwarnings",
@@ -120,6 +109,8 @@
       "type": "html",
       "url": "https://msi.admiralty.co.uk/RadioNavigationalWarnings",
       "parser": "ukho_msi",
+      "enabled": true,
+      "priority": 95,
       "related_regions": [
         "REG:CHANNEL",
         "REG:DOVER_STRAIT",
@@ -131,9 +122,7 @@
       ],
       "navarea": [
         "NAVAREA_I"
-      ],
-      "priority": 95,
-      "enabled": true
+      ]
     },
     {
       "id": "navarea_iii_context",
@@ -142,22 +131,15 @@
       "type": "html",
       "url": "https://wwmiws.wmo.int/",
       "parser": "generic_warning_page",
+      "enabled": false,
+      "priority": 40,
       "related_regions": [
         "REG:MEDITERRANEAN",
         "REG:BLACK_SEA"
       ],
       "navarea": [
         "NAVAREA_III"
-      ],
-      "priority": 40,
-      "enabled": false
+      ]
     }
-  ],
-  "routing_policy": {
-    "create_issues_by_default": false,
-    "show_in_dashboard_board": true,
-    "show_on_map_if_coordinate": true,
-    "use_as_context_for_reports": true,
-    "negative_report_if_empty": true
-  }
+  ]
 }
