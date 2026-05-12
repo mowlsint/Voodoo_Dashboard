@@ -1,8 +1,118 @@
 {
-  "version": 2,
+  "version": 3,
   "name": "VOODOO Maritime Gazetteer",
-  "description": "Controlled maritime gazetteer for inferred geolocation. Expanded global v2: Europe, Middle East, Indian Ocean, Africa, Americas, Indo-Pacific and Arctic. Exact issue-body coordinates override inferred places.",
+  "description": "Controlled maritime gazetteer for inferred geolocation. Expanded global v2: Europe, Middle East, Indian Ocean, Africa, Americas, Indo-Pacific and Arctic. Exact issue-body coordinates override inferred places. v3 adds generic North Sea, German Bight and Baltic Sea topic-area anchors for safer event geolocation.",
   "places": [
+    {
+      "id": "north_sea",
+      "canonical_name": "North Sea",
+      "type": "sea_area",
+      "precision": "area",
+      "center": {
+        "lat": 56.0,
+        "lon": 3.5
+      },
+      "radius_km": 900,
+      "regions": [
+        "REG:NORTH_SEA"
+      ],
+      "aliases": {
+        "de": [
+          "Nordsee"
+        ],
+        "en": [
+          "North Sea"
+        ],
+        "nl": [
+          "Noordzee"
+        ],
+        "da": [
+          "Nordsøen",
+          "Nordsoen"
+        ],
+        "sv": [
+          "Nordsjön",
+          "Nordsjon"
+        ],
+        "no": [
+          "Nordsjøen",
+          "Nordsjoen"
+        ]
+      }
+    },
+    {
+      "id": "german_bight",
+      "canonical_name": "German Bight",
+      "type": "sea_area",
+      "precision": "area",
+      "center": {
+        "lat": 54.2,
+        "lon": 7.5
+      },
+      "radius_km": 180,
+      "regions": [
+        "REG:NORTH_SEA",
+        "REG:GER_BIGHT"
+      ],
+      "aliases": {
+        "de": [
+          "Deutsche Bucht",
+          "deutsche Bucht"
+        ],
+        "en": [
+          "German Bight"
+        ],
+        "nl": [
+          "Duitse Bocht"
+        ]
+      }
+    },
+    {
+      "id": "baltic_sea",
+      "canonical_name": "Baltic Sea",
+      "type": "sea_area",
+      "precision": "area",
+      "center": {
+        "lat": 57.2,
+        "lon": 19.0
+      },
+      "radius_km": 780,
+      "regions": [
+        "REG:BALTIC"
+      ],
+      "aliases": {
+        "de": [
+          "Ostsee"
+        ],
+        "en": [
+          "Baltic Sea",
+          "Baltic"
+        ],
+        "da": [
+          "Østersøen",
+          "Ostersoen",
+          "Oestersoeen"
+        ],
+        "sv": [
+          "Östersjön",
+          "Ostersjon"
+        ],
+        "fi": [
+          "Itämeri",
+          "Itameri"
+        ],
+        "pl": [
+          "Morze Bałtyckie",
+          "Morze Baltyckie"
+        ],
+        "ru_latin": [
+          "Baltiyskoye more"
+        ],
+        "uk_latin": [
+          "Baltiyske more"
+        ]
+      }
+    },
     {
       "id": "strait_gibraltar",
       "canonical_name": "Strait of Gibraltar",
