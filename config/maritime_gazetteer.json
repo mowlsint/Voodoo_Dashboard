@@ -2153,6 +2153,1031 @@
       }
     },
     {
+  "id": "port_ust_luga",
+  "canonical_name": "Ust-Luga",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 59.667, "lon": 28.287 },
+  "radius_km": 24,
+  "regions": ["REG:BALTIC", "REG:GULF_OF_FINLAND", "REG:RUSSIA_BALTIC"],
+  "aliases": {
+    "de": ["Ust-Luga", "Ust Luga"],
+    "en": ["Ust-Luga", "Ust Luga", "Port of Ust-Luga"],
+    "ru_latin": ["Ust-Luga", "Ust Luga", "Port Ust-Luga"]
+  }
+},
+{
+  "id": "port_primorsk_russia",
+  "canonical_name": "Primorsk, Russia",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 60.350, "lon": 28.620 },
+  "radius_km": 18,
+  "regions": ["REG:BALTIC", "REG:GULF_OF_FINLAND", "REG:RUSSIA_BALTIC", "REG:ENERGY"],
+  "aliases": {
+    "de": ["Primorsk", "Primorsk Russland", "Ölhafen Primorsk"],
+    "en": ["Primorsk", "Primorsk Russia", "Port of Primorsk", "Primorsk oil terminal"],
+    "ru_latin": ["Primorsk", "Port Primorsk"]
+  }
+},
+{
+  "id": "port_vysotsk",
+  "canonical_name": "Vysotsk",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 60.628, "lon": 28.570 },
+  "radius_km": 14,
+  "regions": ["REG:BALTIC", "REG:GULF_OF_FINLAND", "REG:RUSSIA_BALTIC", "REG:ENERGY"],
+  "aliases": {
+    "de": ["Vysotsk", "Wyssozki"],
+    "en": ["Vysotsk", "Port of Vysotsk", "Vysotsk terminal"],
+    "ru_latin": ["Vysotsk"]
+  }
+},
+{
+  "id": "port_saint_petersburg",
+  "canonical_name": "Saint Petersburg",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 59.895, "lon": 30.215 },
+  "radius_km": 30,
+  "regions": ["REG:BALTIC", "REG:GULF_OF_FINLAND", "REG:RUSSIA_BALTIC"],
+  "aliases": {
+    "de": ["Sankt Petersburg", "St. Petersburg", "Petersburg"],
+    "en": ["Saint Petersburg", "St Petersburg", "Port of Saint Petersburg", "Port of St Petersburg"],
+    "ru_latin": ["Sankt-Peterburg", "Saint Petersburg", "St Petersburg"]
+  }
+},
+{
+  "id": "port_bronka",
+  "canonical_name": "Bronka",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 59.950, "lon": 29.670 },
+  "radius_km": 12,
+  "regions": ["REG:BALTIC", "REG:GULF_OF_FINLAND", "REG:RUSSIA_BALTIC"],
+  "aliases": {
+    "de": ["Bronka", "Hafen Bronka"],
+    "en": ["Bronka", "Port Bronka", "Bronka terminal"],
+    "ru_latin": ["Bronka"]
+  }
+},
+{
+  "id": "port_kaliningrad",
+  "canonical_name": "Kaliningrad",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 54.705, "lon": 20.500 },
+  "radius_km": 22,
+  "regions": ["REG:BALTIC", "REG:RUSSIA_BALTIC", "REG:KALININGRAD"],
+  "aliases": {
+    "de": ["Kaliningrad", "Königsberg", "Koenigsberg"],
+    "en": ["Kaliningrad", "Port of Kaliningrad"],
+    "ru_latin": ["Kaliningrad"]
+  }
+},
+{
+  "id": "port_baltiysk",
+  "canonical_name": "Baltiysk",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 54.644, "lon": 19.914 },
+  "radius_km": 14,
+  "regions": ["REG:BALTIC", "REG:RUSSIA_BALTIC", "REG:KALININGRAD", "REG:MILITARY"],
+  "aliases": {
+    "de": ["Baltijsk", "Baltiysk", "Pillau"],
+    "en": ["Baltiysk", "Baltijsk", "Baltiysk naval base"],
+    "ru_latin": ["Baltiysk", "Baltijsk"]
+  }
+},
+{
+  "id": "port_murmansk",
+  "canonical_name": "Murmansk",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 68.970, "lon": 33.075 },
+  "radius_km": 28,
+  "regions": ["REG:HIGH_NORTH_ARCTIC", "REG:BARENTS_SEA", "REG:RUSSIA_ARCTIC"],
+  "aliases": {
+    "de": ["Murmansk"],
+    "en": ["Murmansk", "Port of Murmansk"],
+    "ru_latin": ["Murmansk"]
+  }
+},
+{
+  "id": "port_severomorsk",
+  "canonical_name": "Severomorsk",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 69.070, "lon": 33.420 },
+  "radius_km": 18,
+  "regions": ["REG:HIGH_NORTH_ARCTIC", "REG:BARENTS_SEA", "REG:RUSSIA_ARCTIC", "REG:MILITARY"],
+  "aliases": {
+    "de": ["Seweromorsk", "Severomorsk"],
+    "en": ["Severomorsk", "Severomorsk naval base", "Northern Fleet base"],
+    "ru_latin": ["Severomorsk"]
+  }
+},
+{
+  "id": "port_polyarny",
+  "canonical_name": "Polyarny",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 69.198, "lon": 33.450 },
+  "radius_km": 16,
+  "regions": ["REG:HIGH_NORTH_ARCTIC", "REG:BARENTS_SEA", "REG:RUSSIA_ARCTIC", "REG:MILITARY"],
+  "aliases": {
+    "de": ["Poljarny", "Polyarny"],
+    "en": ["Polyarny", "Polyarny naval base"],
+    "ru_latin": ["Polyarny", "Poliarny"]
+  }
+},
+{
+  "id": "port_arkhangelsk",
+  "canonical_name": "Arkhangelsk",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 64.540, "lon": 40.530 },
+  "radius_km": 30,
+  "regions": ["REG:HIGH_NORTH_ARCTIC", "REG:WHITE_SEA", "REG:RUSSIA_ARCTIC"],
+  "aliases": {
+    "de": ["Archangelsk", "Arkhangelsk"],
+    "en": ["Arkhangelsk", "Archangelsk", "Port of Arkhangelsk"],
+    "ru_latin": ["Arkhangelsk"]
+  }
+},
+{
+  "id": "port_severodvinsk",
+  "canonical_name": "Severodvinsk",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 64.580, "lon": 39.830 },
+  "radius_km": 22,
+  "regions": ["REG:HIGH_NORTH_ARCTIC", "REG:WHITE_SEA", "REG:RUSSIA_ARCTIC", "REG:MILITARY"],
+  "aliases": {
+    "de": ["Sewerodwinsk", "Severodvinsk"],
+    "en": ["Severodvinsk", "Severodvinsk shipyard", "Sevmash"],
+    "ru_latin": ["Severodvinsk", "Sevmash"]
+  }
+},
+{
+  "id": "port_kandalaksha",
+  "canonical_name": "Kandalaksha",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 67.150, "lon": 32.410 },
+  "radius_km": 18,
+  "regions": ["REG:HIGH_NORTH_ARCTIC", "REG:WHITE_SEA", "REG:RUSSIA_ARCTIC"],
+  "aliases": {
+    "de": ["Kandalakscha", "Kandalaksha"],
+    "en": ["Kandalaksha", "Port of Kandalaksha"],
+    "ru_latin": ["Kandalaksha"]
+  }
+},
+{
+  "id": "port_sabetta",
+  "canonical_name": "Sabetta",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 71.270, "lon": 72.070 },
+  "radius_km": 24,
+  "regions": ["REG:ARCTIC", "REG:HIGH_NORTH_ARCTIC", "REG:RUSSIA_ARCTIC", "REG:ENERGY"],
+  "aliases": {
+    "de": ["Sabetta", "LNG Sabetta", "Jamal LNG"],
+    "en": ["Sabetta", "Port of Sabetta", "Yamal LNG", "Sabetta LNG"],
+    "ru_latin": ["Sabetta", "Yamal LNG"]
+  }
+},
+{
+  "id": "port_varandey",
+  "canonical_name": "Varandey",
+  "type": "offshore_terminal",
+  "precision": "port",
+  "center": { "lat": 68.850, "lon": 58.200 },
+  "radius_km": 28,
+  "regions": ["REG:ARCTIC", "REG:BARENTS_SEA", "REG:RUSSIA_ARCTIC", "REG:ENERGY"],
+  "aliases": {
+    "de": ["Varandey", "Warandei", "Varandey Terminal"],
+    "en": ["Varandey", "Varandey terminal", "Varandey offshore terminal"],
+    "ru_latin": ["Varandey"]
+  }
+},
+{
+  "id": "port_novorossiysk",
+  "canonical_name": "Novorossiysk",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 44.720, "lon": 37.780 },
+  "radius_km": 28,
+  "regions": ["REG:BLACK_SEA", "REG:RUSSIA_BLACK_SEA", "REG:ENERGY"],
+  "aliases": {
+    "de": ["Noworossijsk", "Novorossiysk"],
+    "en": ["Novorossiysk", "Port of Novorossiysk", "Novorossiysk oil terminal"],
+    "ru_latin": ["Novorossiysk"]
+  }
+},
+{
+  "id": "port_tuapse",
+  "canonical_name": "Tuapse",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 44.100, "lon": 39.070 },
+  "radius_km": 18,
+  "regions": ["REG:BLACK_SEA", "REG:RUSSIA_BLACK_SEA", "REG:ENERGY"],
+  "aliases": {
+    "de": ["Tuapse"],
+    "en": ["Tuapse", "Port of Tuapse", "Tuapse oil terminal"],
+    "ru_latin": ["Tuapse"]
+  }
+},
+{
+  "id": "port_taman",
+  "canonical_name": "Taman",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 45.120, "lon": 36.680 },
+  "radius_km": 24,
+  "regions": ["REG:BLACK_SEA", "REG:RUSSIA_BLACK_SEA", "REG:KERCH_STRAIT"],
+  "aliases": {
+    "de": ["Taman", "Hafen Taman"],
+    "en": ["Taman", "Port of Taman", "Taman terminal"],
+    "ru_latin": ["Taman"]
+  }
+},
+{
+  "id": "port_kavkaz",
+  "canonical_name": "Port Kavkaz",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 45.345, "lon": 36.675 },
+  "radius_km": 16,
+  "regions": ["REG:BLACK_SEA", "REG:KERCH_STRAIT", "REG:RUSSIA_BLACK_SEA"],
+  "aliases": {
+    "de": ["Port Kavkaz", "Kaukasus Hafen", "Hafen Kavkaz"],
+    "en": ["Port Kavkaz", "Kavkaz port", "Port Caucasus"],
+    "ru_latin": ["Port Kavkaz", "Kavkaz"]
+  }
+},
+{
+  "id": "port_sochi",
+  "canonical_name": "Sochi",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 43.580, "lon": 39.720 },
+  "radius_km": 18,
+  "regions": ["REG:BLACK_SEA", "REG:RUSSIA_BLACK_SEA"],
+  "aliases": {
+    "de": ["Sotschi", "Sochi"],
+    "en": ["Sochi", "Port of Sochi"],
+    "ru_latin": ["Sochi"]
+  }
+},
+{
+  "id": "port_sevastopol",
+  "canonical_name": "Sevastopol",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 44.616, "lon": 33.525 },
+  "radius_km": 24,
+  "regions": ["REG:BLACK_SEA", "REG:CRIMEA", "REG:MILITARY"],
+  "aliases": {
+    "de": ["Sewastopol", "Sevastopol"],
+    "en": ["Sevastopol", "Sevastopol naval base"],
+    "ru_latin": ["Sevastopol"],
+    "uk_latin": ["Sevastopol"]
+  }
+},
+{
+  "id": "port_kerch",
+  "canonical_name": "Kerch",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 45.356, "lon": 36.475 },
+  "radius_km": 18,
+  "regions": ["REG:BLACK_SEA", "REG:KERCH_STRAIT", "REG:CRIMEA"],
+  "aliases": {
+    "de": ["Kertsch", "Kerch", "Straße von Kertsch"],
+    "en": ["Kerch", "Kerch Strait", "Port of Kerch"],
+    "ru_latin": ["Kerch"],
+    "uk_latin": ["Kerch"]
+  }
+},
+{
+  "id": "port_yeysk",
+  "canonical_name": "Yeysk",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 46.705, "lon": 38.270 },
+  "radius_km": 16,
+  "regions": ["REG:AZOV_SEA", "REG:BLACK_SEA", "REG:RUSSIA_BLACK_SEA"],
+  "aliases": {
+    "de": ["Jeisk", "Yeysk", "Eysk"],
+    "en": ["Yeysk", "Eysk", "Port of Yeysk"],
+    "ru_latin": ["Yeysk", "Eysk"]
+  }
+},
+{
+  "id": "port_taganrog",
+  "canonical_name": "Taganrog",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 47.210, "lon": 38.930 },
+  "radius_km": 18,
+  "regions": ["REG:AZOV_SEA", "REG:BLACK_SEA", "REG:RUSSIA_BLACK_SEA"],
+  "aliases": {
+    "de": ["Taganrog"],
+    "en": ["Taganrog", "Port of Taganrog"],
+    "ru_latin": ["Taganrog"]
+  }
+},
+{
+  "id": "port_rostov_on_don",
+  "canonical_name": "Rostov-on-Don",
+  "type": "river_port",
+  "precision": "port",
+  "center": { "lat": 47.217, "lon": 39.720 },
+  "radius_km": 24,
+  "regions": ["REG:AZOV_SEA", "REG:BLACK_SEA", "REG:RUSSIA_BLACK_SEA"],
+  "aliases": {
+    "de": ["Rostow am Don", "Rostov am Don", "Rostov-on-Don"],
+    "en": ["Rostov-on-Don", "Rostov on Don", "Port of Rostov-on-Don"],
+    "ru_latin": ["Rostov-na-Donu", "Rostov-on-Don"]
+  }
+},
+{
+  "id": "port_constanta",
+  "canonical_name": "Constanța",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 44.165, "lon": 28.640 },
+  "radius_km": 24,
+  "regions": ["REG:BLACK_SEA", "REG:NATO_EASTERN_FLANK"],
+  "aliases": {
+    "de": ["Constanta", "Konstanza"],
+    "en": ["Constanta", "Constanța", "Port of Constanta"],
+    "ro": ["Constanța", "Constanta"]
+  }
+},
+{
+  "id": "port_varna",
+  "canonical_name": "Varna",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 43.190, "lon": 27.910 },
+  "radius_km": 20,
+  "regions": ["REG:BLACK_SEA", "REG:NATO_EASTERN_FLANK"],
+  "aliases": {
+    "de": ["Warna", "Varna"],
+    "en": ["Varna", "Port of Varna"],
+    "bg_latin": ["Varna"]
+  }
+},
+{
+  "id": "port_burgas",
+  "canonical_name": "Burgas",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 42.490, "lon": 27.480 },
+  "radius_km": 20,
+  "regions": ["REG:BLACK_SEA", "REG:NATO_EASTERN_FLANK", "REG:ENERGY"],
+  "aliases": {
+    "de": ["Burgas"],
+    "en": ["Burgas", "Port of Burgas"],
+    "bg_latin": ["Burgas"]
+  }
+},
+{
+  "id": "port_odesa",
+  "canonical_name": "Odesa",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 46.500, "lon": 30.745 },
+  "radius_km": 24,
+  "regions": ["REG:BLACK_SEA", "REG:BLACK_SEA_NORTH", "REG:UKRAINE_COAST"],
+  "aliases": {
+    "de": ["Odessa", "Odesa"],
+    "en": ["Odesa", "Odessa", "Port of Odesa", "Port of Odessa"],
+    "uk_latin": ["Odesa"],
+    "ru_latin": ["Odessa"]
+  }
+},
+{
+  "id": "port_chornomorsk",
+  "canonical_name": "Chornomorsk",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 46.315, "lon": 30.660 },
+  "radius_km": 18,
+  "regions": ["REG:BLACK_SEA", "REG:BLACK_SEA_NORTH", "REG:UKRAINE_COAST"],
+  "aliases": {
+    "de": ["Tschornomorsk", "Chornomorsk", "Illichivsk"],
+    "en": ["Chornomorsk", "Chernomorsk", "Illichivsk", "Port of Chornomorsk"],
+    "uk_latin": ["Chornomorsk"],
+    "ru_latin": ["Chernomorsk", "Illichivsk"]
+  }
+},
+{
+  "id": "port_pivdennyi",
+  "canonical_name": "Pivdennyi",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 46.620, "lon": 31.015 },
+  "radius_km": 18,
+  "regions": ["REG:BLACK_SEA", "REG:BLACK_SEA_NORTH", "REG:UKRAINE_COAST", "REG:ENERGY"],
+  "aliases": {
+    "de": ["Piwdennyj", "Pivdennyi", "Juschny", "Yuzhny"],
+    "en": ["Pivdennyi", "Pivdennyy", "Yuzhny", "Yuzhny port", "Port Pivdennyi"],
+    "uk_latin": ["Pivdennyi"],
+    "ru_latin": ["Yuzhny"]
+  }
+},
+{
+  "id": "port_mykolaiv",
+  "canonical_name": "Mykolaiv",
+  "type": "river_port",
+  "precision": "port",
+  "center": { "lat": 46.965, "lon": 31.990 },
+  "radius_km": 24,
+  "regions": ["REG:BLACK_SEA", "REG:BLACK_SEA_NORTH", "REG:UKRAINE_COAST"],
+  "aliases": {
+    "de": ["Mykolajiw", "Mykolaiv", "Nikolaev"],
+    "en": ["Mykolaiv", "Nikolaev", "Port of Mykolaiv"],
+    "uk_latin": ["Mykolaiv"],
+    "ru_latin": ["Nikolaev"]
+  }
+},
+{
+  "id": "port_den_helder",
+  "canonical_name": "Den Helder",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 52.955, "lon": 4.780 },
+  "radius_km": 16,
+  "regions": ["REG:NORTH_SEA", "REG:OFFSHORE", "REG:MILITARY"],
+  "aliases": {
+    "de": ["Den Helder"],
+    "en": ["Den Helder", "Port of Den Helder", "Den Helder naval base"],
+    "nl": ["Den Helder"]
+  }
+},
+{
+  "id": "port_vlissingen",
+  "canonical_name": "Vlissingen",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 51.450, "lon": 3.690 },
+  "radius_km": 18,
+  "regions": ["REG:NORTH_SEA", "REG:CHANNEL"],
+  "aliases": {
+    "de": ["Vlissingen", "Flushing"],
+    "en": ["Vlissingen", "Flushing", "Port of Vlissingen"],
+    "nl": ["Vlissingen"]
+  }
+},
+{
+  "id": "port_ostend",
+  "canonical_name": "Ostend",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 51.230, "lon": 2.930 },
+  "radius_km": 12,
+  "regions": ["REG:NORTH_SEA", "REG:CHANNEL", "REG:OFFSHORE"],
+  "aliases": {
+    "de": ["Ostende"],
+    "en": ["Ostend", "Port of Ostend", "Ostende"],
+    "nl": ["Oostende", "Oostende haven"],
+    "fr": ["Ostende"]
+  }
+},
+{
+  "id": "port_brunsbuttel",
+  "canonical_name": "Brunsbüttel",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 53.895, "lon": 9.145 },
+  "radius_km": 14,
+  "regions": ["REG:NORTH_SEA", "REG:GER_BIGHT", "REG:ELBE", "REG:KIEL_CANAL", "REG:ENERGY"],
+  "aliases": {
+    "de": ["Brunsbüttel", "Brunsbuettel", "Elbehafen Brunsbüttel", "LNG Brunsbüttel"],
+    "en": ["Brunsbüttel", "Brunsbuettel", "Port of Brunsbüttel", "Brunsbuettel LNG"]
+  }
+},
+{
+  "id": "port_stade",
+  "canonical_name": "Stade",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 53.625, "lon": 9.525 },
+  "radius_km": 14,
+  "regions": ["REG:NORTH_SEA", "REG:GER_BIGHT", "REG:ELBE", "REG:ENERGY"],
+  "aliases": {
+    "de": ["Stade", "Bützfleth", "Buetzfleth", "Hafen Stade", "LNG Stade"],
+    "en": ["Stade", "Bützfleth", "Buetzfleth", "Port of Stade", "Stade LNG"]
+  }
+},
+{
+  "id": "port_norddeich",
+  "canonical_name": "Norddeich",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 53.625, "lon": 7.160 },
+  "radius_km": 10,
+  "regions": ["REG:NORTH_SEA", "REG:GER_BIGHT", "REG:OFFSHORE"],
+  "aliases": {
+    "de": ["Norddeich", "Norddeich Mole", "Offshorehafen Norddeich"],
+    "en": ["Norddeich", "Norddeich Mole", "Norddeich offshore port"]
+  }
+},
+{
+  "id": "port_borkum",
+  "canonical_name": "Borkum",
+  "type": "island_port",
+  "precision": "port",
+  "center": { "lat": 53.587, "lon": 6.663 },
+  "radius_km": 12,
+  "regions": ["REG:NORTH_SEA", "REG:GER_BIGHT", "REG:OFFSHORE"],
+  "aliases": {
+    "de": ["Borkum", "Hafen Borkum"],
+    "en": ["Borkum", "Port of Borkum"]
+  }
+},
+{
+  "id": "port_lubmin",
+  "canonical_name": "Lubmin",
+  "type": "port_coastal_place",
+  "precision": "port",
+  "center": { "lat": 54.145, "lon": 13.640 },
+  "radius_km": 16,
+  "regions": ["REG:BALTIC", "REG:ENERGY", "REG:KRITIS"],
+  "aliases": {
+    "de": ["Lubmin", "Industriehafen Lubmin", "Nord Stream Anlandestation", "Greifswald-Lubmin"],
+    "en": ["Lubmin", "Lubmin port", "Nord Stream landfall", "Greifswald-Lubmin"]
+  }
+},
+{
+  "id": "port_flensburg",
+  "canonical_name": "Flensburg",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 54.790, "lon": 9.435 },
+  "radius_km": 12,
+  "regions": ["REG:BALTIC", "REG:DANISH_STRAITS"],
+  "aliases": {
+    "de": ["Flensburg", "Flensburger Förde", "Flensburger Foerde"],
+    "en": ["Flensburg", "Flensburg Fjord", "Flensburger Foerde"]
+  }
+},
+{
+  "id": "port_puttgarden",
+  "canonical_name": "Puttgarden",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 54.500, "lon": 11.225 },
+  "radius_km": 10,
+  "regions": ["REG:BALTIC", "REG:FEHMARNBELT"],
+  "aliases": {
+    "de": ["Puttgarden", "Fährhafen Puttgarden", "Fehmarn"],
+    "en": ["Puttgarden", "Puttgarden ferry port", "Fehmarn"]
+  }
+},
+{
+  "id": "port_stralsund",
+  "canonical_name": "Stralsund",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 54.315, "lon": 13.100 },
+  "radius_km": 14,
+  "regions": ["REG:BALTIC"],
+  "aliases": {
+    "de": ["Stralsund", "Hafen Stralsund"],
+    "en": ["Stralsund", "Port of Stralsund"]
+  }
+},
+{
+  "id": "port_peenemunde",
+  "canonical_name": "Peenemünde",
+  "type": "port_coastal_place",
+  "precision": "port",
+  "center": { "lat": 54.135, "lon": 13.770 },
+  "radius_km": 12,
+  "regions": ["REG:BALTIC", "REG:MILITARY"],
+  "aliases": {
+    "de": ["Peenemünde", "Peenemuende"],
+    "en": ["Peenemünde", "Peenemuende", "Peenemunde"]
+  }
+},
+{
+  "id": "port_ronne",
+  "canonical_name": "Rønne",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 55.100, "lon": 14.695 },
+  "radius_km": 12,
+  "regions": ["REG:BALTIC", "REG:BORNHOLM", "REG:OFFSHORE"],
+  "aliases": {
+    "de": ["Rønne", "Roenne", "Bornholm"],
+    "en": ["Rønne", "Ronne", "Port of Rønne", "Bornholm"],
+    "da": ["Rønne", "Rønne Havn", "Bornholm"]
+  }
+},
+{
+  "id": "port_hirtshals",
+  "canonical_name": "Hirtshals",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 57.590, "lon": 9.970 },
+  "radius_km": 12,
+  "regions": ["REG:SKAGERRAK", "REG:NORTH_SEA", "REG:FISHERY"],
+  "aliases": {
+    "de": ["Hirtshals"],
+    "en": ["Hirtshals", "Port of Hirtshals"],
+    "da": ["Hirtshals", "Hirtshals Havn"]
+  }
+},
+{
+  "id": "port_thyboron",
+  "canonical_name": "Thyborøn",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 56.700, "lon": 8.220 },
+  "radius_km": 12,
+  "regions": ["REG:NORTH_SEA", "REG:DANISH_WEST_COAST", "REG:FISHERY", "REG:OFFSHORE"],
+  "aliases": {
+    "de": ["Thyborøn", "Thyboron"],
+    "en": ["Thyborøn", "Thyboron", "Port of Thyboron"],
+    "da": ["Thyborøn", "Thyborøn Havn"]
+  }
+},
+{
+  "id": "port_hanstholm",
+  "canonical_name": "Hanstholm",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 57.120, "lon": 8.600 },
+  "radius_km": 12,
+  "regions": ["REG:NORTH_SEA", "REG:SKAGERRAK", "REG:FISHERY"],
+  "aliases": {
+    "de": ["Hanstholm"],
+    "en": ["Hanstholm", "Port of Hanstholm"],
+    "da": ["Hanstholm", "Hanstholm Havn"]
+  }
+},
+{
+  "id": "port_odense_lindo",
+  "canonical_name": "Odense / Lindø",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 55.475, "lon": 10.545 },
+  "radius_km": 18,
+  "regions": ["REG:BALTIC", "REG:DANISH_STRAITS", "REG:OFFSHORE"],
+  "aliases": {
+    "de": ["Odense", "Lindø", "Lindo"],
+    "en": ["Odense", "Port of Odense", "Lindø", "Lindo", "Lindoe Offshore Renewables Center"],
+    "da": ["Odense", "Odense Havn", "Lindø"]
+  }
+},
+{
+  "id": "port_lulea",
+  "canonical_name": "Luleå",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 65.585, "lon": 22.170 },
+  "radius_km": 18,
+  "regions": ["REG:BALTIC", "REG:GULF_OF_BOTHNIA", "REG:HIGH_NORTH_ARCTIC"],
+  "aliases": {
+    "de": ["Luleå", "Lulea"],
+    "en": ["Luleå", "Lulea", "Port of Luleå"],
+    "sv": ["Luleå", "Luleå hamn"]
+  }
+},
+{
+  "id": "port_umea",
+  "canonical_name": "Umeå",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 63.700, "lon": 20.340 },
+  "radius_km": 16,
+  "regions": ["REG:BALTIC", "REG:GULF_OF_BOTHNIA"],
+  "aliases": {
+    "de": ["Umeå", "Umea"],
+    "en": ["Umeå", "Umea", "Port of Umeå"],
+    "sv": ["Umeå", "Umeå hamn"]
+  }
+},
+{
+  "id": "port_sundsvall",
+  "canonical_name": "Sundsvall",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 62.390, "lon": 17.315 },
+  "radius_km": 16,
+  "regions": ["REG:BALTIC", "REG:GULF_OF_BOTHNIA"],
+  "aliases": {
+    "de": ["Sundsvall"],
+    "en": ["Sundsvall", "Port of Sundsvall"],
+    "sv": ["Sundsvall", "Sundsvalls hamn"]
+  }
+},
+{
+  "id": "port_gavle",
+  "canonical_name": "Gävle",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 60.695, "lon": 17.170 },
+  "radius_km": 16,
+  "regions": ["REG:BALTIC", "REG:GULF_OF_BOTHNIA"],
+  "aliases": {
+    "de": ["Gävle", "Gaevle", "Gavle"],
+    "en": ["Gävle", "Gavle", "Port of Gävle"],
+    "sv": ["Gävle", "Gävle hamn"]
+  }
+},
+{
+  "id": "port_norrkoping",
+  "canonical_name": "Norrköping",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 58.600, "lon": 16.185 },
+  "radius_km": 16,
+  "regions": ["REG:BALTIC", "REG:GOTLAND_SEA"],
+  "aliases": {
+    "de": ["Norrköping", "Norrkoeping", "Norrkoping"],
+    "en": ["Norrköping", "Norrkoping", "Port of Norrköping"],
+    "sv": ["Norrköping", "Norrköpings hamn"]
+  }
+},
+{
+  "id": "port_oxelosund",
+  "canonical_name": "Oxelösund",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 58.670, "lon": 17.120 },
+  "radius_km": 14,
+  "regions": ["REG:BALTIC", "REG:GOTLAND_SEA"],
+  "aliases": {
+    "de": ["Oxelösund", "Oxeloesund", "Oxelosund"],
+    "en": ["Oxelösund", "Oxelosund", "Port of Oxelösund"],
+    "sv": ["Oxelösund", "Oxelösunds hamn"]
+  }
+},
+{
+  "id": "port_karlshamn",
+  "canonical_name": "Karlshamn",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 56.165, "lon": 14.865 },
+  "radius_km": 14,
+  "regions": ["REG:BALTIC", "REG:ENERGY"],
+  "aliases": {
+    "de": ["Karlshamn"],
+    "en": ["Karlshamn", "Port of Karlshamn"],
+    "sv": ["Karlshamn", "Karlshamns hamn"]
+  }
+},
+{
+  "id": "port_hanko",
+  "canonical_name": "Hanko",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 59.825, "lon": 22.965 },
+  "radius_km": 14,
+  "regions": ["REG:BALTIC", "REG:GULF_OF_FINLAND"],
+  "aliases": {
+    "de": ["Hanko", "Hangö", "Hango"],
+    "en": ["Hanko", "Hangö", "Port of Hanko"],
+    "fi": ["Hanko"],
+    "sv": ["Hangö"]
+  }
+},
+{
+  "id": "port_pori",
+  "canonical_name": "Pori",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 61.595, "lon": 21.485 },
+  "radius_km": 18,
+  "regions": ["REG:BALTIC", "REG:GULF_OF_BOTHNIA"],
+  "aliases": {
+    "de": ["Pori", "Björneborg"],
+    "en": ["Pori", "Port of Pori"],
+    "fi": ["Pori"],
+    "sv": ["Björneborg"]
+  }
+},
+{
+  "id": "port_kokkola",
+  "canonical_name": "Kokkola",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 63.845, "lon": 23.010 },
+  "radius_km": 16,
+  "regions": ["REG:BALTIC", "REG:GULF_OF_BOTHNIA"],
+  "aliases": {
+    "de": ["Kokkola", "Karleby"],
+    "en": ["Kokkola", "Port of Kokkola"],
+    "fi": ["Kokkola"],
+    "sv": ["Karleby"]
+  }
+},
+{
+  "id": "port_oulu",
+  "canonical_name": "Oulu",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 65.015, "lon": 25.390 },
+  "radius_km": 18,
+  "regions": ["REG:BALTIC", "REG:GULF_OF_BOTHNIA", "REG:HIGH_NORTH_ARCTIC"],
+  "aliases": {
+    "de": ["Oulu", "Uleåborg", "Uleaborg"],
+    "en": ["Oulu", "Port of Oulu"],
+    "fi": ["Oulu"],
+    "sv": ["Uleåborg"]
+  }
+},
+{
+  "id": "port_kemi_tornio",
+  "canonical_name": "Kemi-Tornio",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 65.735, "lon": 24.555 },
+  "radius_km": 26,
+  "regions": ["REG:BALTIC", "REG:GULF_OF_BOTHNIA", "REG:HIGH_NORTH_ARCTIC"],
+  "aliases": {
+    "de": ["Kemi", "Tornio", "Torneå"],
+    "en": ["Kemi", "Tornio", "Port of Kemi", "Port of Tornio"],
+    "fi": ["Kemi", "Tornio"],
+    "sv": ["Torneå"]
+  }
+},
+{
+  "id": "port_sillamae",
+  "canonical_name": "Sillamäe",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 59.415, "lon": 27.760 },
+  "radius_km": 14,
+  "regions": ["REG:BALTIC", "REG:GULF_OF_FINLAND"],
+  "aliases": {
+    "de": ["Sillamäe", "Sillamae"],
+    "en": ["Sillamäe", "Sillamae", "Port of Sillamäe"],
+    "et": ["Sillamäe", "Sillamae"]
+  }
+},
+{
+  "id": "port_parnu",
+  "canonical_name": "Pärnu",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 58.385, "lon": 24.485 },
+  "radius_km": 14,
+  "regions": ["REG:BALTIC", "REG:GULF_OF_RIGA"],
+  "aliases": {
+    "de": ["Pärnu", "Pernau", "Paernu"],
+    "en": ["Pärnu", "Parnu", "Port of Pärnu"],
+    "et": ["Pärnu", "Parnu"]
+  }
+},
+{
+  "id": "port_kolobrzeg",
+  "canonical_name": "Kołobrzeg",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 54.180, "lon": 15.555 },
+  "radius_km": 12,
+  "regions": ["REG:BALTIC", "REG:FISHERY"],
+  "aliases": {
+    "de": ["Kolberg", "Kołobrzeg", "Kolobrzeg"],
+    "en": ["Kołobrzeg", "Kolobrzeg", "Port of Kołobrzeg"],
+    "pl": ["Kołobrzeg", "Kolobrzeg"]
+  }
+},
+{
+  "id": "port_ustka",
+  "canonical_name": "Ustka",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 54.585, "lon": 16.855 },
+  "radius_km": 12,
+  "regions": ["REG:BALTIC", "REG:FISHERY"],
+  "aliases": {
+    "de": ["Stolpmünde", "Stolpmuende", "Ustka"],
+    "en": ["Ustka", "Port of Ustka"],
+    "pl": ["Ustka"]
+  }
+},
+{
+  "id": "port_darlowo",
+  "canonical_name": "Darłowo",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 54.435, "lon": 16.380 },
+  "radius_km": 12,
+  "regions": ["REG:BALTIC", "REG:FISHERY"],
+  "aliases": {
+    "de": ["Rügenwalde", "Ruegenwalde", "Darłowo", "Darlowo"],
+    "en": ["Darłowo", "Darlowo", "Port of Darłowo"],
+    "pl": ["Darłowo", "Darlowo"]
+  }
+},
+{
+  "id": "port_narvik",
+  "canonical_name": "Narvik",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 68.430, "lon": 17.425 },
+  "radius_km": 18,
+  "regions": ["REG:HIGH_NORTH_ARCTIC", "REG:NORWAY_COAST"],
+  "aliases": {
+    "de": ["Narvik"],
+    "en": ["Narvik", "Port of Narvik"],
+    "no": ["Narvik", "Narvik havn"]
+  }
+},
+{
+  "id": "port_tromso",
+  "canonical_name": "Tromsø",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 69.650, "lon": 18.960 },
+  "radius_km": 18,
+  "regions": ["REG:HIGH_NORTH_ARCTIC", "REG:NORWAY_COAST", "REG:FISHERY"],
+  "aliases": {
+    "de": ["Tromsø", "Tromso"],
+    "en": ["Tromsø", "Tromso", "Port of Tromsø"],
+    "no": ["Tromsø", "Tromsø havn"]
+  }
+},
+{
+  "id": "port_hammerfest",
+  "canonical_name": "Hammerfest",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 70.665, "lon": 23.680 },
+  "radius_km": 20,
+  "regions": ["REG:HIGH_NORTH_ARCTIC", "REG:BARENTS_SEA", "REG:NORWAY_COAST", "REG:ENERGY"],
+  "aliases": {
+    "de": ["Hammerfest", "Melkøya", "Melkoeya"],
+    "en": ["Hammerfest", "Melkøya", "Melkoya", "Hammerfest LNG"],
+    "no": ["Hammerfest", "Melkøya"]
+  }
+},
+{
+  "id": "port_kirkenes",
+  "canonical_name": "Kirkenes",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 69.725, "lon": 30.045 },
+  "radius_km": 18,
+  "regions": ["REG:HIGH_NORTH_ARCTIC", "REG:BARENTS_SEA", "REG:NORWAY_COAST"],
+  "aliases": {
+    "de": ["Kirkenes"],
+    "en": ["Kirkenes", "Port of Kirkenes"],
+    "no": ["Kirkenes", "Kirkenes havn"]
+  }
+},
+{
+  "id": "port_mongstad",
+  "canonical_name": "Mongstad",
+  "type": "energy_terminal",
+  "precision": "port",
+  "center": { "lat": 60.810, "lon": 5.030 },
+  "radius_km": 18,
+  "regions": ["REG:NORTH_SEA", "REG:NORWAY_COAST", "REG:ENERGY"],
+  "aliases": {
+    "de": ["Mongstad", "Mongstad Terminal"],
+    "en": ["Mongstad", "Mongstad terminal", "Mongstad oil terminal"],
+    "no": ["Mongstad"]
+  }
+},
+{
+  "id": "port_sture",
+  "canonical_name": "Sture",
+  "type": "energy_terminal",
+  "precision": "port",
+  "center": { "lat": 60.625, "lon": 4.840 },
+  "radius_km": 16,
+  "regions": ["REG:NORTH_SEA", "REG:NORWAY_COAST", "REG:ENERGY"],
+  "aliases": {
+    "de": ["Sture", "Sture Terminal"],
+    "en": ["Sture", "Sture terminal", "Sture oil terminal"],
+    "no": ["Stureterminalen", "Sture"]
+  }
+},
+{
+  "id": "port_karsto",
+  "canonical_name": "Kårstø",
+  "type": "energy_terminal",
+  "precision": "port",
+  "center": { "lat": 59.275, "lon": 5.515 },
+  "radius_km": 16,
+  "regions": ["REG:NORTH_SEA", "REG:NORWAY_COAST", "REG:ENERGY"],
+  "aliases": {
+    "de": ["Kårstø", "Karsto", "Kaarstoe"],
+    "en": ["Kårstø", "Karsto", "Kaarstoe", "Kårstø gas terminal"],
+    "no": ["Kårstø", "Kårstøterminalen"]
+  }
+}
+    {
       "id": "port_santos",
       "canonical_name": "Santos",
       "type": "port",
