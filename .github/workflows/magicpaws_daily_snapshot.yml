@@ -1,0 +1,63 @@
+name: MagicPaws Daily Visual Snapshot
+
+on:
+  schedule:
+    # Daily 06:15 UTC. Change or add another cron if you want 00:00/12:00 snapshots.
+    - cron: "15 6 * * *"
+  workflow_dispatch:
+    inputs:
+      hours:
+        description: "Snapshot window in hours"
+        required: false
+        default: "36"
+      fresh:
+        description: "Use ?fresh=1 for worker endpoints"
+        required: false
+        default: "0"
+
+permissions:
+  contents: write
+
+jobs:
+  visual_snapshot:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+
+      - name: Verify snapshot files
+        run: |
+          test -f snapshot.html
+          test -f scripts/render_magicpaws_snapshot.mjs
+
+      - name: Install Playwright
+        run: |
+          npm install playwright --no-audit --no-fund
+          npx playwright install --with-deps chromium
+
+      - name: Render visual snapshot
+        run: node scripts/render_magicpaws_snapshot.mjs --hours=${SNAPSHOT_HOURS} --fresh=${SNAPSHOT_FRESH}
+        env:
+          SNAPSHOT_HOURS: ${{ github.event.inputs.hours || '36' }}
+          SNAPSHOT_FRESH: ${{ github.event.inputs.fresh || '0' }}
+
+      - name: Commit visual snapshot
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add snapshots/visual/*.png snapshots/visual/*.pdf snapshots/visual/*.json
+          if git diff --cached --quiet; then
+            echo "No visual snapshot changes to commit."
+          else
+            git commit -m "Add MagicPaws daily visual snapshot"
+            git pull --rebase
+            git push
+          fi
