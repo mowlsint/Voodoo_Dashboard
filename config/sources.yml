@@ -162,7 +162,7 @@ sources:
   - id: maritime_exec_rss
     name: The Maritime Executive (RSS)
     type: rss
-    url: https://maritime-executive.com/rss
+    url: "https://maritime-executive.com/articles.rss"
     labels:
       - D:NEWS_INTEL
       - SRC:MEDIA
