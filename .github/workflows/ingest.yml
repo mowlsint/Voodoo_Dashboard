@@ -1,4 +1,4 @@
-name: Voodoo Ingest (hourly)
+name: MagicPaws Ingest (hourly)
 
 on:
   schedule:
@@ -52,10 +52,10 @@ jobs:
           node --check scripts/snapshot.mjs
 
       - name: Run ingest
+        run: node scripts/ingest.mjs
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          node scripts/ingest.mjs
+          GITHUB_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
 
       - name: Decide whether to snapshot
         id: snapcheck
@@ -75,10 +75,10 @@ jobs:
 
       - name: Run sensor snapshot
         if: steps.snapcheck.outputs.run_snapshot == 'true'
+        run: node scripts/snapshot.mjs
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          node scripts/snapshot.mjs
+          GITHUB_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
 
       - name: Commit sensor snapshot
         if: steps.snapcheck.outputs.run_snapshot == 'true'
@@ -89,7 +89,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "No snapshot changes to commit."
           else
-            git commit -m "Add VOODOO sensor snapshot"
+            git commit -m "Add MagicPaws sensor snapshot"
             git pull --rebase
             git push
           fi
