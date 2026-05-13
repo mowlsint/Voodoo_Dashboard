@@ -3,8 +3,9 @@ import json
 import os
 import re
 import time
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from urllib.parse import parse_qsl, urlencode, urljoin, urlsplit, urlunsplit
+from email.utils import parsedate_to_datetime
 
 import requests
 
@@ -19,6 +20,105 @@ GH_API = "https://api.github.com"
 DEFAULT_EXISTING_ISSUE_PAGES = int(os.environ.get("INGEST_EXISTING_ISSUE_PAGES", "10"))
 REQUEST_TIMEOUT = int(os.environ.get("INGEST_REQUEST_TIMEOUT", "30"))
 
+def now_utc():
+    return datetime.now(timezone.utc)
+
+
+def parse_source_datetime(value):
+    """
+    Parses common RSS/Atom datetime values into timezone-aware UTC datetime.
+    Returns None if parsing fails.
+    """
+    if not value:
+        return None
+
+    if isinstance(value, datetime):
+        dt = value
+    else:
+        text = str(value).strip()
+        if not text:
+            return None
+
+        try:
+            dt = parsedate_to_datetime(text)
+        except Exception:
+            try:
+                text = text.replace("Z", "+00:00")
+                dt = datetime.fromisoformat(text)
+            except Exception:
+                return None
+
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+
+    return dt.astimezone(timezone.utc)
+
+
+def entry_source_datetime(entry):
+    """
+    Gets the best available source publication timestamp from feed entry.
+    Works for feedparser-style dicts and normal dicts.
+    """
+    candidates = [
+        entry.get("published"),
+        entry.get("updated"),
+        entry.get("created"),
+        entry.get("pubDate"),
+        entry.get("date"),
+    ]
+
+    for value in candidates:
+        dt = parse_source_datetime(value)
+        if dt:
+            return dt
+
+    # feedparser sometimes has *_parsed structs
+    for key in ["published_parsed", "updated_parsed", "created_parsed"]:
+        value = entry.get(key)
+        if value:
+            try:
+                return datetime(*value[:6], tzinfo=timezone.utc)
+            except Exception:
+                pass
+
+    return None
+
+
+def source_lookback_hours(source, default_hours=168):
+    try:
+        return int(source.get("lookback_hours", default_hours))
+    except Exception:
+        return default_hours
+
+
+def source_allows_backfill(source):
+    return bool(source.get("allow_backfill", False))
+
+
+def should_keep_entry_for_source(entry, source):
+    """
+    Drops old RSS/social items unless allow_backfill is true.
+    This prevents old posts from appearing as fresh 48h dashboard items.
+    """
+    if source_allows_backfill(source):
+        return True
+
+    dt = entry_source_datetime(entry)
+    if not dt:
+        # Keep undated items for now, but they should later be downgraded.
+        return True
+
+    hours = source_lookback_hours(source)
+    cutoff = now_utc() - timedelta(hours=hours)
+
+    return dt >= cutoff
+
+
+def max_items_for_source(source, default_items=20):
+    try:
+        return int(source.get("max_items", default_items))
+    except Exception:
+        return default_items
 
 def now_iso():
     return datetime.now(timezone.utc).isoformat()
