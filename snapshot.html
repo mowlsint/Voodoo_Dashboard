@@ -113,6 +113,56 @@
     .analysisTable{font-size:14px}.analysisTable td{padding:4px 3px}.smallSource{color:var(--money)}.age{color:var(--muted);text-align:right;white-space:nowrap}
 
     .gaugeBlock{padding:8px 8px;border-bottom:1px solid rgba(176,136,0,.28)}.gaugeBlock:last-child{border-bottom:0}.gaugeLabel{font-size:19px;text-align:center}.gaugeValue{font-size:34px;color:var(--money);text-align:center;margin-top:2px}.gaugeBar{height:16px;border-radius:999px;background:linear-gradient(90deg,var(--ok),var(--money),var(--orange),var(--bad));border:1px solid rgba(255,255,255,.12);position:relative;margin-top:6px}.gaugeNeedle{position:absolute;top:-4px;width:3px;height:24px;background:#fff;transform:translateX(-50%);box-shadow:0 0 8px rgba(255,255,255,.9)}.gaugeScale{font-size:12px;color:var(--muted);display:flex;justify-content:space-between;margin-top:2px}
+    /* Compact fix: Government-Weirdness muss Nordsee UND Ostsee sichtbar zeigen */
+.weirdPanel{
+  display:grid;
+  grid-template-rows:24px 1fr 1fr;
+  min-height:0;
+}
+
+.weirdPanel .ph{
+  height:24px;
+  padding:4px 8px;
+}
+
+.weirdPanel .ph .title{
+  font-size:15px;
+}
+
+.weirdPanel .gaugeBlock{
+  padding:3px 8px;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+
+.weirdPanel .gaugeLabel{
+  font-size:15px;
+  line-height:1;
+}
+
+.weirdPanel .gaugeValue{
+  font-size:24px;
+  line-height:.95;
+  margin-top:0;
+}
+
+.weirdPanel .gaugeBar{
+  height:10px;
+  margin-top:3px;
+}
+
+.weirdPanel .gaugeNeedle{
+  top:-4px;
+  height:18px;
+}
+
+.weirdPanel .gaugeScale{
+  font-size:9px;
+  line-height:1;
+  margin-top:1px;
+}
 
     .metric{display:grid;grid-template-columns:26px 1fr;gap:7px;align-items:center;padding:7px;border-bottom:1px solid rgba(255,255,255,.08)}.metric:last-child{border-bottom:0}.metricIcon{font-size:21px;color:var(--money);text-align:center}.metricLabel{font-size:15px;color:var(--muted)}.metricValue{font-size:24px;color:var(--money);line-height:1}.metricValue.redText{color:var(--bad)}
     .miniRows{font-size:15.5px;line-height:1.08}.miniRow{display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.08)}.miniRow:last-child{border-bottom:0}.good{color:var(--ok)}.warn{color:var(--money)}.elev{color:var(--orange)}.badText{color:var(--bad)}
