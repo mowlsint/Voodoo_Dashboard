@@ -244,18 +244,24 @@ sources:
     region_hint: REG:OTHER
     priority: 70
   - id: klart_skepp_blog_rss
-    name: Klart Skepp! (Blogspot RSS)
+    name: "Klart Skepp! (Blogspot RSS)"
     type: rss
-    url: https://klartskeppnu.blogspot.com/feeds/posts/default?alt=rss
+    url: "https://klartskeppnu.blogspot.com/feeds/posts/default?alt=rss"
     labels:
       - SRC:OSINT
       - SRC:MEDIA
+      - SRC:ANALYSIS
       - D:NEWS_INTEL
       - CONF:LOW
       - SEV:1
       - REG:BALTIC
-    region_hint: REG:OTHER
+    region_hint: "REG:BALTIC"
     priority: 54
+    max_items: 5
+    lookback_hours: 168
+    allow_backfill: false
+    map_weight: 0.3
+    score_weight: 0.6
   - id: oiuye_bsky
     name: oiuye (Bluesky)
     type: social_bsky
@@ -398,24 +404,24 @@ sources:
     region_hint: REG:ATLANTIC_NE
     priority: 70
   - id: die_flaschenpost_rss
-    name: Die Flaschenpost – RSS
+    name: "Die Flaschenpost – RSS"
     type: rss
-    url: https://die-flaschenpost.de/feed/
+    url: "https://die-flaschenpost.de/feed/"
     labels:
       - SRC:OSINT
       - SRC:MEDIA
-      - SRC:CIVIL_SOCIETY
       - SRC:ANALYSIS
       - D:NEWS_INTEL
-      - D:CYBER_IT
-      - D:INFRA_CI
       - CONF:LOW
       - SEV:1
-      - SCORE:HYBRID_CONTEXT
-      - MAP:NO
-      - DECAY:SLOW
-    region_hint: REG:EUROPE
-    priority: 62
+      - REG:OTHER
+    region_hint: "REG:OTHER"
+    priority: 35
+    max_items: 5
+    lookback_hours: 168
+    allow_backfill: false
+    map_weight: 0
+    score_weight: 0.4
   - id: die_flaschenpost_aussenpolitik_rss
     name: Die Flaschenpost – Außenpolitik
     type: rss
@@ -436,25 +442,25 @@ sources:
     region_hint: REG:EUROPE
     priority: 66
   - id: alex_kohler_x
-    name: Alexander Kohler / Piratenpartei – X
+    name: "Alex Kohler (X)"
     type: social_x
-    handle: AlexKohler1
-    bridge_path: /x/AlexKohler1
+    handle: "AlexKohler1"
+    bridge_path: "/x/AlexKohler1"
     labels:
       - SRC:OSINT
       - SRC:SOCIAL
-      - SRC:CIVIL_SOCIETY
-      - SRC:ANALYSIS_POINTER
-      - D:CYBER_IT
-      - D:INFRA_CI
+      - SRC:ANALYSIS
       - D:NEWS_INTEL
       - CONF:LOW
       - SEV:1
-      - SCORE:HYBRID_CONTEXT
-      - MAP:NO
-      - DECAY:SLOW
-    region_hint: REG:EUROPE
+      - REG:EUROPE
+    region_hint: "REG:EUROPE"
     priority: 72
+    max_items: 8
+    lookback_hours: 72
+    allow_backfill: false
+    map_weight: 0.2
+    score_weight: 0.8
   - id: swp_publications_de
     name: SWP – Offizielle Publikationen DE
     type: rss
