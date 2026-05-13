@@ -355,6 +355,313 @@ sources:
     labels: ["D:NEWS_INTEL", "SRC:SOCIAL"]
     region_hint: "REG:ATLANTIC_NE"
     priority: 70
+
+      # ---------------------------------------------------------------------------
+  # MAGIC PAWS // MARITIME PHASE ZERO
+  # Thinktank / Analyst / marKRITIS / Shadow Fleet Context Layer
+  # Wirkung: Hybridscore + Kontext, nicht automatisch Kartenpunkt
+  # ---------------------------------------------------------------------------
+
+  - id: "die_flaschenpost_rss"
+    name: "Die Flaschenpost – RSS"
+    type: "rss"
+    url: "https://die-flaschenpost.de/feed/"
+    labels:
+      - SRC:OSINT
+      - SRC:MEDIA
+      - SRC:CIVIL_SOCIETY
+      - SRC:ANALYSIS
+      - D:NEWS_INTEL
+      - D:CYBER_IT
+      - D:INFRA_CI
+      - CONF:LOW
+      - SEV:1
+      - SCORE:HYBRID_CONTEXT
+      - MAP:NO
+      - DECAY:SLOW
+    region_hint: "REG:EUROPE"
+    priority: 62
+
+  - id: "die_flaschenpost_aussenpolitik_rss"
+    name: "Die Flaschenpost – Außenpolitik"
+    type: "rss"
+    url: "https://die-flaschenpost.de/category/deutschland-nachrichten/aussenpolitik/feed/"
+    labels:
+      - SRC:OSINT
+      - SRC:MEDIA
+      - SRC:CIVIL_SOCIETY
+      - SRC:ANALYSIS
+      - D:NEWS_INTEL
+      - D:CYBER_IT
+      - D:INFRA_CI
+      - CONF:LOW
+      - SEV:1
+      - SCORE:HYBRID_CONTEXT
+      - MAP:NO
+      - DECAY:SLOW
+    region_hint: "REG:EUROPE"
+    priority: 66
+
+  - id: "alex_kohler_x"
+    name: "Alexander Kohler / Piratenpartei – X"
+    type: "social_x"
+    handle: "AlexKohler1"
+    bridge_path: "/x/AlexKohler1"
+    labels:
+      - SRC:OSINT
+      - SRC:SOCIAL
+      - SRC:CIVIL_SOCIETY
+      - SRC:ANALYSIS_POINTER
+      - D:CYBER_IT
+      - D:INFRA_CI
+      - D:NEWS_INTEL
+      - CONF:LOW
+      - SEV:1
+      - SCORE:HYBRID_CONTEXT
+      - MAP:NO
+      - DECAY:SLOW
+    region_hint: "REG:EUROPE"
+    priority: 72
+
+  - id: "swp_publications_de"
+    name: "SWP – Offizielle Publikationen DE"
+    type: "rss"
+    url: "https://www.swp-berlin.org/SWPPublications.xml"
+    labels:
+      - SRC:THINKTANK
+      - SRC:ANALYSIS
+      - D:NEWS_INTEL
+      - D:CYBER_IT
+      - D:INFRA_CI
+      - CONF:MED
+      - SEV:1
+      - SCORE:HYBRID_CONTEXT
+      - MAP:NO
+      - DECAY:SLOW
+    region_hint: "REG:EUROPE"
+    priority: 86
+
+  - id: "swp_publications_en"
+    name: "SWP – Official Publications EN"
+    type: "rss"
+    url: "https://www.swp-berlin.org/en/SWPPublications.xml"
+    labels:
+      - SRC:THINKTANK
+      - SRC:ANALYSIS
+      - D:NEWS_INTEL
+      - D:CYBER_IT
+      - D:INFRA_CI
+      - CONF:MED
+      - SEV:1
+      - SCORE:HYBRID_CONTEXT
+      - MAP:NO
+      - DECAY:SLOW
+    region_hint: "REG:EUROPE"
+    priority: 84
+
+  - id: "rusi_latest_publications"
+    name: "RUSI – Latest Publications"
+    type: "rss"
+    url: "https://www.rusi.org/rss/latest-publications.xml"
+    labels:
+      - SRC:THINKTANK
+      - SRC:ANALYSIS
+      - D:NEWS_INTEL
+      - D:MARITIME_SECURITY
+      - D:SANCTIONS
+      - D:INFRA_CI
+      - CONF:MED
+      - SEV:1
+      - SCORE:HYBRID_CONTEXT
+      - MAP:NO
+      - DECAY:SLOW
+    region_hint: "REG:EUROPE"
+    priority: 88
+
+  - id: "rusi_latest_commentary"
+    name: "RUSI – Latest Commentary"
+    type: "rss"
+    url: "https://www.rusi.org/rss/latest-commentary.xml"
+    labels:
+      - SRC:THINKTANK
+      - SRC:ANALYSIS
+      - D:NEWS_INTEL
+      - D:MARITIME_SECURITY
+      - D:SANCTIONS
+      - D:INFRA_CI
+      - CONF:MED
+      - SEV:1
+      - SCORE:HYBRID_CONTEXT
+      - MAP:NO
+      - DECAY:SLOW
+    region_hint: "REG:EUROPE"
+    priority: 84
+
+  - id: "atlantic_council_reports"
+    name: "Atlantic Council – Reports / Issue Briefs"
+    type: "rss"
+    url: "https://www.atlanticcouncil.org/category/in-depth-research-reports/feed/"
+    labels:
+      - SRC:THINKTANK
+      - SRC:ANALYSIS
+      - D:NEWS_INTEL
+      - D:MARITIME_SECURITY
+      - D:SANCTIONS
+      - D:INFRA_CI
+      - CONF:MED
+      - SEV:1
+      - SCORE:HYBRID_CONTEXT
+      - MAP:NO
+      - DECAY:SLOW
+    region_hint: "REG:EUROPE"
+    priority: 86
+
+  - id: "cepa_feed"
+    name: "CEPA – Center for European Policy Analysis"
+    type: "rss"
+    url: "https://cepa.org/feed/"
+    labels:
+      - SRC:THINKTANK
+      - SRC:ANALYSIS
+      - D:NEWS_INTEL
+      - D:SANCTIONS
+      - D:INFRA_CI
+      - CONF:MED
+      - SEV:1
+      - SCORE:HYBRID_CONTEXT
+      - MAP:NO
+      - DECAY:SLOW
+    region_hint: "REG:EUROPE"
+    priority: 78
+
+  - id: "gids_feed"
+    name: "GIDS Hamburg – Beiträge"
+    type: "rss"
+    url: "https://gids-hamburg.de/feed/"
+    labels:
+      - SRC:THINKTANK
+      - SRC:ANALYSIS
+      - D:NEWS_INTEL
+      - D:MARITIME_SECURITY
+      - D:INFRA_CI
+      - CONF:MED
+      - SEV:1
+      - REG:NORTH_SEA
+      - REG:BALTIC
+      - SCORE:HYBRID_CONTEXT
+      - MAP:NO
+      - DECAY:SLOW
+    region_hint: "REG:NORTH_SEA"
+    priority: 82
+
+  - id: "ispk_x"
+    name: "ISPK Kiel – X"
+    type: "social_x"
+    handle: "ISPK_org"
+    bridge_path: "/x/ISPK_org"
+    labels:
+      - SRC:THINKTANK
+      - SRC:SOCIAL
+      - SRC:ANALYSIS_POINTER
+      - D:NEWS_INTEL
+      - D:MARITIME_SECURITY
+      - D:INFRA_CI
+      - CONF:LOW
+      - SEV:1
+      - REG:BALTIC
+      - SCORE:HYBRID_CONTEXT
+      - MAP:NO
+      - DECAY:SLOW
+    region_hint: "REG:BALTIC"
+    priority: 76
+
+  - id: "julian_pawlak_x"
+    name: "Julian Pawlak – Maritime Security / Baltic / Northern Flank"
+    type: "social_x"
+    handle: "jupawlak"
+    bridge_path: "/x/jupawlak"
+    labels:
+      - SRC:OSINT
+      - SRC:SOCIAL
+      - SRC:ANALYST
+      - SRC:ANALYSIS_POINTER
+      - D:MARITIME_SECURITY
+      - D:INFRA_CI
+      - D:NEWS_INTEL
+      - CONF:LOW
+      - SEV:1
+      - REG:BALTIC
+      - REG:NORTH_SEA
+      - SCORE:HYBRID_CONTEXT
+      - MAP:NO
+      - DECAY:SLOW
+    region_hint: "REG:BALTIC"
+    priority: 74
+
+  - id: "sal_mercogliano_x"
+    name: "Sal Mercogliano / WGOW Shipping – X"
+    type: "social_x"
+    handle: "mercoglianos"
+    bridge_path: "/x/mercoglianos"
+    labels:
+      - SRC:OSINT
+      - SRC:SOCIAL
+      - SRC:ANALYST
+      - SRC:SHIPPING_EXPERT
+      - SRC:ANALYSIS_POINTER
+      - D:MARITIME_SECURITY
+      - D:SANCTIONS
+      - D:SHIPPING
+      - CONF:LOW
+      - SEV:1
+      - SCORE:HYBRID_CONTEXT
+      - MAP:NO
+      - DECAY:SLOW
+    region_hint: "REG:GLOBAL"
+    priority: 72
+
+  - id: "tom_sharpe_x"
+    name: "Tom Sharpe – Naval / Maritime Security – X"
+    type: "social_x"
+    handle: "TomSharpe134"
+    bridge_path: "/x/TomSharpe134"
+    labels:
+      - SRC:OSINT
+      - SRC:SOCIAL
+      - SRC:ANALYST
+      - SRC:NAVAL
+      - SRC:ANALYSIS_POINTER
+      - D:MARITIME_SECURITY
+      - D:SANCTIONS
+      - D:INFRA_CI
+      - CONF:LOW
+      - SEV:1
+      - REG:NORTH_SEA
+      - REG:CHANNEL
+      - SCORE:HYBRID_CONTEXT
+      - MAP:NO
+      - DECAY:SLOW
+    region_hint: "REG:NORTH_SEA"
+    priority: 70
+
+  - id: "small_wars_journal_rss"
+    name: "Small Wars Journal – Maritime / Irregular Warfare"
+    type: "rss"
+    url: "https://smallwarsjournal.com/feed"
+    labels:
+      - SRC:OSINT
+      - SRC:ANALYSIS
+      - SRC:DEFENCE_MEDIA
+      - D:NEWS_INTEL
+      - D:MARITIME_SECURITY
+      - D:SANCTIONS
+      - CONF:LOW
+      - SEV:1
+      - SCORE:HYBRID_CONTEXT
+      - MAP:NO
+      - DECAY:SLOW
+    region_hint: "REG:GLOBAL"
+    priority: 64
       # --- OFFICIAL / HIGH-VALUE MARITIME SECURITY / GOVERNMENT -------------------
 
   - id: "uk_mca_org"
@@ -413,6 +720,44 @@ sources:
     region_hint: "REG:ATLANTIC_NE"
     priority: 78
 
+sources:
+  - id: "rfnosblog_x"
+    name: "Russia Maritime Watch (X) – RFNOSBlog"
+    type: "social_x"
+    handle: "RFNOSBlog"
+    bridge_path: "/x/RFNOSBlog"
+    labels: ["D:AIS_TRACK", "V:RUS_WARSHIP", "SRC:SOCIAL"]
+    region_hint: "REG:OTHER"
+    priority: 90
+
+  - id: "shortwave78_x"
+    name: "Shortwave Observer (X) – shortwave78"
+    type: "social_x"
+    handle: "shortwave78"
+    bridge_path: "/x/shortwave78"
+    labels: ["D:RF_SIGNAL", "PAT:RF_BURST", "SRC:SOCIAL"]
+    region_hint: "REG:OTHER"
+    priority: 70
+
+  - id: "die_flaschenpost_rss"
+    name: "Die Flaschenpost – RSS"
+    type: "rss"
+    url: "https://die-flaschenpost.de/feed/"
+    labels:
+      - SRC:OSINT
+      - SRC:MEDIA
+      - SRC:CIVIL_SOCIETY
+      - SRC:ANALYSIS
+      - D:NEWS_INTEL
+      - D:CYBER_IT
+      - D:INFRA_CI
+      - CONF:LOW
+      - SEV:1
+      - SCORE:HYBRID_CONTEXT
+      - MAP:NO
+      - DECAY:SLOW
+    region_hint: "REG:EUROPE"
+    priority: 62
   # --- B SOURCES / MARITIME TRADE PRESS --------------------------------------
 
   - id: "porttechnology_news"
