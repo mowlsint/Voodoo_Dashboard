@@ -453,6 +453,761 @@
       }
     },
     {
+  "id": "port_brake",
+  "canonical_name": "Brake",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 53.326, "lon": 8.485 },
+  "radius_km": 8,
+  "regions": ["REG:NORTH_SEA", "REG:GER_BIGHT", "REG:WESER"],
+  "aliases": {
+    "de": ["Brake", "Brake Unterweser", "Hafen Brake"],
+    "en": ["Brake", "Brake port", "Port of Brake"]
+  }
+},
+{
+  "id": "port_nordenham",
+  "canonical_name": "Nordenham",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 53.486, "lon": 8.484 },
+  "radius_km": 9,
+  "regions": ["REG:NORTH_SEA", "REG:GER_BIGHT", "REG:WESER"],
+  "aliases": {
+    "de": ["Nordenham", "Hafen Nordenham", "Blexen"],
+    "en": ["Nordenham", "Port of Nordenham", "Blexen"]
+  }
+},
+{
+  "id": "port_bremen",
+  "canonical_name": "Bremen",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 53.108, "lon": 8.757 },
+  "radius_km": 18,
+  "regions": ["REG:NORTH_SEA", "REG:GER_BIGHT", "REG:WESER"],
+  "aliases": {
+    "de": ["Bremen", "Bremer Häfen", "Neustädter Hafen", "Industriehafen Bremen"],
+    "en": ["Bremen", "Port of Bremen", "Bremen ports"]
+  }
+},
+{
+  "id": "port_cuxhaven",
+  "canonical_name": "Cuxhaven",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 53.872, "lon": 8.705 },
+  "radius_km": 12,
+  "regions": ["REG:NORTH_SEA", "REG:GER_BIGHT", "REG:ELBE"],
+  "aliases": {
+    "de": ["Cuxhaven", "Hafen Cuxhaven"],
+    "en": ["Cuxhaven", "Port of Cuxhaven"]
+  }
+},
+{
+  "id": "port_emden",
+  "canonical_name": "Emden",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 53.349, "lon": 7.186 },
+  "radius_km": 14,
+  "regions": ["REG:NORTH_SEA", "REG:GER_BIGHT", "REG:EMS"],
+  "aliases": {
+    "de": ["Emden", "Hafen Emden"],
+    "en": ["Emden", "Port of Emden"]
+  }
+},
+{
+  "id": "port_eemshaven",
+  "canonical_name": "Eemshaven",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 53.444, "lon": 6.832 },
+  "radius_km": 12,
+  "regions": ["REG:NORTH_SEA", "REG:GER_BIGHT", "REG:EMS"],
+  "aliases": {
+    "de": ["Eemshaven"],
+    "en": ["Eemshaven", "Port of Eemshaven"],
+    "nl": ["Eemshaven"]
+  }
+},
+{
+  "id": "port_delfzijl",
+  "canonical_name": "Delfzijl",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 53.332, "lon": 6.928 },
+  "radius_km": 10,
+  "regions": ["REG:NORTH_SEA", "REG:GER_BIGHT", "REG:EMS"],
+  "aliases": {
+    "de": ["Delfzijl"],
+    "en": ["Delfzijl", "Port of Delfzijl"],
+    "nl": ["Delfzijl"]
+  }
+},
+{
+  "id": "port_ijmuiden",
+  "canonical_name": "IJmuiden",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 52.463, "lon": 4.593 },
+  "radius_km": 14,
+  "regions": ["REG:NORTH_SEA"],
+  "aliases": {
+    "de": ["IJmuiden", "Ijmuiden"],
+    "en": ["IJmuiden", "Ijmuiden", "Port of IJmuiden"],
+    "nl": ["IJmuiden", "Ijmuiden"]
+  }
+},
+{
+  "id": "port_amsterdam",
+  "canonical_name": "Amsterdam",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 52.409, "lon": 4.807 },
+  "radius_km": 24,
+  "regions": ["REG:NORTH_SEA"],
+  "aliases": {
+    "de": ["Amsterdam", "Hafen Amsterdam"],
+    "en": ["Amsterdam", "Port of Amsterdam"],
+    "nl": ["Amsterdam", "Haven Amsterdam"]
+  }
+},
+{
+  "id": "port_rotterdam",
+  "canonical_name": "Rotterdam",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 51.948, "lon": 4.142 },
+  "radius_km": 35,
+  "regions": ["REG:NORTH_SEA", "REG:CHANNEL"],
+  "aliases": {
+    "de": ["Rotterdam", "Hafen Rotterdam", "Maasvlakte"],
+    "en": ["Rotterdam", "Port of Rotterdam", "Maasvlakte"],
+    "nl": ["Rotterdam", "Haven Rotterdam", "Maasvlakte"]
+  }
+},
+{
+  "id": "port_antwerp",
+  "canonical_name": "Antwerp",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 51.286, "lon": 4.315 },
+  "radius_km": 28,
+  "regions": ["REG:NORTH_SEA", "REG:CHANNEL"],
+  "aliases": {
+    "de": ["Antwerpen", "Hafen Antwerpen"],
+    "en": ["Antwerp", "Port of Antwerp", "Antwerp-Bruges"],
+    "nl": ["Antwerpen", "Haven van Antwerpen"]
+  }
+},
+{
+  "id": "port_zeebrugge",
+  "canonical_name": "Zeebrugge",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 51.333, "lon": 3.207 },
+  "radius_km": 14,
+  "regions": ["REG:NORTH_SEA", "REG:CHANNEL"],
+  "aliases": {
+    "de": ["Zeebrugge"],
+    "en": ["Zeebrugge", "Port of Zeebrugge", "Bruges-Zeebrugge"],
+    "nl": ["Zeebrugge"]
+  }
+},
+{
+  "id": "port_dunkirk",
+  "canonical_name": "Dunkirk",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 51.039, "lon": 2.339 },
+  "radius_km": 18,
+  "regions": ["REG:CHANNEL", "REG:DOVER_STRAIT"],
+  "aliases": {
+    "de": ["Dünkirchen", "Duenkirchen"],
+    "en": ["Dunkirk", "Port of Dunkirk"],
+    "fr": ["Dunkerque", "Port de Dunkerque"]
+  }
+},
+{
+  "id": "port_calais",
+  "canonical_name": "Calais",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 50.966, "lon": 1.858 },
+  "radius_km": 10,
+  "regions": ["REG:CHANNEL", "REG:DOVER_STRAIT"],
+  "aliases": {
+    "de": ["Calais"],
+    "en": ["Calais", "Port of Calais"],
+    "fr": ["Calais", "Port de Calais"]
+  }
+},
+{
+  "id": "port_dover",
+  "canonical_name": "Dover",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 51.126, "lon": 1.328 },
+  "radius_km": 10,
+  "regions": ["REG:CHANNEL", "REG:DOVER_STRAIT"],
+  "aliases": {
+    "de": ["Dover"],
+    "en": ["Dover", "Port of Dover", "Dover Harbour"]
+  }
+},
+{
+  "id": "port_felixstowe",
+  "canonical_name": "Felixstowe",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 51.954, "lon": 1.323 },
+  "radius_km": 14,
+  "regions": ["REG:NORTH_SEA", "REG:CHANNEL"],
+  "aliases": {
+    "de": ["Felixstowe"],
+    "en": ["Felixstowe", "Port of Felixstowe"]
+  }
+},
+{
+  "id": "port_harwich",
+  "canonical_name": "Harwich",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 51.946, "lon": 1.284 },
+  "radius_km": 12,
+  "regions": ["REG:NORTH_SEA", "REG:CHANNEL"],
+  "aliases": {
+    "de": ["Harwich"],
+    "en": ["Harwich", "Harwich Haven", "Port of Harwich"]
+  }
+},
+{
+  "id": "port_immingham",
+  "canonical_name": "Immingham",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 53.628, "lon": -0.187 },
+  "radius_km": 14,
+  "regions": ["REG:NORTH_SEA", "REG:HUMBER"],
+  "aliases": {
+    "de": ["Immingham"],
+    "en": ["Immingham", "Port of Immingham", "Humber ports"]
+  }
+},
+{
+  "id": "port_hull",
+  "canonical_name": "Hull",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 53.741, "lon": -0.279 },
+  "radius_km": 14,
+  "regions": ["REG:NORTH_SEA", "REG:HUMBER"],
+  "aliases": {
+    "de": ["Hull"],
+    "en": ["Hull", "Kingston upon Hull", "Port of Hull"]
+  }
+},
+{
+  "id": "port_teesside",
+  "canonical_name": "Teesport",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 54.604, "lon": -1.156 },
+  "radius_km": 18,
+  "regions": ["REG:NORTH_SEA"],
+  "aliases": {
+    "de": ["Teesport", "Teesside"],
+    "en": ["Teesport", "Teesside", "Port of Tees", "River Tees"]
+  }
+},
+{
+  "id": "port_tyne",
+  "canonical_name": "Port of Tyne",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 54.993, "lon": -1.455 },
+  "radius_km": 16,
+  "regions": ["REG:NORTH_SEA"],
+  "aliases": {
+    "de": ["Tyne", "Newcastle Hafen"],
+    "en": ["Port of Tyne", "Tyne", "Newcastle port", "North Shields"]
+  }
+},
+{
+  "id": "port_aberdeen",
+  "canonical_name": "Aberdeen",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 57.143, "lon": -2.078 },
+  "radius_km": 16,
+  "regions": ["REG:NORTH_SEA", "REG:BRITISH_ISLES"],
+  "aliases": {
+    "de": ["Aberdeen"],
+    "en": ["Aberdeen", "Port of Aberdeen", "Aberdeen Harbour"]
+  }
+},
+{
+  "id": "port_peterhead",
+  "canonical_name": "Peterhead",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 57.505, "lon": -1.777 },
+  "radius_km": 14,
+  "regions": ["REG:NORTH_SEA", "REG:BRITISH_ISLES"],
+  "aliases": {
+    "de": ["Peterhead"],
+    "en": ["Peterhead", "Peterhead port", "Peterhead Harbour"]
+  }
+},
+{
+  "id": "port_stavanger",
+  "canonical_name": "Stavanger",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 58.970, "lon": 5.733 },
+  "radius_km": 18,
+  "regions": ["REG:NORTH_SEA", "REG:NORWAY_COAST"],
+  "aliases": {
+    "de": ["Stavanger"],
+    "en": ["Stavanger", "Port of Stavanger"],
+    "no": ["Stavanger", "Stavanger havn"]
+  }
+},
+{
+  "id": "port_bergen",
+  "canonical_name": "Bergen",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 60.397, "lon": 5.322 },
+  "radius_km": 18,
+  "regions": ["REG:NORTH_SEA", "REG:NORWAY_COAST", "REG:HIGH_NORTH_ARCTIC"],
+  "aliases": {
+    "de": ["Bergen"],
+    "en": ["Bergen", "Port of Bergen"],
+    "no": ["Bergen", "Bergen havn"]
+  }
+},
+{
+  "id": "port_kristiansand",
+  "canonical_name": "Kristiansand",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 58.145, "lon": 7.995 },
+  "radius_km": 16,
+  "regions": ["REG:NORTH_SEA", "REG:SKAGERRAK", "REG:NORWAY_COAST"],
+  "aliases": {
+    "de": ["Kristiansand"],
+    "en": ["Kristiansand", "Port of Kristiansand"],
+    "no": ["Kristiansand", "Kristiansand havn"]
+  }
+},
+{
+  "id": "port_oslo",
+  "canonical_name": "Oslo",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 59.902, "lon": 10.746 },
+  "radius_km": 18,
+  "regions": ["REG:SKAGERRAK", "REG:NORWAY_COAST"],
+  "aliases": {
+    "de": ["Oslo", "Oslofjord"],
+    "en": ["Oslo", "Port of Oslo", "Oslofjord"],
+    "no": ["Oslo", "Oslo havn", "Oslofjorden"]
+  }
+},
+{
+  "id": "port_gothenburg",
+  "canonical_name": "Gothenburg",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 57.695, "lon": 11.861 },
+  "radius_km": 20,
+  "regions": ["REG:KATTEGAT", "REG:SKAGERRAK", "REG:BALTIC"],
+  "aliases": {
+    "de": ["Göteborg", "Goeteborg"],
+    "en": ["Gothenburg", "Port of Gothenburg"],
+    "sv": ["Göteborg", "Goteborg", "Göteborgs hamn"]
+  }
+},
+{
+  "id": "port_aarhus",
+  "canonical_name": "Aarhus",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 56.160, "lon": 10.226 },
+  "radius_km": 14,
+  "regions": ["REG:BALTIC", "REG:KATTEGAT", "REG:DANISH_STRAITS"],
+  "aliases": {
+    "de": ["Aarhus", "Århus"],
+    "en": ["Aarhus", "Aarhus port", "Port of Aarhus"],
+    "da": ["Aarhus", "Århus", "Aarhus Havn"]
+  }
+},
+{
+  "id": "port_fredericia",
+  "canonical_name": "Fredericia",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 55.563, "lon": 9.752 },
+  "radius_km": 12,
+  "regions": ["REG:BALTIC", "REG:DANISH_STRAITS", "REG:LITTLE_BELT"],
+  "aliases": {
+    "de": ["Fredericia"],
+    "en": ["Fredericia", "Port of Fredericia"],
+    "da": ["Fredericia", "Fredericia Havn"]
+  }
+},
+{
+  "id": "port_esbjerg",
+  "canonical_name": "Esbjerg",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 55.467, "lon": 8.439 },
+  "radius_km": 16,
+  "regions": ["REG:NORTH_SEA", "REG:DANISH_WEST_COAST"],
+  "aliases": {
+    "de": ["Esbjerg"],
+    "en": ["Esbjerg", "Port of Esbjerg"],
+    "da": ["Esbjerg", "Esbjerg Havn"]
+  }
+},
+{
+  "id": "port_frederikshavn",
+  "canonical_name": "Frederikshavn",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 57.441, "lon": 10.545 },
+  "radius_km": 14,
+  "regions": ["REG:KATTEGAT", "REG:SKAGERRAK", "REG:BALTIC"],
+  "aliases": {
+    "de": ["Frederikshavn"],
+    "en": ["Frederikshavn", "Port of Frederikshavn"],
+    "da": ["Frederikshavn", "Frederikshavn Havn"]
+  }
+},
+{
+  "id": "port_aalborg",
+  "canonical_name": "Aalborg",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 57.050, "lon": 9.922 },
+  "radius_km": 14,
+  "regions": ["REG:SKAGERRAK", "REG:LIMFJORD"],
+  "aliases": {
+    "de": ["Aalborg", "Ålborg", "Limfjord"],
+    "en": ["Aalborg", "Port of Aalborg", "Limfjord"],
+    "da": ["Aalborg", "Ålborg", "Aalborg Havn", "Limfjorden"]
+  }
+},
+{
+  "id": "port_malmo",
+  "canonical_name": "Malmö",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 55.617, "lon": 13.012 },
+  "radius_km": 12,
+  "regions": ["REG:BALTIC", "REG:DANISH_STRAITS", "REG:ORESUND"],
+  "aliases": {
+    "de": ["Malmö", "Malmoe", "Malmo"],
+    "en": ["Malmö", "Malmo", "Port of Malmö", "Copenhagen Malmö Port"],
+    "sv": ["Malmö", "Malmö hamn"]
+  }
+},
+{
+  "id": "port_helsingborg",
+  "canonical_name": "Helsingborg",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 56.043, "lon": 12.695 },
+  "radius_km": 10,
+  "regions": ["REG:BALTIC", "REG:DANISH_STRAITS", "REG:ORESUND"],
+  "aliases": {
+    "de": ["Helsingborg"],
+    "en": ["Helsingborg", "Port of Helsingborg"],
+    "sv": ["Helsingborg", "Helsingborgs hamn"]
+  }
+},
+{
+  "id": "port_trelleborg",
+  "canonical_name": "Trelleborg",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 55.374, "lon": 13.155 },
+  "radius_km": 10,
+  "regions": ["REG:BALTIC"],
+  "aliases": {
+    "de": ["Trelleborg"],
+    "en": ["Trelleborg", "Port of Trelleborg"],
+    "sv": ["Trelleborg", "Trelleborgs hamn"]
+  }
+},
+{
+  "id": "port_karlskrona",
+  "canonical_name": "Karlskrona",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 56.161, "lon": 15.586 },
+  "radius_km": 14,
+  "regions": ["REG:BALTIC"],
+  "aliases": {
+    "de": ["Karlskrona"],
+    "en": ["Karlskrona", "Port of Karlskrona"],
+    "sv": ["Karlskrona", "Karlskrona hamn"]
+  }
+},
+{
+  "id": "port_stockholm",
+  "canonical_name": "Stockholm",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 59.330, "lon": 18.120 },
+  "radius_km": 24,
+  "regions": ["REG:BALTIC", "REG:GOTLAND_SEA"],
+  "aliases": {
+    "de": ["Stockholm"],
+    "en": ["Stockholm", "Ports of Stockholm", "Port of Stockholm"],
+    "sv": ["Stockholm", "Stockholms hamnar"]
+  }
+},
+{
+  "id": "port_nynashamn",
+  "canonical_name": "Nynäshamn",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 58.903, "lon": 17.954 },
+  "radius_km": 12,
+  "regions": ["REG:BALTIC", "REG:GOTLAND_SEA"],
+  "aliases": {
+    "de": ["Nynäshamn", "Nynaeshamn"],
+    "en": ["Nynäshamn", "Nynashamn", "Port of Nynäshamn"],
+    "sv": ["Nynäshamn", "Nynäshamns hamn"]
+  }
+},
+{
+  "id": "port_visby",
+  "canonical_name": "Visby",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 57.637, "lon": 18.284 },
+  "radius_km": 10,
+  "regions": ["REG:BALTIC", "REG:GOTLAND_SEA"],
+  "aliases": {
+    "de": ["Visby", "Gotland"],
+    "en": ["Visby", "Port of Visby", "Gotland"],
+    "sv": ["Visby", "Visby hamn", "Gotland"]
+  }
+},
+{
+  "id": "port_helsinki",
+  "canonical_name": "Helsinki",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 60.167, "lon": 24.955 },
+  "radius_km": 22,
+  "regions": ["REG:BALTIC", "REG:GULF_OF_FINLAND"],
+  "aliases": {
+    "de": ["Helsinki", "Helsingfors"],
+    "en": ["Helsinki", "Port of Helsinki"],
+    "fi": ["Helsinki", "Helsingin satama"],
+    "sv": ["Helsingfors"]
+  }
+},
+{
+  "id": "port_kotka_hamina",
+  "canonical_name": "Kotka-Hamina",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 60.470, "lon": 26.930 },
+  "radius_km": 28,
+  "regions": ["REG:BALTIC", "REG:GULF_OF_FINLAND"],
+  "aliases": {
+    "de": ["Kotka", "Hamina", "Kotka-Hamina"],
+    "en": ["Kotka", "Hamina", "Kotka-Hamina", "Port of HaminaKotka"],
+    "fi": ["Kotka", "Hamina", "HaminaKotka"]
+  }
+},
+{
+  "id": "port_turku",
+  "canonical_name": "Turku",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 60.435, "lon": 22.220 },
+  "radius_km": 16,
+  "regions": ["REG:BALTIC", "REG:GULF_OF_BOTHNIA"],
+  "aliases": {
+    "de": ["Turku", "Åbo"],
+    "en": ["Turku", "Port of Turku"],
+    "fi": ["Turku", "Turun satama"],
+    "sv": ["Åbo"]
+  }
+},
+{
+  "id": "port_rauma",
+  "canonical_name": "Rauma",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 61.133, "lon": 21.500 },
+  "radius_km": 14,
+  "regions": ["REG:BALTIC", "REG:GULF_OF_BOTHNIA"],
+  "aliases": {
+    "de": ["Rauma"],
+    "en": ["Rauma", "Port of Rauma"],
+    "fi": ["Rauma", "Rauman satama"]
+  }
+},
+{
+  "id": "port_tallinn",
+  "canonical_name": "Tallinn",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 59.444, "lon": 24.753 },
+  "radius_km": 18,
+  "regions": ["REG:BALTIC", "REG:GULF_OF_FINLAND"],
+  "aliases": {
+    "de": ["Tallinn", "Reval"],
+    "en": ["Tallinn", "Port of Tallinn"],
+    "et": ["Tallinn", "Tallinna Sadam"]
+  }
+},
+{
+  "id": "port_paldiski",
+  "canonical_name": "Paldiski",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 59.350, "lon": 24.050 },
+  "radius_km": 14,
+  "regions": ["REG:BALTIC", "REG:GULF_OF_FINLAND"],
+  "aliases": {
+    "de": ["Paldiski"],
+    "en": ["Paldiski", "Paldiski port"],
+    "et": ["Paldiski"]
+  }
+},
+{
+  "id": "port_riga",
+  "canonical_name": "Riga",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 57.000, "lon": 24.100 },
+  "radius_km": 22,
+  "regions": ["REG:BALTIC", "REG:GULF_OF_RIGA"],
+  "aliases": {
+    "de": ["Riga"],
+    "en": ["Riga", "Port of Riga", "Freeport of Riga"],
+    "lv": ["Rīga", "Riga"]
+  }
+},
+{
+  "id": "port_ventspils",
+  "canonical_name": "Ventspils",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 57.395, "lon": 21.550 },
+  "radius_km": 14,
+  "regions": ["REG:BALTIC"],
+  "aliases": {
+    "de": ["Ventspils", "Windau"],
+    "en": ["Ventspils", "Port of Ventspils"],
+    "lv": ["Ventspils"]
+  }
+},
+{
+  "id": "port_liepaja",
+  "canonical_name": "Liepāja",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 56.515, "lon": 21.010 },
+  "radius_km": 14,
+  "regions": ["REG:BALTIC"],
+  "aliases": {
+    "de": ["Liepaja", "Libau"],
+    "en": ["Liepāja", "Liepaja", "Port of Liepāja"],
+    "lv": ["Liepāja", "Liepaja"]
+  }
+},
+{
+  "id": "port_klaipeda",
+  "canonical_name": "Klaipėda",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 55.705, "lon": 21.128 },
+  "radius_km": 18,
+  "regions": ["REG:BALTIC"],
+  "aliases": {
+    "de": ["Klaipeda", "Memel"],
+    "en": ["Klaipėda", "Klaipeda", "Port of Klaipeda"],
+    "lt": ["Klaipėda", "Klaipeda"]
+  }
+},
+{
+  "id": "port_gdynia",
+  "canonical_name": "Gdynia",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 54.540, "lon": 18.550 },
+  "radius_km": 16,
+  "regions": ["REG:BALTIC"],
+  "aliases": {
+    "de": ["Gdingen", "Gdynia"],
+    "en": ["Gdynia", "Port of Gdynia"],
+    "pl": ["Gdynia", "Port Gdynia"]
+  }
+},
+{
+  "id": "port_szczecin_swinoujscie",
+  "canonical_name": "Szczecin-Świnoujście",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 53.900, "lon": 14.260 },
+  "radius_km": 38,
+  "regions": ["REG:BALTIC"],
+  "aliases": {
+    "de": ["Stettin", "Swinemünde", "Swinemuende", "Szczecin", "Świnoujście"],
+    "en": ["Szczecin", "Świnoujście", "Swinoujscie", "Port of Szczecin", "Port of Swinoujscie"],
+    "pl": ["Szczecin", "Świnoujście", "Swinoujscie", "Zespół portów Szczecin-Świnoujście"]
+  }
+},
+{
+  "id": "port_lubeck_travemunde",
+  "canonical_name": "Lübeck-Travemünde",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 53.958, "lon": 10.878 },
+  "radius_km": 16,
+  "regions": ["REG:BALTIC", "REG:FEHMARNBELT"],
+  "aliases": {
+    "de": ["Lübeck", "Luebeck", "Travemünde", "Travemuende", "Hafen Lübeck"],
+    "en": ["Lübeck", "Lubeck", "Travemünde", "Travemunde", "Port of Lubeck"]
+  }
+},
+{
+  "id": "port_wismar",
+  "canonical_name": "Wismar",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 53.898, "lon": 11.458 },
+  "radius_km": 12,
+  "regions": ["REG:BALTIC"],
+  "aliases": {
+    "de": ["Wismar", "Hafen Wismar"],
+    "en": ["Wismar", "Port of Wismar"]
+  }
+},
+{
+  "id": "port_sassnitz_mukran",
+  "canonical_name": "Sassnitz-Mukran",
+  "type": "port",
+  "precision": "port",
+  "center": { "lat": 54.485, "lon": 13.587 },
+  "radius_km": 12,
+  "regions": ["REG:BALTIC"],
+  "aliases": {
+    "de": ["Sassnitz", "Mukran", "Fährhafen Sassnitz", "Hafen Mukran"],
+    "en": ["Sassnitz", "Mukran", "Port of Sassnitz", "Mukran Port"]
+  }
+}
+    {
       "id": "port_gdansk",
       "canonical_name": "Gdańsk",
       "type": "port",
