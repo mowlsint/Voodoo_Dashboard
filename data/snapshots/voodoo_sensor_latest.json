@@ -1,8 +1,8 @@
 {
   "schema_version": 3,
-  "ts": "2026-05-13T09:20:23.414Z",
-  "bucket_start_utc": "2026-05-13T09:00:00.000Z",
-  "bucket_end_utc": "2026-05-13T12:00:00.000Z",
+  "ts": "2026-05-13T12:29:26.195Z",
+  "bucket_start_utc": "2026-05-13T12:00:00.000Z",
+  "bucket_end_utc": "2026-05-13T15:00:00.000Z",
   "bucket_hours": 3,
   "source": {
     "type": "github_issues",
@@ -11,32 +11,32 @@
     "state": "open"
   },
   "counts": {
-    "open_events_total": 523,
-    "open_events_deduped_total": 511,
-    "recent_72h_events": 277,
-    "recent_72h_deduped_events": 271,
-    "recent_72h_source_capped_weighted_events": 55.94,
-    "current_bucket_events": 0,
-    "current_bucket_deduped_events": 0,
-    "current_bucket_source_capped_weighted_events": 0,
-    "duplicate_events_total": 12,
+    "open_events_total": 584,
+    "open_events_deduped_total": 578,
+    "recent_72h_events": 341,
+    "recent_72h_deduped_events": 335,
+    "recent_72h_source_capped_weighted_events": 75.56,
+    "current_bucket_events": 61,
+    "current_bucket_deduped_events": 61,
+    "current_bucket_source_capped_weighted_events": 23.1,
+    "duplicate_events_total": 6,
     "duplicate_events_72h": 6,
     "duplicate_events_bucket": 0,
-    "social_rss_events_72h": 231,
-    "social_rss_deduped_events_72h": 225,
-    "social_rss_events_bucket": 0,
-    "social_rss_deduped_events_bucket": 0,
+    "social_rss_events_72h": 295,
+    "social_rss_deduped_events_72h": 289,
+    "social_rss_events_bucket": 61,
+    "social_rss_deduped_events_bucket": 61,
     "p0_suspect_72h": 0,
     "geo_total": 0,
     "geo_72h": 0,
     "geo_count_method": "explicit_coordinates_only"
   },
   "sensors": {
-    "hybrid_seismograph_pct": 63,
-    "keyword_barometer_pct": 0,
+    "hybrid_seismograph_pct": 82,
+    "keyword_barometer_pct": 23,
     "government_weirdness": {
-      "north_sea_pct": 0,
-      "baltic_sea_pct": 1
+      "north_sea_pct": 10,
+      "baltic_sea_pct": 11
     }
   },
   "diagnostics": {
@@ -79,21 +79,76 @@
         0.08
       ]
     },
-    "hybrid_weighted_points_72h": 75.44,
-    "keyword_weighted_hits_bucket": 0,
-    "keyword_raw_hits_bucket": 0,
-    "keyword_scored_events_bucket": 0,
-    "government_weirdness_north_sea_points": 0,
-    "government_weirdness_baltic_sea_points": 0.35,
-    "government_weirdness_north_sea_events": 0,
-    "government_weirdness_baltic_sea_events": 4,
-    "government_weirdness_north_sea_weighted_events": 0,
-    "government_weirdness_baltic_sea_weighted_events": 0.32,
+    "hybrid_weighted_points_72h": 97.99,
+    "keyword_weighted_hits_bucket": 4.63,
+    "keyword_raw_hits_bucket": 12,
+    "keyword_scored_events_bucket": 61,
+    "government_weirdness_north_sea_points": 4.68,
+    "government_weirdness_baltic_sea_points": 5.03,
+    "government_weirdness_north_sea_events": 11,
+    "government_weirdness_baltic_sea_events": 15,
+    "government_weirdness_north_sea_weighted_events": 3.7,
+    "government_weirdness_baltic_sea_weighted_events": 4.02,
     "keyword_config_loaded": true,
     "keyword_config_version": 2,
     "cold_start_note": "Scores are cold-start density values until a 90-day baseline exists."
   },
-  "top_terms": [],
+  "top_terms": [
+    {
+      "term": "Schattenflotte",
+      "tier": "A",
+      "count": 3,
+      "weighted": 1.45
+    },
+    {
+      "term": "drone",
+      "tier": "A",
+      "count": 1,
+      "weighted": 0.65
+    },
+    {
+      "term": "sabotage",
+      "tier": "A",
+      "count": 1,
+      "weighted": 0.65
+    },
+    {
+      "term": "espionage",
+      "tier": "A",
+      "count": 1,
+      "weighted": 0.65
+    },
+    {
+      "term": "energy security",
+      "tier": "C",
+      "count": 2,
+      "weighted": 0.52
+    },
+    {
+      "term": "shadow fleet",
+      "tier": "A",
+      "count": 1,
+      "weighted": 0.35
+    },
+    {
+      "term": "drones",
+      "tier": "A",
+      "count": 1,
+      "weighted": 0.15
+    },
+    {
+      "term": "preparedness",
+      "tier": "B",
+      "count": 1,
+      "weighted": 0.1
+    },
+    {
+      "term": "early warning",
+      "tier": "B",
+      "count": 1,
+      "weighted": 0.1
+    }
+  ],
   "top_sources_72h": [
     {
       "source_id": "warontherocks_bsky",
@@ -117,31 +172,31 @@
     },
     {
       "source_id": "oiuye_bsky",
-      "count": 18
+      "count": 17
     },
     {
       "source_id": "UKMTO Recent Incidents",
       "count": 16
     },
     {
-      "source_id": "highnorthnews_bsky",
-      "count": 4
-    },
-    {
-      "source_id": "gCaptain",
-      "count": 4
-    },
-    {
       "source_id": "swp_publications_de",
-      "count": 3
+      "count": 11
     },
     {
-      "source_id": "rusi_latest_publications",
-      "count": 3
+      "source_id": "small_wars_journal_rss",
+      "count": 10
     },
     {
-      "source_id": "maritimekiwi_bsky",
-      "count": 3
+      "source_id": "gids_feed",
+      "count": 10
+    },
+    {
+      "source_id": "die_flaschenpost_aussenpolitik_rss",
+      "count": 9
+    },
+    {
+      "source_id": "cepa_feed",
+      "count": 9
     }
   ],
   "top_sources_72h_deduped": [
@@ -167,88 +222,122 @@
     },
     {
       "source_id": "oiuye_bsky",
-      "count": 18
+      "count": 17
     },
     {
       "source_id": "UKMTO Recent Incidents",
       "count": 16
     },
     {
-      "source_id": "highnorthnews_bsky",
-      "count": 4
-    },
-    {
       "source_id": "swp_publications_de",
-      "count": 3
+      "count": 11
     },
     {
-      "source_id": "rusi_latest_publications",
-      "count": 3
+      "source_id": "small_wars_journal_rss",
+      "count": 10
     },
     {
-      "source_id": "maritimekiwi_bsky",
-      "count": 3
+      "source_id": "gids_feed",
+      "count": 10
     },
     {
-      "source_id": "navylookout_bsky",
-      "count": 2
+      "source_id": "die_flaschenpost_aussenpolitik_rss",
+      "count": 9
+    },
+    {
+      "source_id": "cepa_feed",
+      "count": 9
     }
   ],
   "domain_counts_72h": {
     "D:INCIDENT": 1,
-    "D:INFRA_CI": 13,
-    "D:NEWS_INTEL": 220,
+    "D:INFRA_CI": 69,
+    "D:NEWS_INTEL": 228,
     "D:SECURITY_CRIME": 43
   },
   "domain_counts_72h_deduped": {
     "D:INCIDENT": 1,
-    "D:INFRA_CI": 13,
-    "D:NEWS_INTEL": 215,
+    "D:INFRA_CI": 69,
+    "D:NEWS_INTEL": 223,
     "D:SECURITY_CRIME": 42
   },
   "region_counts_72h": {
     "REG:ATLANTIC_NE": 6,
-    "REG:EUROPE": 7,
-    "REG:OTHER": 199,
+    "REG:EUROPE": 53,
+    "REG:GLOBAL": 10,
+    "REG:NORTH_SEA": 10,
+    "REG:OTHER": 197,
     "REG:UNKNOWN": 65
   },
   "region_counts_72h_deduped": {
     "REG:ATLANTIC_NE": 6,
-    "REG:EUROPE": 7,
-    "REG:OTHER": 197,
+    "REG:EUROPE": 53,
+    "REG:GLOBAL": 10,
+    "REG:NORTH_SEA": 10,
+    "REG:OTHER": 195,
     "REG:UNKNOWN": 61
   },
   "baseline_observations": {
     "note": "Raw baseline observations for later 90-day normalization. Scores are not yet baseline-normalized.",
-    "source_kind_counts_bucket": {},
-    "source_kind_counts_bucket_deduped": {},
+    "source_kind_counts_bucket": {
+      "rss": 61
+    },
+    "source_kind_counts_bucket_deduped": {
+      "rss": 61
+    },
     "source_kind_counts_72h": {
       "media": 30,
       "official": 16,
-      "rss": 58,
-      "social": 173
+      "rss": 124,
+      "social": 171
     },
     "source_kind_counts_72h_deduped": {
       "media": 30,
       "official": 16,
-      "rss": 52,
-      "social": 173
+      "rss": 118,
+      "social": 171
     },
-    "source_domain_counts_bucket": {},
-    "source_domain_counts_bucket_deduped": {},
+    "source_domain_counts_bucket": {
+      "atlantic_council_reports|D:INFRA_CI": 8,
+      "cepa_feed|D:INFRA_CI": 4,
+      "die_flaschenpost_aussenpolitik_rss|D:INFRA_CI": 9,
+      "gids_feed|D:INFRA_CI": 10,
+      "rusi_latest_commentary|D:INFRA_CI": 5,
+      "rusi_latest_publications|D:INFRA_CI": 3,
+      "small_wars_journal_rss|D:NEWS_INTEL": 10,
+      "swp_publications_de|D:INFRA_CI": 8,
+      "swp_publications_en|D:INFRA_CI": 4
+    },
+    "source_domain_counts_bucket_deduped": {
+      "atlantic_council_reports|D:INFRA_CI": 8,
+      "cepa_feed|D:INFRA_CI": 4,
+      "die_flaschenpost_aussenpolitik_rss|D:INFRA_CI": 9,
+      "gids_feed|D:INFRA_CI": 10,
+      "rusi_latest_commentary|D:INFRA_CI": 5,
+      "rusi_latest_publications|D:INFRA_CI": 3,
+      "small_wars_journal_rss|D:NEWS_INTEL": 10,
+      "swp_publications_de|D:INFRA_CI": 8,
+      "swp_publications_en|D:INFRA_CI": 4
+    },
     "source_domain_counts_72h": {
+      "atlantic_council_reports|D:INFRA_CI": 8,
       "auonsson_bsky|D:NEWS_INTEL": 40,
+      "cepa_feed|D:INFRA_CI": 9,
+      "die_flaschenpost_aussenpolitik_rss|D:INFRA_CI": 9,
       "die_flaschenpost_rss|D:INFRA_CI": 1,
       "gcaptain_rss|D:NEWS_INTEL": 32,
       "gCaptain|D:NEWS_INTEL": 3,
       "gCaptain|D:SECURITY_CRIME": 1,
+      "gids_feed|D:INFRA_CI": 10,
       "highnorthnews_bsky|D:NEWS_INTEL": 4,
-      "maritimekiwi_bsky|D:NEWS_INTEL": 3,
+      "maritimekiwi_bsky|D:NEWS_INTEL": 2,
       "navylookout_bsky|D:NEWS_INTEL": 2,
-      "oiuye_bsky|D:NEWS_INTEL": 18,
-      "rusi_latest_publications|D:INFRA_CI": 3,
-      "swp_publications_de|D:INFRA_CI": 3,
-      "swp_publications_en|D:INFRA_CI": 1,
+      "oiuye_bsky|D:NEWS_INTEL": 17,
+      "rusi_latest_commentary|D:INFRA_CI": 5,
+      "rusi_latest_publications|D:INFRA_CI": 6,
+      "small_wars_journal_rss|D:NEWS_INTEL": 10,
+      "swp_publications_de|D:INFRA_CI": 11,
+      "swp_publications_en|D:INFRA_CI": 5,
       "The Maritime Executive|D:INCIDENT": 1,
       "The Maritime Executive|D:INFRA_CI": 5,
       "The Maritime Executive|D:NEWS_INTEL": 36,
@@ -258,16 +347,22 @@
       "worldcrimeintel_x|D:SECURITY_CRIME": 24
     },
     "source_domain_counts_72h_deduped": {
+      "atlantic_council_reports|D:INFRA_CI": 8,
       "auonsson_bsky|D:NEWS_INTEL": 40,
+      "cepa_feed|D:INFRA_CI": 9,
+      "die_flaschenpost_aussenpolitik_rss|D:INFRA_CI": 9,
       "die_flaschenpost_rss|D:INFRA_CI": 1,
       "gcaptain_rss|D:NEWS_INTEL": 30,
+      "gids_feed|D:INFRA_CI": 10,
       "highnorthnews_bsky|D:NEWS_INTEL": 4,
-      "maritimekiwi_bsky|D:NEWS_INTEL": 3,
+      "maritimekiwi_bsky|D:NEWS_INTEL": 2,
       "navylookout_bsky|D:NEWS_INTEL": 2,
-      "oiuye_bsky|D:NEWS_INTEL": 18,
-      "rusi_latest_publications|D:INFRA_CI": 3,
-      "swp_publications_de|D:INFRA_CI": 3,
-      "swp_publications_en|D:INFRA_CI": 1,
+      "oiuye_bsky|D:NEWS_INTEL": 17,
+      "rusi_latest_commentary|D:INFRA_CI": 5,
+      "rusi_latest_publications|D:INFRA_CI": 6,
+      "small_wars_journal_rss|D:NEWS_INTEL": 10,
+      "swp_publications_de|D:INFRA_CI": 11,
+      "swp_publications_en|D:INFRA_CI": 5,
       "The Maritime Executive|D:INCIDENT": 1,
       "The Maritime Executive|D:INFRA_CI": 5,
       "The Maritime Executive|D:NEWS_INTEL": 36,
@@ -277,33 +372,45 @@
       "worldcrimeintel_x|D:SECURITY_CRIME": 24
     },
     "source_region_counts_72h": {
+      "atlantic_council_reports|REG:EUROPE": 8,
       "auonsson_bsky|REG:OTHER": 40,
+      "cepa_feed|REG:EUROPE": 9,
+      "die_flaschenpost_aussenpolitik_rss|REG:EUROPE": 9,
       "die_flaschenpost_rss|REG:UNKNOWN": 1,
       "gcaptain_rss|REG:OTHER": 32,
       "gCaptain|REG:UNKNOWN": 4,
+      "gids_feed|REG:NORTH_SEA": 10,
       "highnorthnews_bsky|REG:ATLANTIC_NE": 4,
-      "maritimekiwi_bsky|REG:OTHER": 3,
+      "maritimekiwi_bsky|REG:OTHER": 2,
       "navylookout_bsky|REG:ATLANTIC_NE": 2,
-      "oiuye_bsky|REG:OTHER": 18,
-      "rusi_latest_publications|REG:EUROPE": 3,
-      "swp_publications_de|REG:EUROPE": 3,
-      "swp_publications_en|REG:EUROPE": 1,
+      "oiuye_bsky|REG:OTHER": 17,
+      "rusi_latest_commentary|REG:EUROPE": 5,
+      "rusi_latest_publications|REG:EUROPE": 6,
+      "small_wars_journal_rss|REG:GLOBAL": 10,
+      "swp_publications_de|REG:EUROPE": 11,
+      "swp_publications_en|REG:EUROPE": 5,
       "The Maritime Executive|REG:UNKNOWN": 44,
       "UKMTO Recent Incidents|REG:UNKNOWN": 16,
       "warontherocks_bsky|REG:OTHER": 82,
       "worldcrimeintel_x|REG:OTHER": 24
     },
     "source_region_counts_72h_deduped": {
+      "atlantic_council_reports|REG:EUROPE": 8,
       "auonsson_bsky|REG:OTHER": 40,
+      "cepa_feed|REG:EUROPE": 9,
+      "die_flaschenpost_aussenpolitik_rss|REG:EUROPE": 9,
       "die_flaschenpost_rss|REG:UNKNOWN": 1,
       "gcaptain_rss|REG:OTHER": 30,
+      "gids_feed|REG:NORTH_SEA": 10,
       "highnorthnews_bsky|REG:ATLANTIC_NE": 4,
-      "maritimekiwi_bsky|REG:OTHER": 3,
+      "maritimekiwi_bsky|REG:OTHER": 2,
       "navylookout_bsky|REG:ATLANTIC_NE": 2,
-      "oiuye_bsky|REG:OTHER": 18,
-      "rusi_latest_publications|REG:EUROPE": 3,
-      "swp_publications_de|REG:EUROPE": 3,
-      "swp_publications_en|REG:EUROPE": 1,
+      "oiuye_bsky|REG:OTHER": 17,
+      "rusi_latest_commentary|REG:EUROPE": 5,
+      "rusi_latest_publications|REG:EUROPE": 6,
+      "small_wars_journal_rss|REG:GLOBAL": 10,
+      "swp_publications_de|REG:EUROPE": 11,
+      "swp_publications_en|REG:EUROPE": 5,
       "The Maritime Executive|REG:UNKNOWN": 44,
       "UKMTO Recent Incidents|REG:UNKNOWN": 16,
       "warontherocks_bsky|REG:OTHER": 82,
@@ -314,7 +421,71 @@
       "gCaptain": 4,
       "gcaptain_rss": 2
     },
-    "source_caps_bucket": [],
+    "source_caps_bucket": [
+      {
+        "source_id": "gids_feed",
+        "source_kind": "rss",
+        "raw_events": 10,
+        "weighted_events": 3.05,
+        "capped_events": 9
+      },
+      {
+        "source_id": "small_wars_journal_rss",
+        "source_kind": "rss",
+        "raw_events": 10,
+        "weighted_events": 3.05,
+        "capped_events": 9
+      },
+      {
+        "source_id": "die_flaschenpost_aussenpolitik_rss",
+        "source_kind": "rss",
+        "raw_events": 9,
+        "weighted_events": 2.9,
+        "capped_events": 8
+      },
+      {
+        "source_id": "atlantic_council_reports",
+        "source_kind": "rss",
+        "raw_events": 8,
+        "weighted_events": 2.75,
+        "capped_events": 7
+      },
+      {
+        "source_id": "swp_publications_de",
+        "source_kind": "rss",
+        "raw_events": 8,
+        "weighted_events": 2.75,
+        "capped_events": 7
+      },
+      {
+        "source_id": "rusi_latest_commentary",
+        "source_kind": "rss",
+        "raw_events": 5,
+        "weighted_events": 2.3,
+        "capped_events": 4
+      },
+      {
+        "source_id": "cepa_feed",
+        "source_kind": "rss",
+        "raw_events": 4,
+        "weighted_events": 2.15,
+        "capped_events": 3
+      },
+      {
+        "source_id": "swp_publications_en",
+        "source_kind": "rss",
+        "raw_events": 4,
+        "weighted_events": 2.15,
+        "capped_events": 3
+      },
+      {
+        "source_id": "rusi_latest_publications",
+        "source_kind": "rss",
+        "raw_events": 3,
+        "weighted_events": 2,
+        "capped_events": 2
+      }
+    ],
     "source_caps_72h": [
       {
         "source_id": "warontherocks_bsky",
@@ -354,9 +525,9 @@
       {
         "source_id": "oiuye_bsky",
         "source_kind": "social",
-        "raw_events": 18,
-        "weighted_events": 2.85,
-        "capped_events": 17
+        "raw_events": 17,
+        "weighted_events": 2.77,
+        "capped_events": 16
       },
       {
         "source_id": "UKMTO Recent Incidents",
@@ -364,6 +535,69 @@
         "raw_events": 16,
         "weighted_events": 9.15,
         "capped_events": 15
+      },
+      {
+        "source_id": "swp_publications_de",
+        "source_kind": "rss",
+        "raw_events": 11,
+        "weighted_events": 3.2,
+        "capped_events": 10
+      },
+      {
+        "source_id": "gids_feed",
+        "source_kind": "rss",
+        "raw_events": 10,
+        "weighted_events": 3.05,
+        "capped_events": 9
+      },
+      {
+        "source_id": "small_wars_journal_rss",
+        "source_kind": "rss",
+        "raw_events": 10,
+        "weighted_events": 3.05,
+        "capped_events": 9
+      },
+      {
+        "source_id": "cepa_feed",
+        "source_kind": "rss",
+        "raw_events": 9,
+        "weighted_events": 2.9,
+        "capped_events": 8
+      },
+      {
+        "source_id": "die_flaschenpost_aussenpolitik_rss",
+        "source_kind": "rss",
+        "raw_events": 9,
+        "weighted_events": 2.9,
+        "capped_events": 8
+      },
+      {
+        "source_id": "atlantic_council_reports",
+        "source_kind": "rss",
+        "raw_events": 8,
+        "weighted_events": 2.75,
+        "capped_events": 7
+      },
+      {
+        "source_id": "rusi_latest_publications",
+        "source_kind": "rss",
+        "raw_events": 6,
+        "weighted_events": 2.45,
+        "capped_events": 5
+      },
+      {
+        "source_id": "rusi_latest_commentary",
+        "source_kind": "rss",
+        "raw_events": 5,
+        "weighted_events": 2.3,
+        "capped_events": 4
+      },
+      {
+        "source_id": "swp_publications_en",
+        "source_kind": "rss",
+        "raw_events": 5,
+        "weighted_events": 2.3,
+        "capped_events": 4
       },
       {
         "source_id": "highnorthnews_bsky",
@@ -375,23 +609,9 @@
       {
         "source_id": "maritimekiwi_bsky",
         "source_kind": "social",
-        "raw_events": 3,
-        "weighted_events": 1.65,
-        "capped_events": 2
-      },
-      {
-        "source_id": "rusi_latest_publications",
-        "source_kind": "rss",
-        "raw_events": 3,
-        "weighted_events": 2,
-        "capped_events": 2
-      },
-      {
-        "source_id": "swp_publications_de",
-        "source_kind": "rss",
-        "raw_events": 3,
-        "weighted_events": 2,
-        "capped_events": 2
+        "raw_events": 2,
+        "weighted_events": 1.45,
+        "capped_events": 1
       },
       {
         "source_id": "navylookout_bsky",
@@ -402,13 +622,6 @@
       },
       {
         "source_id": "die_flaschenpost_rss",
-        "source_kind": "rss",
-        "raw_events": 1,
-        "weighted_events": 1,
-        "capped_events": 0
-      },
-      {
-        "source_id": "swp_publications_en",
         "source_kind": "rss",
         "raw_events": 1,
         "weighted_events": 1,
