@@ -215,6 +215,20 @@ sources:
     region_hint: "REG:OTHER"
     priority: 70
 
+  - id: klart_skepp_blog_rss
+    name: "Klart Skepp! (Blogspot RSS)"
+    type: rss
+    url: "https://klartskeppnu.blogspot.com/feeds/posts/default?alt=rss"
+    labels:
+      - SRC:OSINT
+      - SRC:MEDIA
+      - D:NEWS_INTEL
+      - CONF:LOW
+      - SEV:1
+      - REG:BALTIC
+    region_hint: "REG:OTHER"
+    priority: 54
+
   - id: "oiuye_bsky"
     name: "oiuye (Bluesky)"
     type: "social_bsky"
