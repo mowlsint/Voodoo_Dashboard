@@ -478,5 +478,17 @@ sources:
     type: "html"
     url: "https://theloadstar.com/"
     labels: ["D:NEWS_INTEL", "SRC:MEDIA", "OBJ:SUPPLY_CHAIN"]
+      
+  - id: klart_skepp_blog_rss
+    name: "Klart Skepp! (Blogspot RSS)"
+    type: rss
+    url: "https://klartskeppnu.blogspot.com/feeds/posts/default?alt=rss"
+    labels:
+      - SRC:OSINT
+      - SRC:MEDIA
+      - D:NEWS_INTEL
+      - CONF:LOW
+      - SEV:1
+      - REG:BALTIC
     region_hint: "REG:OTHER"
     priority: 54
