@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Magic Paws – Maritime Phase Zero (Retro Ops) v5.22 "Map Time Window Hotfix"</title>
+  <title>Magic Paws – Maritime Phase Zero (Retro Ops) v5.23 "NAVTEX Area Map + Reload Fix"</title>
 
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -710,7 +710,7 @@
       <div class="brand">
         <div class="brandLine">
           <h1>MAGIC PAWS // MARITIME PHASE ZERO</h1>
-          <span class="ver">v5.22 “Map Time Window Hotfix”</span>
+          <span class="ver">v5.23 “NAVTEX Area Map + Reload Fix”</span>
         </div>
         <div class="sub">
           Source: <span id="src">–</span> • Stand: <span id="stand">–</span> • Worker: <span class="hint" id="wkr">–</span>
@@ -1710,13 +1710,34 @@ Wilhelmshaven JadeWeserPort"></textarea>
     if (loaded === 0) status.textContent = "CI: none loaded";
   }
 
-  async function loadBundle(){
-    const list = el("list");
-    if (list && !state.events.length) {
-      list.innerHTML = `<div class="event">Loading bundle from ${escapeHtml(API.bundle)} …</div>`;
-    }
+  function withFresh(url, fresh){
+    return fresh ? `${url}${url.includes("?") ? "&" : "?"}fresh=1` : url;
+  }
 
-    const res = await apiFetch(API.bundle);
+  function setButtonBusy(id, busy, labelWhenBusy){
+    const btn = el(id);
+    if (!btn) return () => {};
+    const oldText = btn.textContent;
+    btn.disabled = Boolean(busy);
+    if (busy && labelWhenBusy) btn.textContent = labelWhenBusy;
+    return () => {
+      btn.disabled = false;
+      btn.textContent = oldText;
+    };
+  }
+
+  async function loadBundle(options = {}){
+    const fresh = Boolean(options.fresh);
+    const showLoading = Boolean(options.showLoading);
+    const list = el("list");
+    const url = withFresh(API.bundle, fresh);
+
+    if (list && (showLoading || !state.events.length)) {
+      list.innerHTML = `<div class="event">Loading bundle from ${escapeHtml(url)} …</div>`;
+    }
+    if (el("foot")) el("foot").textContent = fresh ? "Reload: Bundle wird frisch geladen …" : "Bundle wird geladen …";
+
+    const res = await apiFetch(url);
     if (!res.ok) {
       const txt = await res.text().catch(() => "");
       throw new Error(`Bundle HTTP ${res.status} ${res.statusText}: ${txt.slice(0, 500)}`);
@@ -1737,43 +1758,76 @@ Wilhelmshaven JadeWeserPort"></textarea>
     buildSelectOptions(el("domain"), domains);
     buildSelectOptions(el("region"), regions);
 
-    console.log("MAGIC PAWS bundle loaded", { events: state.events.length, first: state.events[0] });
+    console.log("MAGIC PAWS bundle loaded", { fresh, events: state.events.length, first: state.events[0] });
     applyFilters();
+    if (el("foot")) el("foot").textContent = `Reload ok: ${state.events.length} Events • ${nowStr()}`;
+  }
+
+  async function reloadNow(){
+    const done = setButtonBusy("btnReload", true, "RELOADING…");
+    if (el("foot")) el("foot").textContent = "Reload gestartet …";
+
+    try {
+      await loadBundle({ fresh:true, showLoading:true });
+
+      const sideResults = await Promise.allSettled([
+        loadWeather(true),
+        loadNavtex(true)
+      ]);
+      sideResults.forEach((r, idx) => {
+        if (r.status === "rejected") console.warn(idx === 0 ? "Weather reload failed" : "NAVTEX reload failed", r.reason);
+      });
+
+      if (state.map) {
+        await loadCI();
+        refreshMapLayers();
+      }
+
+      if (el("foot")) el("foot").textContent = `Reload abgeschlossen • ${state.events.length} Events • ${nowStr()}`;
+    } catch (err) {
+      console.error("Reload failed", err);
+      if (el("foot")) el("foot").textContent = `Reload fehlgeschlagen: ${err?.message || String(err)}`;
+      alert("RELOAD fehlgeschlagen:\n" + (err?.message || String(err)));
+    } finally {
+      done();
+    }
   }
 
   async function rebuildNow(){
-    const token = localStorage.getItem("MAGIC_PAWS_REBUILD_TOKEN") || localStorage.getItem("VOODOO_REBUILD_TOKEN") || "";
+    const token = window.prompt(
+      "REBUILD_TOKEN eingeben.\n\nDer Worker vergleicht diesen Wert mit dem Cloudflare Secret REBUILD_TOKEN. Der Token wird nicht gespeichert."
+    );
 
-    if (!token) {
-      alert(
-        "Kein REBUILD_TOKEN gesetzt.\n\n" +
-        "Einmal in der Browser-Konsole setzen:\n" +
-        "localStorage.setItem('MAGIC_PAWS_REBUILD_TOKEN', 'DEIN_TOKEN')\n\n" +
-        "Hinweis: Ein alter VOODOO_REBUILD_TOKEN wird aus Kompatibilitätsgründen noch gelesen."
-      );
-      return;
-    }
+    if (!token || !token.trim()) return;
 
-    const res = await apiFetch(API.rebuild, {
-      method: "POST",
-      headers: {
-        "Authorization": "Bearer " + token
+    const done = setButtonBusy("btnRebuild", true, "REBUILDING…");
+    if (el("foot")) el("foot").textContent = "Rebuild gestartet …";
+
+    try {
+      const res = await apiFetch(API.rebuild, {
+        method: "POST",
+        headers: {
+          "Authorization": "Bearer " + token.trim()
+        }
+      });
+
+      const text = await res.text().catch(() => "");
+      let data = null;
+      try { data = text ? JSON.parse(text) : null; } catch(_e) {}
+
+      if (!res.ok || data?.ok === false) {
+        throw new Error((data?.message || data?.error || text || `HTTP ${res.status}`).slice(0, 1000));
       }
-    });
 
-    if (!res.ok) {
-      const txt = await res.text().catch(() => "");
-      alert("REBUILD fehlgeschlagen: HTTP " + res.status + "\n" + txt.slice(0, 500));
-      return;
+      await reloadNow();
+      if (el("foot")) el("foot").textContent = `Rebuild + Reload abgeschlossen • ${nowStr()}`;
+    } catch (err) {
+      console.error("REBUILD failed", err);
+      if (el("foot")) el("foot").textContent = `Rebuild fehlgeschlagen: ${err?.message || String(err)}`;
+      alert("REBUILD fehlgeschlagen:\n" + (err?.message || String(err)));
+    } finally {
+      done();
     }
-
-    await loadBundle();
-    if (state.map) {
-      await loadCI();
-      refreshMapLayers();
-    }
-    loadWeather().catch(err => console.warn("Weather failed", err));
-    loadNavtex().catch(err => console.warn("NAVTEX failed", err));
   }
 
   function safeElText(id){
@@ -2341,10 +2395,12 @@ Wilhelmshaven JadeWeserPort"></textarea>
     }, 120);
   }
 
-  async function loadWeather(){
-    el("weatherMeta").textContent = "/api/weather";
+  async function loadWeather(fresh = false){
+    const url = withFresh(API.weather, fresh);
+    el("weatherMeta").textContent = fresh ? "/api/weather?fresh=1" : "/api/weather";
+    el("weatherBox").innerHTML = `<div class="navwarnSummary"><div class="big">Wetter lädt…</div><div class="hint">${escapeHtml(url)}</div></div>`;
     try{
-      const res = await apiFetch(API.weather);
+      const res = await apiFetch(url);
       const data = await res.json();
       if (!res.ok || data.ok === false) throw new Error(data?.error ?? `HTTP ${res.status}`);
       state.weatherData = data;
@@ -2352,13 +2408,17 @@ Wilhelmshaven JadeWeserPort"></textarea>
     } catch(e){
       state.weatherData = null;
       el("weatherBox").innerHTML = `<div class="navwarnSummary"><div class="big">Weather error</div><div class="hint">${escapeHtml(e.message)}</div></div>`;
+      throw e;
     }
   }
 
-  async function loadNavtex(){
-    el("navtexMeta").textContent = "/api/navtex";
+  async function loadNavtex(fresh = false){
+    const url = withFresh(API.navtex, fresh);
+    el("navtexMeta").textContent = fresh ? "/api/navtex?fresh=1" : "/api/navtex";
+    el("navtexBox").innerHTML = `<div class="navwarnSummary"><div class="big">NAVTEX/NAVWARN lädt…</div><div class="hint">${escapeHtml(url)}</div></div>`;
+    setNavtexMiniMeta("NAVTEX/NAVWARN lädt …");
     try{
-      const res = await apiFetch(API.navtex);
+      const res = await apiFetch(url);
       const data = await res.json();
       if (!res.ok || data.ok === false) throw new Error(data?.error ?? `HTTP ${res.status}`);
       state.navtexData = data;
@@ -2369,6 +2429,7 @@ Wilhelmshaven JadeWeserPort"></textarea>
       el("navtexBox").innerHTML = `<div class="navwarnSummary"><div class="big">NAVWARN error</div><div class="hint">${escapeHtml(e.message)}</div></div>`;
       setNavtexMiniMeta("NAVTEX/NAVWARN konnte nicht geladen werden.");
       clearNavtexMiniMap();
+      throw e;
     }
   }
 
@@ -2394,7 +2455,7 @@ Wilhelmshaven JadeWeserPort"></textarea>
     on(id, id === "q" ? "input" : "change", applyFilters);
   });
 
-  on("btnReload", "click", () => loadBundle().catch(err => console.error("Reload failed", err)));
+  on("btnReload", "click", reloadNow);
   on("btnRebuild", "click", rebuildNow);
   on("btnExport", "click", exportFiltered);
   on("btnFit", "click", refreshMapLayers);
