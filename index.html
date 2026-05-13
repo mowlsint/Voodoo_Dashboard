@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Voodoo Dashboard – Hybrid Maritime (Retro Ops) v5.22 "Map Time Window Hotfix"</title>
+  <title>Magic Paws – Maritime Phase Zero (Retro Ops) v5.22 "Map Time Window Hotfix"</title>
 
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -578,6 +578,108 @@
       font-size:12px !important;
     }
 
+
+
+    /* v5.23 / Magic Paws: NAVTEX mini map below NAVWARN board */
+    .navtexMiniMapCard{
+      margin-top:10px;
+      border:1px solid rgba(176,136,0,.32);
+      border-radius:12px;
+      background:linear-gradient(180deg, rgba(255,255,255,.025), rgba(0,0,0,.22));
+      overflow:hidden;
+    }
+    .navtexMiniMapHead{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-bottom:1px solid rgba(176,136,0,.24);
+    }
+    .navtexMiniMapHead .title{
+      font-size:18px;
+      line-height:1;
+    }
+    .navtexMiniMapHead .meta{
+      color:var(--muted);
+      font-size:13px;
+      margin-top:3px;
+    }
+    .navtexMiniMapTools{
+      display:flex;
+      gap:6px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    #navtexMiniMap{
+      width:100%;
+      height:260px;
+      border-bottom:1px solid rgba(176,136,0,.24);
+      background:#071014;
+    }
+    .navtexMiniList{
+      max-height:210px;
+      overflow:auto;
+      padding:8px 10px 10px;
+      display:grid;
+      gap:7px;
+    }
+    .navtexMiniAreaLine{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:8px;
+      padding:7px 8px;
+      border:1px solid rgba(176,136,0,.22);
+      border-radius:10px;
+      background:rgba(0,0,0,.22);
+      cursor:pointer;
+    }
+    .navtexMiniAreaLine:hover,
+    .navtexMiniItem:hover{
+      background:rgba(176,136,0,.10);
+    }
+    .navtexMiniAreaLine .count{
+      color:var(--money);
+      white-space:nowrap;
+    }
+    .navtexMiniItem{
+      padding:7px 8px;
+      border:1px solid rgba(176,136,0,.18);
+      border-radius:10px;
+      background:rgba(255,255,255,.02);
+      cursor:pointer;
+    }
+    .navtexMiniItem .ref{
+      color:var(--money);
+      font-size:15px;
+    }
+    .navtexMiniItem .mini{
+      color:var(--muted);
+      font-size:12px;
+      margin-top:2px;
+    }
+    .navtexMiniItem .desc{
+      color:rgba(255,255,255,.84);
+      font-size:13px;
+      line-height:1.12;
+      margin-top:3px;
+    }
+    .navtexAreaIcon{
+      border:1px solid rgba(255,210,77,.85);
+      background:rgba(5,6,7,.88);
+      color:#ffd24d;
+      border-radius:999px;
+      min-width:28px;
+      min-height:28px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-family:"VT323", ui-monospace, monospace;
+      font-size:16px;
+      box-shadow:0 0 14px rgba(176,136,0,.32);
+    }
+
     @media (max-width: 1100px){
       .grid{grid-template-columns:1fr;}
       #map{height:460px;}
@@ -607,7 +709,7 @@
     <div class="topbar">
       <div class="brand">
         <div class="brandLine">
-          <h1>VOODOO // HYBRID MARITIME OPS</h1>
+          <h1>MAGIC PAWS // MARITIME PHASE ZERO</h1>
           <span class="ver">v5.22 “Map Time Window Hotfix”</span>
         </div>
         <div class="sub">
@@ -863,6 +965,23 @@ Wilhelmshaven JadeWeserPort"></textarea>
           </div>
           <div class="pc">
             <div class="scrollbox"><div class="monoSmall" id="navtexBox">Lädt…</div></div>
+
+            <div class="navtexMiniMapCard">
+              <div class="navtexMiniMapHead">
+                <div>
+                  <div class="title">NAVTEX Area Map</div>
+                  <div class="meta" id="navtexMiniMeta">Wartet auf /api/navtex …</div>
+                </div>
+                <div class="navtexMiniMapTools">
+                  <button class="btn secondary tinyBtn" id="navtexMiniReset" type="button">ALLE</button>
+                  <button class="btn secondary tinyBtn" id="navtexMiniFit" type="button">FIT</button>
+                </div>
+              </div>
+              <div id="navtexMiniMap" aria-label="NAVTEX / NAVWARN Area Map"></div>
+              <div class="navtexMiniList" id="navtexMiniList">
+                <div class="hint">Nach dem Laden werden Meldungen nach Areas gruppiert und klickbar angezeigt.</div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -872,6 +991,7 @@ Wilhelmshaven JadeWeserPort"></textarea>
 
 <script>
 (() => {
+  // Worker URL bleibt vorerst bestehen. Erst ändern, wenn der Cloudflare Worker wirklich umbenannt wurde.
   const BASE = "https://voodoo-hybrid-api.mowlsint.workers.dev";
   const API = {
     bundle:  `${BASE}/api/bundle`,
@@ -908,7 +1028,11 @@ Wilhelmshaven JadeWeserPort"></textarea>
     map: null,
     layers: { events: null, ciGroup: null, geoLocator: null },
     ciBounds: null,
-    geoPoint: null
+    geoPoint: null,
+    weatherData: null,
+    navtexData: null,
+    navtexMiniMap: null,
+    navtexMiniLayers: null
   };
 
   function nowStr(){ return new Date().toLocaleString(); }
@@ -1613,18 +1737,19 @@ Wilhelmshaven JadeWeserPort"></textarea>
     buildSelectOptions(el("domain"), domains);
     buildSelectOptions(el("region"), regions);
 
-    console.log("VOODOO bundle loaded", { events: state.events.length, first: state.events[0] });
+    console.log("MAGIC PAWS bundle loaded", { events: state.events.length, first: state.events[0] });
     applyFilters();
   }
 
   async function rebuildNow(){
-    const token = localStorage.getItem("VOODOO_REBUILD_TOKEN") || "";
+    const token = localStorage.getItem("MAGIC_PAWS_REBUILD_TOKEN") || localStorage.getItem("VOODOO_REBUILD_TOKEN") || "";
 
     if (!token) {
       alert(
         "Kein REBUILD_TOKEN gesetzt.\n\n" +
         "Einmal in der Browser-Konsole setzen:\n" +
-        "localStorage.setItem('VOODOO_REBUILD_TOKEN', 'DEIN_TOKEN')"
+        "localStorage.setItem('MAGIC_PAWS_REBUILD_TOKEN', 'DEIN_TOKEN')\n\n" +
+        "Hinweis: Ein alter VOODOO_REBUILD_TOKEN wird aus Kompatibilitätsgründen noch gelesen."
       );
       return;
     }
@@ -1779,7 +1904,7 @@ Wilhelmshaven JadeWeserPort"></textarea>
       keyword_barometer_pct: Number(safeElText("kwPct")) || null,
       keyword_hits_display: safeElText("kwHits"),
       keyword_meta: safeElText("kwMeta"),
-      note: "Aktuelle Dashboard-Heuristik; 90-Tage-Baseline entsteht über data/snapshots/voodoo_sensor_snapshots.ndjson."
+      note: "Aktuelle Dashboard-Heuristik; 90-Tage-Baseline entsteht über data/snapshots/magicpaws_sensor_snapshots.ndjson."
     };
   }
 
@@ -1790,7 +1915,7 @@ Wilhelmshaven JadeWeserPort"></textarea>
     const filteredEvents = state.filtered.map(compactEvent);
 
     return {
-      export_schema: "VOODOO_REPORT_EXPORT_PACK_v2",
+      export_schema: "MAGIC_PAWS_REPORT_EXPORT_PACK_v2",
       exported_at: exportedAt.toISOString(),
       intended_use: [
         "MOwlSINT Daily Honkytonk",
@@ -1846,14 +1971,14 @@ Wilhelmshaven JadeWeserPort"></textarea>
         "Für Daily Honkytonk und Greybook jetzt primär report_window_export nutzen.",
         "Das Exportfenster kann oben rechts zwischen 24, 48 und 120 Stunden gewählt werden.",
         "Quellenqualität, Dubletten und tatsächliche maritime Relevanz vor Veröffentlichung prüfen.",
-        "Die 90-Tage-Lernkurve liegt separat in data/snapshots/voodoo_sensor_snapshots.ndjson."
+        "Die 90-Tage-Lernkurve liegt separat in data/snapshots/magicpaws_sensor_snapshots.ndjson."
       ]
     };
   }
 
   function exportFiltered(){
     const pack = buildReportExport();
-    downloadJson(`${isoStampForFile()}_VOODOO_report_export_pack.json`, pack);
+    downloadJson(`${isoStampForFile()}_MAGIC_PAWS_report_export_pack.json`, pack);
   }
 
   function fmtWx(v, suffix = ""){
@@ -1923,9 +2048,9 @@ Wilhelmshaven JadeWeserPort"></textarea>
       return `
         <div class="navwarnBoard">
           <div class="navwarnSummary">
-            <div class="big">Keine UKHO-NAVWARN-Items im aktuellen Abruf</div>
-            <div class="hint">Quelle: ${escapeHtml(data.source || "UKHO")} • Stand: ${data.fetched_at ? escapeHtml(new Date(data.fetched_at).toLocaleString()) : "–"}</div>
-            <div class="hint" style="margin-top:6px;">Bewertung: sinnvolle Negativmeldung. Keine offizielle MSI-Stützung aus diesem Parserlauf.</div>
+            <div class="big">Keine NAVTEX/NAVWARN-Items im aktuellen Abruf</div>
+            <div class="hint">Quellen: ${escapeHtml(String(data.source_count ?? data.sources_ok ?? "–"))} • Stand: ${data.fetched_at ? escapeHtml(new Date(data.fetched_at).toLocaleString()) : "–"}</div>
+            <div class="hint" style="margin-top:6px;">Bewertung: sinnvolle Negativmeldung. Keine nutzbaren MSI-/NAVWARN-Items aus diesem Parserlauf.</div>
           </div>
         </div>
       `;
@@ -1933,10 +2058,12 @@ Wilhelmshaven JadeWeserPort"></textarea>
 
     const list = items.slice(0, 12).map(it => {
       const c = it.coord ? `Koordinate: ${fmtWx(it.coord.lat)}, ${fmtWx(it.coord.lon)}` : "Koordinate: nein";
+      const src = navtexSource(it);
+      const regions = Array.isArray(it.regions) && it.regions.length ? it.regions.join(", ") : "REG:–";
       return `
         <div class="navwarnItem">
-          <div class="ref">${escapeHtml(it.ref || "NAVWARN")}</div>
-          <div class="mini">${escapeHtml(it.dtg || "")} • ${escapeHtml(c)}</div>
+          <div class="ref">${escapeHtml(navtexTitle(it))}</div>
+          <div class="mini">${escapeHtml(src)} • ${escapeHtml(regions)} • ${escapeHtml(c)}</div>
           <div class="desc">${escapeHtml(it.description || "")}</div>
         </div>
       `;
@@ -1946,11 +2073,272 @@ Wilhelmshaven JadeWeserPort"></textarea>
       <div class="navwarnBoard">
         <div class="navwarnSummary">
           <div class="big">${items.length} NAVWARN/MSI-Items • ${withCoord} mit Koordinate</div>
-          <div class="hint">Quelle: ${escapeHtml(data.source || "UKHO")} • Stand: ${data.fetched_at ? escapeHtml(new Date(data.fetched_at).toLocaleString()) : "–"}</div>
+          <div class="hint">Quellen ok: ${escapeHtml(String(data.sources_ok ?? data.source_count ?? "–"))}/${escapeHtml(String(data.source_count ?? "–"))} • Stand: ${data.fetched_at ? escapeHtml(new Date(data.fetched_at).toLocaleString()) : "–"}</div>
         </div>
         ${list}
       </div>
     `;
+  }
+
+
+
+  const NAVTEX_AREA_DEFS = {
+    "REG:GER_BIGHT": { label:"Deutsche Bucht", center:[54.55, 7.25], bounds:[[53.25, 5.25], [56.25, 9.25]] },
+    "REG:NORTH_SEA": { label:"Nordsee", center:[56.0, 2.6], bounds:[[51.0, -3.0], [61.5, 9.5]] },
+    "REG:BALTIC": { label:"Ostsee", center:[56.6, 18.0], bounds:[[53.2, 9.5], [66.0, 31.0]] },
+    "REG:DANISH_STRAITS": { label:"Dänische Meerengen", center:[55.45, 11.25], bounds:[[54.0, 9.4], [57.8, 13.4]] },
+    "REG:SKAGERRAK": { label:"Skagerrak", center:[57.7, 8.8], bounds:[[56.4, 6.2], [59.2, 11.5]] },
+    "REG:KATTEGAT": { label:"Kattegat", center:[56.8, 11.5], bounds:[[55.4, 10.0], [58.2, 13.3]] },
+    "REG:GULF_OF_FINLAND": { label:"Finnischer Meerbusen", center:[60.05, 26.5], bounds:[[59.0, 23.0], [61.5, 31.0]] },
+    "REG:GULF_OF_RIGA": { label:"Rigaischer Meerbusen", center:[57.7, 23.25], bounds:[[56.8, 21.3], [58.9, 24.6]] },
+    "REG:GULF_OF_BOTHNIA": { label:"Bottnischer Meerbusen", center:[63.0, 20.5], bounds:[[60.0, 17.0], [66.0, 25.0]] },
+    "REG:GOTLAND_SEA": { label:"Gotlandsee", center:[57.4, 18.9], bounds:[[55.5, 16.5], [59.5, 21.0]] },
+    "REG:IRISH_SEA": { label:"Irische See", center:[54.0, -4.7], bounds:[[51.0, -7.8], [56.5, -2.8]] },
+    "REG:CHANNEL": { label:"Ärmelkanal", center:[50.45, -1.8], bounds:[[49.2, -6.3], [51.6, 2.3]] },
+    "REG:DOVER_STRAIT": { label:"Straße von Dover", center:[51.05, 1.55], bounds:[[50.6, 0.5], [51.5, 2.4]] },
+    "REG:BISCAY_ATLANTIC_APPROACHES": { label:"Biskaya / Atlantikzugänge", center:[48.0, -11.0], bounds:[[45.0, -20.0], [52.0, -5.0]] },
+    "REG:BRITISH_ISLES": { label:"Britische Inseln / Westküste", center:[56.0, -5.2], bounds:[[50.0, -11.0], [59.8, -2.5]] },
+    "REG:HIGH_NORTH_ARCTIC": { label:"High North / Arktis", center:[69.0, 15.0], bounds:[[64.0, -10.0], [75.0, 35.0]] }
+  };
+
+  const NAVTEX_REGION_PRIORITY = [
+    "REG:GER_BIGHT",
+    "REG:DOVER_STRAIT",
+    "REG:DANISH_STRAITS",
+    "REG:GULF_OF_FINLAND",
+    "REG:GULF_OF_RIGA",
+    "REG:GULF_OF_BOTHNIA",
+    "REG:GOTLAND_SEA",
+    "REG:SKAGERRAK",
+    "REG:KATTEGAT",
+    "REG:CHANNEL",
+    "REG:IRISH_SEA",
+    "REG:BISCAY_ATLANTIC_APPROACHES",
+    "REG:BRITISH_ISLES",
+    "REG:BALTIC",
+    "REG:NORTH_SEA",
+    "REG:HIGH_NORTH_ARCTIC"
+  ];
+
+  function navtexItems(data){
+    return Array.isArray(data?.items) ? data.items : [];
+  }
+
+  function navtexPrimaryRegion(item){
+    const regs = Array.isArray(item?.regions) ? item.regions : [];
+    return NAVTEX_REGION_PRIORITY.find(r => regs.includes(r)) || regs.find(r => NAVTEX_AREA_DEFS[r]) || regs[0] || "REG:OTHER";
+  }
+
+  function navtexAreaLabel(region){
+    return NAVTEX_AREA_DEFS[region]?.label || region || "ohne Area";
+  }
+
+  function navtexTitle(item, fallback = "NAVWARN"){
+    return item?.warning_ref || item?.ref || item?.title || fallback;
+  }
+
+  function navtexSource(item){
+    return item?.source_name || item?.source_id || item?.country || "Quelle unbekannt";
+  }
+
+  function shortNavtexText(s, n = 210){
+    const t = String(s || "").replace(/\s+/g, " ").trim();
+    return t.length > n ? t.slice(0, n - 1) + "…" : t;
+  }
+
+  function navtexItemPoint(item){
+    const c = item?.coord;
+    const lat = Number(c?.lat);
+    const lon = Number(c?.lon);
+    if (Number.isFinite(lat) && Number.isFinite(lon) && Math.abs(lat) <= 90 && Math.abs(lon) <= 180) {
+      return { lat, lon, mode:"coord" };
+    }
+    const region = navtexPrimaryRegion(item);
+    const area = NAVTEX_AREA_DEFS[region];
+    if (area) return { lat:area.center[0], lon:area.center[1], mode:"area", region };
+    return null;
+  }
+
+  function navtexGroupedByArea(items){
+    const out = new Map();
+    for (const item of items) {
+      const region = navtexPrimaryRegion(item);
+      if (!out.has(region)) out.set(region, []);
+      out.get(region).push(item);
+    }
+    return out;
+  }
+
+  function initNavtexMiniMap(){
+    const node = el("navtexMiniMap");
+    if (!node || typeof L === "undefined") return null;
+    if (state.navtexMiniMap) return state.navtexMiniMap;
+
+    state.navtexMiniMap = L.map("navtexMiniMap", {
+      zoomControl:true,
+      attributionControl:false,
+      scrollWheelZoom:false
+    }).setView([56.0, 11.0], 4);
+
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png", {
+      maxZoom:12,
+      attribution:"&copy; OpenStreetMap &copy; CARTO"
+    }).addTo(state.navtexMiniMap);
+
+    state.navtexMiniLayers = L.featureGroup().addTo(state.navtexMiniMap);
+    return state.navtexMiniMap;
+  }
+
+  function clearNavtexMiniMap(){
+    if (state.navtexMiniLayers) state.navtexMiniLayers.clearLayers();
+  }
+
+  function setNavtexMiniMeta(text){
+    const m = el("navtexMiniMeta");
+    if (m) m.textContent = text;
+  }
+
+  function renderNavtexMiniList(items, selectedRegion = null){
+    const list = el("navtexMiniList");
+    if (!list) return;
+
+    const shown = selectedRegion
+      ? items.filter(item => (Array.isArray(item.regions) ? item.regions : []).includes(selectedRegion) || navtexPrimaryRegion(item) === selectedRegion)
+      : items;
+
+    if (!shown.length) {
+      list.innerHTML = `<div class="hint">Keine NAVTEX/NAVWARN-Meldungen für diese Auswahl.</div>`;
+      return;
+    }
+
+    const grouped = navtexGroupedByArea(shown);
+    const areaRows = [...grouped.entries()]
+      .sort((a, b) => b[1].length - a[1].length)
+      .map(([region, arr]) => `
+        <div class="navtexMiniAreaLine" data-navtex-area="${escapeHtml(region)}">
+          <span>${escapeHtml(navtexAreaLabel(region))}</span>
+          <span class="count">${arr.length}</span>
+        </div>
+      `).join("");
+
+    const itemRows = shown.slice(0, 60).map(item => {
+      const p = navtexItemPoint(item);
+      const area = navtexAreaLabel(navtexPrimaryRegion(item));
+      const coordLabel = item.coord ? `Geo ${fmtWx(item.coord.lat)}, ${fmtWx(item.coord.lon)}` : "Area-Zentrum";
+      return `
+        <div class="navtexMiniItem" data-navtex-item="${escapeHtml(item.id || item.hash || navtexTitle(item))}">
+          <div class="ref">${escapeHtml(navtexTitle(item))} · ${escapeHtml(area)}</div>
+          <div class="mini">${escapeHtml(navtexSource(item))} • ${escapeHtml(coordLabel)}</div>
+          <div class="desc">${escapeHtml(shortNavtexText(item.description, 170))}</div>
+        </div>
+      `;
+    }).join("");
+
+    list.innerHTML = selectedRegion
+      ? itemRows
+      : `<div class="hint">Areas anklicken: Karte und Liste springen in den jeweiligen Warnbereich.</div>${areaRows}${itemRows}`;
+
+    list.querySelectorAll("[data-navtex-area]").forEach(row => {
+      row.addEventListener("click", () => focusNavtexArea(row.dataset.navtexArea));
+    });
+
+    list.querySelectorAll("[data-navtex-item]").forEach(row => {
+      row.addEventListener("click", () => {
+        const key = row.dataset.navtexItem;
+        const item = shown.find(x => String(x.id || x.hash || navtexTitle(x)) === String(key));
+        if (!item || !state.navtexMiniMap) return;
+        const p = navtexItemPoint(item);
+        if (!p) return;
+        state.navtexMiniMap.setView([p.lat, p.lon], p.mode === "coord" ? 7 : 5);
+      });
+    });
+  }
+
+  function focusNavtexArea(region){
+    const map = initNavtexMiniMap();
+    if (!map) return;
+    const items = navtexItems(state.navtexData);
+    const area = NAVTEX_AREA_DEFS[region];
+    const count = items.filter(item => (Array.isArray(item.regions) ? item.regions : []).includes(region) || navtexPrimaryRegion(item) === region).length;
+    renderNavtexMiniList(items, region);
+    setNavtexMiniMeta(`${navtexAreaLabel(region)} • ${count} Meldung(en)`);
+    if (area) map.fitBounds(area.bounds, { padding:[12,12] });
+  }
+
+  function fitNavtexMiniMapToContent(){
+    const map = initNavtexMiniMap();
+    if (!map || !state.navtexMiniLayers) return;
+    try {
+      const bounds = state.navtexMiniLayers.getBounds();
+      if (bounds && bounds.isValid()) map.fitBounds(bounds, { padding:[14,14] });
+      else map.setView([56.0, 11.0], 4);
+    } catch (_e) {
+      map.setView([56.0, 11.0], 4);
+    }
+  }
+
+  function renderNavtexMiniMap(data){
+    const map = initNavtexMiniMap();
+    if (!map) {
+      setNavtexMiniMeta("Leaflet nicht verfügbar.");
+      return;
+    }
+
+    clearNavtexMiniMap();
+    const items = navtexItems(data);
+    const withCoord = items.filter(item => item?.coord).length;
+    const grouped = navtexGroupedByArea(items);
+
+    for (const [region, arr] of grouped.entries()) {
+      const area = NAVTEX_AREA_DEFS[region];
+      if (!area) continue;
+
+      const rect = L.rectangle(area.bounds, {
+        weight:1,
+        opacity:.55,
+        fillOpacity:.08
+      }).bindPopup(`<b>${escapeHtml(area.label)}</b><br>${arr.length} Meldung(en)`);
+
+      rect.on("click", () => focusNavtexArea(region));
+      rect.addTo(state.navtexMiniLayers);
+
+      const icon = L.divIcon({
+        className:"navtexAreaIcon",
+        html:String(arr.length),
+        iconSize:[30,30],
+        iconAnchor:[15,15]
+      });
+      const areaMarker = L.marker(area.center, { icon, title:`${area.label}: ${arr.length}` })
+        .bindPopup(`<b>${escapeHtml(area.label)}</b><br>${arr.length} Meldung(en)`);
+      areaMarker.on("click", () => focusNavtexArea(region));
+      areaMarker.addTo(state.navtexMiniLayers);
+    }
+
+    for (const item of items) {
+      const p = navtexItemPoint(item);
+      if (!p) continue;
+      const region = navtexPrimaryRegion(item);
+      const area = navtexAreaLabel(region);
+      const marker = L.circleMarker([p.lat, p.lon], {
+        radius:p.mode === "coord" ? 4.8 : 3.4,
+        weight:1,
+        opacity:.85,
+        fillOpacity:p.mode === "coord" ? .72 : .32
+      }).bindPopup(`
+        <b>${escapeHtml(navtexTitle(item))}</b><br>
+        <span>${escapeHtml(area)}</span><br>
+        ${escapeHtml(shortNavtexText(item.description, 260))}<br>
+        <small>${escapeHtml(navtexSource(item))}</small>
+      `);
+      marker.addTo(state.navtexMiniLayers);
+    }
+
+    renderNavtexMiniList(items, null);
+    setNavtexMiniMeta(`${items.length} Meldungen • ${withCoord} mit Koordinate • ${grouped.size} Areas`);
+    setTimeout(() => {
+      map.invalidateSize();
+      fitNavtexMiniMapToContent();
+    }, 120);
   }
 
   async function loadWeather(){
@@ -1975,9 +2363,12 @@ Wilhelmshaven JadeWeserPort"></textarea>
       if (!res.ok || data.ok === false) throw new Error(data?.error ?? `HTTP ${res.status}`);
       state.navtexData = data;
       el("navtexBox").innerHTML = renderNavwarnBoard(data);
+      renderNavtexMiniMap(data);
     } catch(e){
       state.navtexData = null;
       el("navtexBox").innerHTML = `<div class="navwarnSummary"><div class="big">NAVWARN error</div><div class="hint">${escapeHtml(e.message)}</div></div>`;
+      setNavtexMiniMeta("NAVTEX/NAVWARN konnte nicht geladen werden.");
+      clearNavtexMiniMap();
     }
   }
 
@@ -2011,6 +2402,11 @@ Wilhelmshaven JadeWeserPort"></textarea>
   on("btnGeoSearch", "click", searchGeoName);
   on("btnGeoCopy", "click", copyGeoLine);
   on("btnGeoClear", "click", clearGeoLocator);
+  on("navtexMiniReset", "click", () => {
+    if (!state.navtexData) return;
+    renderNavtexMiniMap(state.navtexData);
+  });
+  on("navtexMiniFit", "click", fitNavtexMiniMapToContent);
 
   const geoInput = el("geoInput");
   if (geoInput) {
@@ -2045,7 +2441,7 @@ Wilhelmshaven JadeWeserPort"></textarea>
   // boot
   (async function boot(){
     try {
-      console.log("VOODOO boot start");
+      console.log("MAGIC PAWS boot start");
       if (el("foot")) el("foot").textContent = "DEBUG: boot start";
       await loadBundle();
       if (el("foot")) el("foot").textContent = `DEBUG: boot ok, Events: ${state.events.length}`;
