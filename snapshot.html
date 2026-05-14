@@ -3,12 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MAGIC PAWS // Daily Snapshot Compact</title>
+  <title>MAGIC PAWS // Daily Snapshot Interactive</title>
 
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
         integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
           integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -50,22 +51,9 @@
     .ph .meta{font-size:13px;color:var(--muted);text-align:right;white-space:nowrap;line-height:1}
     .pc{padding:8px 9px}
 
-    .header{display:grid;grid-template-columns:62px 1fr 360px 268px;gap:9px;align-items:stretch}
-    .logoBox{
-  display:grid;
-  place-items:center;
-  padding:6px;
-}
-
-.logoBox img{
-  max-width:100%;
-  max-height:100%;
-  width:auto;
-  height:48px;
-  object-fit:contain;
-  display:block;
-  filter: brightness(1.05) contrast(1.05);
-}
+    .header{display:grid;grid-template-columns:78px 1fr 360px 268px;gap:9px;align-items:stretch}
+    .logoBox{display:grid;place-items:center;padding:5px}
+    .logoBox img{max-width:100%;max-height:56px;width:auto;height:56px;object-fit:contain;display:block;filter:brightness(1.08) contrast(1.08)}
     .brand{padding:7px 9px;border-left:1px solid rgba(176,136,0,.28);overflow:hidden}
     .brand h1{font-size:34px;line-height:.88;margin:0;color:var(--money);letter-spacing:1px;white-space:nowrap}
     .brand .sub{font-size:20px;color:var(--text);margin-top:4px;white-space:nowrap}
@@ -113,56 +101,6 @@
     .analysisTable{font-size:14px}.analysisTable td{padding:4px 3px}.smallSource{color:var(--money)}.age{color:var(--muted);text-align:right;white-space:nowrap}
 
     .gaugeBlock{padding:8px 8px;border-bottom:1px solid rgba(176,136,0,.28)}.gaugeBlock:last-child{border-bottom:0}.gaugeLabel{font-size:19px;text-align:center}.gaugeValue{font-size:34px;color:var(--money);text-align:center;margin-top:2px}.gaugeBar{height:16px;border-radius:999px;background:linear-gradient(90deg,var(--ok),var(--money),var(--orange),var(--bad));border:1px solid rgba(255,255,255,.12);position:relative;margin-top:6px}.gaugeNeedle{position:absolute;top:-4px;width:3px;height:24px;background:#fff;transform:translateX(-50%);box-shadow:0 0 8px rgba(255,255,255,.9)}.gaugeScale{font-size:12px;color:var(--muted);display:flex;justify-content:space-between;margin-top:2px}
-    /* Compact fix: Government-Weirdness muss Nordsee UND Ostsee sichtbar zeigen */
-.weirdPanel{
-  display:grid;
-  grid-template-rows:24px 1fr 1fr;
-  min-height:0;
-}
-
-.weirdPanel .ph{
-  height:24px;
-  padding:4px 8px;
-}
-
-.weirdPanel .ph .title{
-  font-size:15px;
-}
-
-.weirdPanel .gaugeBlock{
-  padding:3px 8px;
-  min-height:0;
-  display:flex;
-  flex-direction:column;
-  justify-content:center;
-}
-
-.weirdPanel .gaugeLabel{
-  font-size:15px;
-  line-height:1;
-}
-
-.weirdPanel .gaugeValue{
-  font-size:24px;
-  line-height:.95;
-  margin-top:0;
-}
-
-.weirdPanel .gaugeBar{
-  height:10px;
-  margin-top:3px;
-}
-
-.weirdPanel .gaugeNeedle{
-  top:-4px;
-  height:18px;
-}
-
-.weirdPanel .gaugeScale{
-  font-size:9px;
-  line-height:1;
-  margin-top:1px;
-}
 
     .metric{display:grid;grid-template-columns:26px 1fr;gap:7px;align-items:center;padding:7px;border-bottom:1px solid rgba(255,255,255,.08)}.metric:last-child{border-bottom:0}.metricIcon{font-size:21px;color:var(--money);text-align:center}.metricLabel{font-size:15px;color:var(--muted)}.metricValue{font-size:24px;color:var(--money);line-height:1}.metricValue.redText{color:var(--bad)}
     .miniRows{font-size:15.5px;line-height:1.08}.miniRow{display:flex;justify-content:space-between;gap:8px;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.08)}.miniRow:last-child{border-bottom:0}.good{color:var(--ok)}.warn{color:var(--money)}.elev{color:var(--orange)}.badText{color:var(--bad)}
@@ -171,19 +109,52 @@
     .footer{display:flex;gap:18px;align-items:center;justify-content:space-between;padding:3px 7px;color:var(--muted);font-size:13.5px;line-height:1;white-space:nowrap}.footer div:first-child{overflow:hidden;text-overflow:ellipsis}
     .leaflet-container{background:#071014;font-family:inherit}.leaflet-control-attribution{display:none}.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#0b0c0e;color:#f5f5f5;border:1px solid var(--stroke)}
     .loading{position:fixed;inset:0;display:grid;place-items:center;z-index:9999;background:rgba(0,0,0,.82);color:var(--money);font-size:34px}.loading.hidden{display:none}
-    @media print{@page{size:16in 9in;margin:0}body{background:#050607}.snapshot{width:1600px;height:900px}.loading{display:none!important}}
+
+
+    .clickLink{color:var(--text);text-decoration:none;border-bottom:1px dotted rgba(255,210,77,.55)}
+    .clickLink:hover{color:var(--money);border-bottom-color:var(--money)}
+    .openHint{color:var(--money);font-size:11px;margin-left:3px;opacity:.85}
+
+    .snapshotToolbar{
+      position:fixed;right:12px;top:8px;z-index:10000;display:flex;gap:8px;align-items:center;
+      padding:6px;border:1px solid rgba(176,136,0,.65);border-radius:12px;
+      background:rgba(0,0,0,.78);box-shadow:0 0 22px rgba(176,136,0,.18);
+      backdrop-filter:blur(4px);
+    }
+    .snapshotToolbar button{
+      cursor:pointer;border:1px solid rgba(176,136,0,.70);border-radius:9px;
+      background:linear-gradient(180deg,rgba(176,136,0,.20),rgba(0,0,0,.25));
+      color:var(--text);font-family:inherit;font-size:15px;line-height:1;padding:7px 10px;
+    }
+    .snapshotToolbar button:hover{color:var(--money);border-color:var(--money)}
+    .snapshotToolbar.hiddenDuringCapture,.autoRender .snapshotToolbar{display:none!important}
+
+    /* Compact fix: Government-Weirdness muss Nordsee UND Ostsee sichtbar zeigen */
+    .weirdPanel{display:grid;grid-template-rows:24px 1fr 1fr;min-height:0}
+    .weirdPanel .ph{height:24px;padding:4px 8px}
+    .weirdPanel .ph .title{font-size:15px}
+    .weirdPanel .gaugeBlock{padding:3px 8px;min-height:0;display:flex;flex-direction:column;justify-content:center}
+    .weirdPanel .gaugeLabel{font-size:15px;line-height:1}
+    .weirdPanel .gaugeValue{font-size:24px;line-height:.95;margin-top:0}
+    .weirdPanel .gaugeBar{height:10px;margin-top:3px}
+    .weirdPanel .gaugeNeedle{top:-4px;height:18px}
+    .weirdPanel .gaugeScale{font-size:9px;line-height:1;margin-top:1px}
+
+    @media print{@page{size:16in 9in;margin:0}body{background:#050607}.snapshot{width:1600px;height:900px}.loading,.snapshotToolbar{display:none!important}}
   </style>
 </head>
 <body>
   <div class="loading" id="loading">MAGIC PAWS SNAPSHOT LÄDT …</div>
+  <nav class="snapshotToolbar" aria-label="Snapshot-Werkzeuge">
+    <button type="button" id="btnSavePng">SNAPSHOT PNG</button>
+    <button type="button" id="btnPrintPdf">DRUCK / PDF</button>
+  </nav>
 
   <main class="snapshot" id="snapshotRoot">
     <header class="header panel">
-      <div class="logoBox">
-  <img src="./assets/magic-paws-logo.jpg" alt="Magic Paws Logo" />
-</div>
+      <div class="logoBox"><img src="./assets/magic-paws-logo.png" alt="Magic Paws Logo" onerror="this.style.display='none';this.parentElement.textContent='🐾';" /></div>
       <div class="brand"><h1>MAGIC PAWS // MARITIME PHASE ZERO</h1><div class="sub">TÄGLICHER SNAPSHOT / KURZLAGEBILD</div></div>
-      <div class="metaBox"><div><b id="versionLabel">v5.26 “Compact Snapshot”</b></div><div>Source: <b id="sourceLabel">–</b> &nbsp; | &nbsp; Stand: <b id="standLabel">–</b></div><div>Worker: <b id="workerLabel">–</b></div></div>
+      <div class="metaBox"><div><b id="versionLabel">v5.27 “Interactive Snapshot”</b></div><div>Source: <b id="sourceLabel">–</b> &nbsp; | &nbsp; Stand: <b id="standLabel">–</b></div><div>Worker: <b id="workerLabel">–</b></div></div>
       <div class="classBox"><div>Klassifikation: <b>UNCLASSIFIED</b></div><div>Zeitraum: <b id="periodLabel">letzte 36 Stunden</b></div><div>Raum: <b>Nordsee / Ostsee / Kanal / Mittelmeer</b></div></div>
     </header>
 
@@ -207,7 +178,7 @@
       <div class="sideBottom"><section class="panel navtexPanel"><div class="ph"><div class="title">NAVTEX / NAVWARN</div><div class="meta" id="navtexMeta">–</div></div><div class="pc"><div class="miniRows" id="navtexRows"></div></div></section><section class="panel weatherPanel"><div class="ph"><div class="title">Wetterfenster</div><div class="meta">24–72h</div></div><div class="pc"><div class="miniRows" id="weatherRows"></div></div></section></div>
     </section>
 
-    <footer class="footer panel"><div>DISCLAIMER: OSINT- und Dashboard-Heuristik. Keine geheimdienstliche Bewertung.</div><div>Zeitzone: UTC</div><div>Nächste Aktualisierung: täglich / GitHub Action</div><div>MAGIC PAWS // mowlsint</div></footer>
+    <footer class="footer panel"><div>DISCLAIMER: ausschließlich OSINT- und Dashboard-Heuristik.</div><div>Zeitzone: UTC</div><div>Nächste Aktualisierung: täglich / GitHub Action</div><div>MAGIC PAWS // mowlsint</div></footer>
   </main>
 
 <script>
@@ -218,7 +189,10 @@
   const HOURS = Math.max(1, Number(params.get("hours") || 36));
   const ANALYSIS_DAYS = Math.max(1, Number(params.get("analysisDays") || 14));
   const FRESH = params.get("fresh") === "1" || params.get("fresh") === "true";
+  const AUTO_RENDER = params.get("auto") === "1" || params.get("auto") === "true";
+  if (AUTO_RENDER) document.body.classList.add("autoRender");
   const MAX_MARKERS = Math.max(20, Number(params.get("maxMarkers") || 120));
+  const GH_ISSUES_URL = "https://github.com/mowlsint/MagicPaws/issues";
   const API = { bundle:`${BASE}/api/bundle${FRESH ? "?fresh=1" : ""}`, navtex:`${BASE}/api/navtex${FRESH ? "?fresh=1" : ""}`, weather:`${BASE}/api/weather${FRESH ? "?fresh=1" : ""}` };
   const FOCUS = { minLat:34, maxLat:66.8, minLon:-13.5, maxLon:33.5 };
 
@@ -258,6 +232,8 @@
   function sourceUrl(ev){ const direct=[ev?.original_url,ev?.source_url,ev?.link,ev?.source_hint?.link].map(cleanUrl).find(u=>/^https?:\/\//i.test(u) && !/github\.com\/[^/]+\/[^/]+\/issues\/\d+/i.test(u)); if(direct) return direct; const urls=String(ev?.summary||"").match(/https?:\/\/[^\s<>"']+/gi)||[]; return urls.map(cleanUrl).find(u=>!/github\.com\/[^/]+\/[^/]+\/issues\/\d+/i.test(u)) || ev?.url || ""; }
   function hostFromUrl(url){ try{return new URL(url).hostname.replace(/^www\./,"");}catch{return "unbekannt";} }
   function sourceName(ev){ const hint=ev?.source_hint?.source || ev?.source || null; if(hint && String(hint).trim() && String(hint).trim() !== "-") return String(hint).trim().slice(0,28); return hostFromUrl(sourceUrl(ev)).slice(0,28); }
+  function issueSearchUrl(query){ return `${GH_ISSUES_URL}?q=${encodeURIComponent(`is:issue is:open ${query}`)}`; }
+  function eventLink(ev){ const direct=sourceUrl(ev); if(/^https?:\/\//i.test(direct) && !/api\.github\.com/i.test(direct)) return direct; const issue=cleanUrl(ev?.html_url || ev?.issue_url || ""); if(/^https?:\/\//i.test(issue)) return issue; return issueSearchUrl(`"${String(ev?.title || sourceName(ev) || "").slice(0,70)}"`); }
   function severityNum(ev){ const s=ev?.severity || labels(ev).find(l=>/^SEV:\d/.test(l)) || "SEV:1"; const n=Number(String(s).replace(/\D/g,"")); return clamp(Number.isFinite(n)?n:1,1,4); }
   function sevClass(n){ return n>=4 ? "sev4" : n>=3 ? "sev3" : n>=2 ? "sev2" : "sev1"; }
   function severityDots(n){ return Array.from({length:4},(_,i)=>`<span class="dot ${i < n ? sevClass(n) : ""}" style="opacity:${i < n ? 1 : .20}"></span>`).join(""); }
@@ -269,21 +245,27 @@
   function scoreAuthorityWeirdness(events,mode){ const regs=mode==="north"?["REG:NORTH_SEA","REG:GER_BIGHT","REG:CHANNEL"]:["REG:BALTIC","REG:BALTIC_SEA","REG:DANISH_STRAITS","REG:ORESUND","REG:GOTLAND_SEA"]; let score=0; const seen=new Set(); for(const ev of events){ const ls=labels(ev); const text=norm(eventText(ev)); const hit=regs.includes(ev?.region)||ls.some(l=>regs.includes(l))||(mode==="north"&&/north sea|nordsee|german bight|deutsche bucht|channel|ärmelkanal/.test(text))||(mode!=="north"&&/baltic|ostsee|øresund|oresund|kattegat|gotland|danish straits|dänische/.test(text)); if(!hit) continue; const key=ev?.url||ev?.id||ev?.number||ev?.title; if(seen.has(key)) continue; seen.add(key); let w=severityNum(ev)*2; if(hasAny(ev,["SRC:OFFICIAL","D:AIR_ACTIVITY","D:RF_SIGNAL","RF:NAVWARN","RF:NAVTEX","V:SAR_UNIT","V:RUS_WARSHIP","V:RUS_RESEARCH","V:AUTHORITY"])) w*=1.4; if(hasAny(ev,["OBJ:CABLE","OBJ:PIPELINE","OBJ:PORT","OBJ:WINDFARM"])) w*=1.18; score+=w; } return clamp(Math.round((score/55)*100),0,100); }
 
   function buildHourlyBuckets(events){ const bucketMs=3600000,count=72; const buckets=Array.from({length:count},(_,idx)=>({idx,maritime:0,infra:0,cyber:0,drone:0,info:0})); for(const ev of events){ const ms=getEventChronologyMs(ev); if(!ms) continue; const age=Date.now()-ms; if(age<0||age>count*bucketMs) continue; const b=count-1-Math.floor(age/bucketMs); if(b<0||b>=count) continue; const s=scoreEventForHybrid(ev); if(hasAny(ev,["D:INFRA_CI","OBJ:CABLE","OBJ:PIPELINE","OBJ:PORT","OBJ:WINDFARM"])) buckets[b].infra+=s; else if(hasAny(ev,["D:CYBER_OT","D:RF_SIGNAL","PAT:GNSS_JAM","PAT:GNSS_SPOOF"])) buckets[b].cyber+=s; else if(hasAny(ev,["D:DRONE_UAS","D:AIR_ACTIVITY"])) buckets[b].drone+=s; else if(hasAny(ev,["D:INFOOPS","D:NEWS_INTEL","SRC:THINKTANK","SRC:ANALYSIS"])) buckets[b].info+=s; else buckets[b].maritime+=s; } return buckets; }
-  function topDomains(events){ const m=new Map(); for(const ev of events){ const key=sourceName(ev)||hostFromUrl(sourceUrl(ev)); if(!m.has(key)) m.set(key,{key,count:0,maxSev:1}); const row=m.get(key); row.count++; row.maxSev=Math.max(row.maxSev,severityNum(ev)); } return [...m.values()].sort((a,b)=>b.count-a.count||b.maxSev-a.maxSev).slice(0,6); }
+  function topDomains(events){ const m=new Map(); for(const ev of events){ const key=sourceName(ev)||hostFromUrl(sourceUrl(ev)); if(!m.has(key)) m.set(key,{key,count:0,maxSev:1,href:issueSearchUrl(`"${key}"`)}); const row=m.get(key); row.count++; row.maxSev=Math.max(row.maxSev,severityNum(ev)); } return [...m.values()].sort((a,b)=>b.count-a.count||b.maxSev-a.maxSev).slice(0,6); }
   function topKeywords(events){ const rows=KEYWORDS.map(k=>({label:k.label,count:0})); for(const ev of events){ const t=norm(eventText(ev)); for(const r of rows){ const terms=KEYWORDS.find(k=>k.label===r.label).terms; for(const term of terms){ if(t.includes(norm(term))) r.count++; } } } return rows.filter(r=>r.count>0).sort((a,b)=>b.count-a.count).slice(0,7); }
   function thinkTankAnalyses(events){ return events.filter(ev=>{ const t=norm(eventText(ev)); return ageDays(ev)<=ANALYSIS_DAYS && (hasAny(ev,["SRC:THINKTANK","SRC:ANALYSIS","SRC:ANALYST","SRC:ANALYSIS_POINTER"]) || /think.?tank|rusi|swp|chatham|csis|cepa|ecfr|cna|gids|dgap|atlantic council|small wars journal/.test(t)); }).sort((a,b)=>getEventChronologyMs(b)-getEventChronologyMs(a)).slice(0,5); }
 
   function drawSeismograph(events){ const svg=el("seismoSvg"); const buckets=buildHourlyBuckets(events); const cats=[["Maritim","maritime"],["KRITIS","infra"],["Cyber/RF","cyber"],["Drohne","drone"],["InfoOps","info"]]; const max=Math.max(10,...buckets.flatMap(b=>cats.map(([,k])=>b[k]))); let html=""; for(const y of [14,39,64,89]) html+=`<line x1="32" y1="${y}" x2="456" y2="${y}" stroke="rgba(255,255,255,.10)"/><text x="8" y="${y+4}" class="axisLabel">${Math.round((96-y)/96*100)}</text>`; cats.forEach(([label,key],ci)=>{ const x=66+ci*91; html+=`<line x1="${x}" y1="12" x2="${x}" y2="86" stroke="rgba(255,255,255,.12)"/><text x="${x}" y="102" text-anchor="middle" class="axisLabel">${esc(label)}</text>`; const sample=buckets.filter((_,i)=>i%9===0 || i>buckets.length-7).map(b=>b[key]); sample.forEach((v,i)=>{ const pct=clamp(Math.round((v/max)*100),0,100); const y=86-(pct/100)*72; const c=pct>=75?"#ff4d4d":pct>=50?"#ff8a00":pct>=25?"#ffd24d":"#33d17a"; const dx=(i-sample.length/2)*3.0; html+=`<circle cx="${(x+dx).toFixed(1)}" cy="${y.toFixed(1)}" r="3.6" fill="${c}" opacity="${pct?.95:.18}"/>`; }); }); svg.innerHTML=html; }
-  function renderDomainRows(events){ const rows=topDomains(events); const other=Math.max(0,events.length-rows.reduce((a,r)=>a+r.count,0)); const body=rows.map(r=>`<tr><td>${esc(r.key)}</td><td class="num">${r.count}</td><td class="sevDots">${severityDots(r.maxSev)}</td></tr>`); if(other) body.push(`<tr><td>Weitere</td><td class="num">${other}</td><td></td></tr>`); body.push(`<tr><td style="color:var(--money)">GESAMT</td><td class="num">${events.length}</td><td></td></tr>`); el("domainRows").innerHTML=body.join(""); }
+  function renderDomainRows(events){ const rows=topDomains(events); const other=Math.max(0,events.length-rows.reduce((a,r)=>a+r.count,0)); const body=rows.map(r=>`<tr><td><a class="clickLink" href="${esc(r.href)}" target="_blank" rel="noopener noreferrer" title="GitHub-Issues zu dieser Quelle öffnen">${esc(r.key)}<span class="openHint">↗</span></a></td><td class="num">${r.count}</td><td class="sevDots">${severityDots(r.maxSev)}</td></tr>`); if(other) body.push(`<tr><td><a class="clickLink" href="${esc(issueSearchUrl(`is:open`))}" target="_blank" rel="noopener noreferrer">Weitere<span class="openHint">↗</span></a></td><td class="num">${other}</td><td></td></tr>`); body.push(`<tr><td style="color:var(--money)">GESAMT</td><td class="num">${events.length}</td><td></td></tr>`); el("domainRows").innerHTML=body.join(""); }
   function renderKeywordRows(events){ const rows=topKeywords(events); const max=Math.max(1,...rows.map(r=>r.count)); el("keywordRows").innerHTML=(rows.length?rows:[{label:"keine Treffer",count:0}]).map((r,i)=>{ const pct=Math.round((r.count/max)*100); const color=i===0?"var(--bad)":i<=2?"var(--orange)":i<=4?"var(--money)":"var(--ok)"; return `<tr><td>${i+1}</td><td>${esc(r.label)}</td><td class="num">${r.count}</td><td><div class="barTrack"><div class="barFill" style="width:${pct}%;background:${color}"></div></div></td></tr>`; }).join(""); }
-  function renderAnalyses(events){ const rows=thinkTankAnalyses(events); el("analysisMeta").textContent=`${rows.length} Treffer <=${ANALYSIS_DAYS} Tage`; el("analysisRows").innerHTML=rows.length?rows.map(ev=>{ const d=eventDate(ev); const age=Math.max(0,Math.round(ageDays(ev))); return `<tr><td>${d?d.toISOString().slice(0,10):"–"}</td><td class="smallSource">${esc(sourceName(ev))}</td><td>${esc(String(ev.title||"").slice(0,80))}</td><td class="age">${age}T</td></tr>`; }).join(""):`<tr><td colspan="4" class="miniNote">Keine frischen Analyse-Treffer.</td></tr>`; }
+  function renderAnalyses(events){ const rows=thinkTankAnalyses(events); el("analysisMeta").textContent=`${rows.length} Treffer <=${ANALYSIS_DAYS} Tage`; el("analysisRows").innerHTML=rows.length?rows.map(ev=>{ const d=eventDate(ev); const age=Math.max(0,Math.round(ageDays(ev))); const href=eventLink(ev); return `<tr><td>${d?d.toISOString().slice(0,10):"–"}</td><td class="smallSource">${esc(sourceName(ev))}</td><td><a class="clickLink" href="${esc(href)}" target="_blank" rel="noopener noreferrer" title="Quelle/Issue öffnen">${esc(String(ev.title||"").slice(0,80))}<span class="openHint">↗</span></a></td><td class="age">${age}T</td></tr>`; }).join(""):`<tr><td colspan="4" class="miniNote">Keine frischen Analyse-Treffer.</td></tr>`; }
   function renderWeird(north,baltic){ el("weirdNorth").textContent=String(north); el("weirdBaltic").textContent=String(baltic); el("weirdNorthNeedle").style.left=`${north}%`; el("weirdBalticNeedle").style.left=`${baltic}%`; }
   function renderStats(events,focusCount){ const p0=events.filter(e=>e?.phase0?.suspect || labels(e).includes("P0:SUSPECT")).length; el("eventsCount").textContent=events.length.toLocaleString("de-DE"); el("p0Count").textContent=String(p0); el("geoCount").textContent=String(focusCount); el("lastFetch").textContent=now.toISOString().slice(11,16)+" UTC"; }
   function renderShortlage(events,navtexData,focusCount){ const p0=events.filter(e=>e?.phase0?.suspect || labels(e).includes("P0:SUSPECT")).length; const high=events.filter(e=>severityNum(e)>=3).length; const north=events.filter(e=>e.region==="REG:NORTH_SEA" || labels(e).includes("REG:NORTH_SEA") || labels(e).includes("REG:GER_BIGHT")).length; const baltic=events.filter(e=>e.region==="REG:BALTIC" || labels(e).includes("REG:BALTIC") || labels(e).includes("REG:DANISH_STRAITS")).length; const ci=events.filter(e=>hasAny(e,["D:INFRA_CI","OBJ:CABLE","OBJ:PIPELINE","OBJ:PORT","OBJ:WINDFARM"])).length; const rf=events.filter(e=>hasAny(e,["D:RF_SIGNAL","PAT:GNSS_JAM","PAT:GNSS_SPOOF"])).length; const shadow=events.filter(e=>hasAny(e,["V:SHADOW_FLEET","V:SANCTIONS_EVASION","D:SANCTIONS"])).length; const navCount=Array.isArray(navtexData?.items)?navtexData.items.length:null; const bullets=[`${events.length} Meldungen im ${HOURS}h-Fenster, davon ${high} mit erhöhter/hoher Severity.`,`GEO-Fokus Mittel-/Nordeuropa: ${focusCount} lagekartenfähige Punkte.`,`Regionale Cluster: Nordsee ${north}, Ostsee/Dänische Meerengen ${baltic}.`]; if(p0) bullets.push(`${p0} Ereignisse mit P0:SUSPECT-Logik.`); if(ci) bullets.push(`${ci} Hinweise mit KRITIS-/Kabel-/Port-/Offshore-Bezug.`); if(rf) bullets.push(`${rf} RF-/GNSS-/AIS-nahe Hinweise oder Anomalien.`); if(shadow) bullets.push(`${shadow} Meldungen mit Schattenflotten-/Sanktionsbezug.`); if(navCount!==null) bullets.push(`NAVTEX/NAVWARN-Kontext: ${navCount} geladene Warnobjekte.`); el("shortBullets").innerHTML=bullets.slice(0,7).map(b=>`<li>${esc(b)}</li>`).join(""); }
   function renderNavtex(data){ const items=Array.isArray(data?.items)?data.items:[]; el("navtexMeta").textContent=data?.fetched_at?new Date(data.fetched_at).toISOString().slice(11,16)+" UTC":"–"; const regionCounts=new Map(); for(const item of items){ const regs=Array.isArray(item.regions)&&item.regions.length?item.regions:["REG:OTHER"]; const r=regs[0]; regionCounts.set(r,(regionCounts.get(r)||0)+1); } const names={"REG:NORTH_SEA":"Nordsee","REG:GER_BIGHT":"Dt. Bucht","REG:BALTIC":"Ostsee","REG:DANISH_STRAITS":"Dänische Meerengen","REG:CHANNEL":"Ärmelkanal","REG:BLACK_SEA":"Schwarzes Meer"}; const rows=[...regionCounts.entries()].sort((a,b)=>b[1]-a[1]).slice(0,4); el("navtexRows").innerHTML=rows.length?rows.map(([r,c])=>`<div class="miniRow"><span>${esc(names[r]||r)}</span><span class="${c>=6?'badText':c>=3?'elev':'good'}">${c}</span></div>`).join(""):`<div class="miniRow"><span>Keine Daten</span><span>–</span></div>`; }
   function weatherSeverity(point){ const gust=Number(point?.next24?.wind_gusts_10m_max ?? point?.now?.wind_gusts_10m ?? 0); const vis=Number(point?.next24?.visibility_min ?? point?.now?.visibility ?? 99999); if(gust>=80||vis<500) return ["SCHLECHT","badText"]; if(gust>=60||vis<1000) return ["MÄßIG","warn"]; return ["GUT","good"]; }
   function renderWeather(data){ const points=Array.isArray(data?.points)?data.points:[]; const map=new Map(); for(const p of points){ let name=p.name || p.region || "Seegebiet"; if(/Helgoland|German Bight/i.test(name)) name="Nordsee"; else if(/Gda|Gotland|Baltic|Copenhagen|Øresund|Oresund/i.test(name)) name="Ostsee"; else if(/Dover|Channel/i.test(name)) name="Ärmelkanal"; else if(/Cyprus|Mediterranean/i.test(name)) name="Mittelmeer Ost"; else if(/Black Sea|Odesa/i.test(name)) name="Schwarzes Meer"; if(!map.has(name)) map.set(name,p); } const rows=[...map.entries()].slice(0,4).map(([name,p])=>{ const [txt,cls]=weatherSeverity(p); return `<div class="miniRow"><span>${esc(name)}</span><span class="${cls}">${txt}</span></div>`; }); el("weatherRows").innerHTML=rows.length?rows.join(""):`<div class="miniRow"><span>Wetterdaten</span><span>–</span></div>`; }
-  function initMap(events){ if(typeof L==="undefined"){ el("map").innerHTML="<div style='padding:20px'>Leaflet nicht verfügbar.</div>"; return 0; } const map=L.map("map",{zoomControl:false,attributionControl:false,preferCanvas:true,scrollWheelZoom:false,dragging:false,doubleClickZoom:false,boxZoom:false,keyboard:false}).setView([53.8,8.8],4); L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{maxZoom:10}).addTo(map); const focusBounds=L.latLngBounds([[34,-13.5],[66.8,33.5]]); map.fitBounds(focusBounds,{padding:[8,8]}); map.setMaxBounds(focusBounds.pad(.08)); const focusEvents=events.filter(inFocus).slice(0,MAX_MARKERS); for(const ev of focusEvents){ const lat=Number(ev.geo.lat),lon=Number(ev.geo.lon),sev=severityNum(ev); L.circleMarker([lat,lon],{radius:sev>=4?5.8:sev>=3?4.9:4.0,color:colorForEvent(ev),weight:1.4,fillColor:colorForEvent(ev),fillOpacity:.72,opacity:.95}).bindPopup(`<b>${esc(ev.title)}</b><br>${esc(sourceName(ev))}<br>${esc(ev.severity || "")}`).addTo(map); } setTimeout(()=>map.invalidateSize(),150); el("mapMeta").textContent=`${focusEvents.length}/${events.filter(e=>e?.geo).length} GEO im Fokus`; return focusEvents.length; }
+  function initMap(events){ if(typeof L==="undefined"){ el("map").innerHTML="<div style='padding:20px'>Leaflet nicht verfügbar.</div>"; return 0; } const map=L.map("map",{zoomControl:false,attributionControl:false,preferCanvas:true,scrollWheelZoom:false,dragging:false,doubleClickZoom:false,boxZoom:false,keyboard:false}).setView([53.8,8.8],4); L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{maxZoom:10,crossOrigin:true}).addTo(map); const focusBounds=L.latLngBounds([[34,-13.5],[66.8,33.5]]); map.fitBounds(focusBounds,{padding:[8,8]}); map.setMaxBounds(focusBounds.pad(.08)); const focusEvents=events.filter(inFocus).slice(0,MAX_MARKERS); for(const ev of focusEvents){ const lat=Number(ev.geo.lat),lon=Number(ev.geo.lon),sev=severityNum(ev); L.circleMarker([lat,lon],{radius:sev>=4?5.8:sev>=3?4.9:4.0,color:colorForEvent(ev),weight:1.4,fillColor:colorForEvent(ev),fillOpacity:.72,opacity:.95}).bindPopup(`<b>${esc(ev.title)}</b><br>${esc(sourceName(ev))}<br>${esc(ev.severity || "")}`).addTo(map); } setTimeout(()=>map.invalidateSize(),150); el("mapMeta").textContent=`${focusEvents.length}/${events.filter(e=>e?.geo).length} GEO im Fokus`; return focusEvents.length; }
+
+  function snapshotFilename(ext){ const p=n=>String(n).padStart(2,"0"); const d=new Date(); return `MAGIC_PAWS_snapshot_${d.getUTCFullYear()}${p(d.getUTCMonth()+1)}${p(d.getUTCDate())}_${p(d.getUTCHours())}${p(d.getUTCMinutes())}Z_${HOURS}h.${ext}`; }
+  async function saveSnapshotPng(){ const toolbar=document.querySelector(".snapshotToolbar"); const btn=el("btnSavePng"); if(!window.html2canvas){ alert("PNG-Snapshot nicht verfügbar: html2canvas konnte nicht geladen werden. Für PDF bitte DRUCK / PDF nutzen."); return; } try{ toolbar?.classList.add("hiddenDuringCapture"); if(btn) btn.textContent="ERSTELLE PNG …"; await new Promise(r=>setTimeout(r,160)); const canvas=await window.html2canvas(el("snapshotRoot"),{backgroundColor:"#050607",scale:2,useCORS:true,allowTaint:false,logging:false,windowWidth:1600,windowHeight:900}); const a=document.createElement("a"); a.download=snapshotFilename("png"); a.href=canvas.toDataURL("image/png"); document.body.appendChild(a); a.click(); a.remove(); }catch(err){ console.error(err); alert("PNG-Snapshot fehlgeschlagen. Vermutlich blockiert ein Karten-Tile/CORS die Canvas-Erstellung. PDF-Druck funktioniert weiterhin."); }finally{ if(btn) btn.textContent="SNAPSHOT PNG"; toolbar?.classList.remove("hiddenDuringCapture"); } }
+  function printSnapshotPdf(){ window.print(); }
+  document.addEventListener("click", ev => { const png=ev.target.closest?.("#btnSavePng"); const pdf=ev.target.closest?.("#btnPrintPdf"); if(png){ ev.preventDefault(); saveSnapshotPng(); } if(pdf){ ev.preventDefault(); printSnapshotPdf(); } });
+
   async function fetchJson(url,fallback){ try{ const res=await fetch(url,{cache:"no-store",credentials:"omit"}); const data=await res.json(); if(!res.ok||data?.ok===false) throw new Error(data?.error||`HTTP ${res.status}`); return data; }catch(err){ console.warn("Snapshot fetch failed",url,err); return fallback; } }
   async function boot(){ el("workerLabel").textContent=new URL(BASE).hostname; el("periodLabel").textContent=`letzte ${HOURS} Stunden`; el("domainMeta").textContent=`${HOURS}h`; el("hybridMeta").textContent=`${HOURS}h`; el("kwSubtitle").textContent=`Social + RSS • ${HOURS}h`; const [bundle,navtex,weather]=await Promise.all([fetchJson(API.bundle,{events:[],source:null,generated_at:null}),fetchJson(API.navtex,{items:[]}),fetchJson(API.weather,{points:[]})]); const allEvents=Array.isArray(bundle?.events)?bundle.events:[]; const windowEvents=eventsSince(allEvents,HOURS); const analysisEvents=eventsSince(allEvents,ANALYSIS_DAYS*24); el("sourceLabel").textContent=bundle?.source?`${bundle.source.owner||"?"}/${bundle.source.repo||"?"}`:"Bundle"; el("standLabel").textContent=bundle?.generated_at?new Date(bundle.generated_at).toISOString().replace("T"," ").slice(0,16)+" UTC":"–"; const focusCount=initMap(windowEvents); const score=scorePhaseZero(windowEvents); el("hybridScore").textContent=String(score); el("hybridStatus").textContent=statusFromScore(score); renderStats(windowEvents,focusCount); renderWeird(scoreAuthorityWeirdness(windowEvents,"north"),scoreAuthorityWeirdness(windowEvents,"baltic")); drawSeismograph(allEvents); renderDomainRows(windowEvents); renderKeywordRows(windowEvents); renderAnalyses(analysisEvents); renderNavtex(navtex); renderWeather(weather); renderShortlage(windowEvents,navtex,focusCount); document.documentElement.dataset.snapshotReady="true"; window.__MAGIC_PAWS_SNAPSHOT_READY__=true; el("loading").classList.add("hidden"); }
   boot().catch(err=>{ console.error(err); el("loading").innerHTML=`SNAPSHOT FEHLER<br><span style="font-size:20px;color:#fff">${esc(err.message||String(err))}</span>`; window.__MAGIC_PAWS_SNAPSHOT_READY__=true; });
