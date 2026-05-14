@@ -51,7 +51,7 @@
     .ph .meta{font-size:13px;color:var(--muted);text-align:right;white-space:nowrap;line-height:1}
     .pc{padding:8px 9px}
 
-    .header{display:grid;grid-template-columns:78px 1fr 360px 268px;gap:9px;align-items:stretch}
+    .header{display:grid;grid-template-columns:78px minmax(430px,1fr) 192px 310px 238px;gap:7px;align-items:stretch}
     .logoBox{display:grid;place-items:center;padding:5px}
     .logoBox img{max-width:100%;max-height:56px;width:auto;height:56px;object-fit:contain;display:block;filter:brightness(1.08) contrast(1.08)}
     .brand{padding:7px 9px;border-left:1px solid rgba(176,136,0,.28);overflow:hidden}
@@ -116,18 +116,18 @@
     .openHint{color:var(--money);font-size:11px;margin-left:3px;opacity:.85}
 
     .snapshotToolbar{
-      position:fixed;right:12px;top:8px;z-index:10000;display:flex;gap:8px;align-items:center;
-      padding:6px;border:1px solid rgba(176,136,0,.65);border-radius:12px;
-      background:rgba(0,0,0,.78);box-shadow:0 0 22px rgba(176,136,0,.18);
-      backdrop-filter:blur(4px);
+      align-self:center;justify-self:center;width:100%;max-width:192px;height:42px;
+      display:flex;gap:6px;align-items:center;justify-content:center;
+      padding:5px;border:1px solid rgba(176,136,0,.60);border-radius:10px;
+      background:rgba(0,0,0,.42);box-shadow:0 0 18px rgba(176,136,0,.13);
     }
     .snapshotToolbar button{
-      cursor:pointer;border:1px solid rgba(176,136,0,.70);border-radius:9px;
+      cursor:pointer;border:1px solid rgba(176,136,0,.70);border-radius:8px;
       background:linear-gradient(180deg,rgba(176,136,0,.20),rgba(0,0,0,.25));
-      color:var(--text);font-family:inherit;font-size:15px;line-height:1;padding:7px 10px;
+      color:var(--text);font-family:inherit;font-size:13px;line-height:1;padding:6px 8px;white-space:nowrap;
     }
     .snapshotToolbar button:hover{color:var(--money);border-color:var(--money)}
-    .snapshotToolbar.hiddenDuringCapture,.autoRender .snapshotToolbar{display:none!important}
+    .snapshotToolbar.hiddenDuringCapture,.autoRender .snapshotToolbar{visibility:hidden!important}
 
     /* Compact fix: Government-Weirdness muss Nordsee UND Ostsee sichtbar zeigen */
     .weirdPanel{display:grid;grid-template-rows:24px 1fr 1fr;min-height:0}
@@ -145,16 +145,16 @@
 </head>
 <body>
   <div class="loading" id="loading">MAGIC PAWS SNAPSHOT LÄDT …</div>
-  <nav class="snapshotToolbar" aria-label="Snapshot-Werkzeuge">
-    <button type="button" id="btnSavePng">SNAPSHOT PNG</button>
-    <button type="button" id="btnPrintPdf">DRUCK / PDF</button>
-  </nav>
 
   <main class="snapshot" id="snapshotRoot">
     <header class="header panel">
       <div class="logoBox"><img src="./assets/magic-paws-logo.png" alt="Magic Paws Logo" onerror="this.style.display='none';this.parentElement.textContent='🐾';" /></div>
       <div class="brand"><h1>MAGIC PAWS // MARITIME PHASE ZERO</h1><div class="sub">TÄGLICHER SNAPSHOT / KURZLAGEBILD</div></div>
-      <div class="metaBox"><div><b id="versionLabel">v5.28 “Interactive Snapshot / Weirdness Sync”</b></div><div>Source: <b id="sourceLabel">–</b> &nbsp; | &nbsp; Stand: <b id="standLabel">–</b></div><div>Worker: <b id="workerLabel">–</b></div></div>
+      <nav class="snapshotToolbar" aria-label="Snapshot-Werkzeuge">
+        <button type="button" id="btnSavePng">PNG</button>
+        <button type="button" id="btnPrintPdf">PDF</button>
+      </nav>
+      <div class="metaBox"><div><b id="versionLabel">v5.29 “Interactive Snapshot / Header Tools”</b></div><div>Source: <b id="sourceLabel">–</b> &nbsp; | &nbsp; Stand: <b id="standLabel">–</b></div><div>Worker: <b id="workerLabel">–</b></div></div>
       <div class="classBox"><div>Klassifikation: <b>UNCLASSIFIED</b></div><div>Zeitraum: <b id="periodLabel">letzte 36 Stunden</b></div><div>Raum: <b>Nordsee / Ostsee / Kanal / Mittelmeer</b></div></div>
     </header>
 
@@ -309,7 +309,7 @@
   function initMap(events){ if(typeof L==="undefined"){ el("map").innerHTML="<div style='padding:20px'>Leaflet nicht verfügbar.</div>"; return 0; } const map=L.map("map",{zoomControl:false,attributionControl:false,preferCanvas:true,scrollWheelZoom:false,dragging:false,doubleClickZoom:false,boxZoom:false,keyboard:false}).setView([53.8,8.8],4); L.tileLayer("https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png",{maxZoom:10,crossOrigin:true}).addTo(map); const focusBounds=L.latLngBounds([[34,-13.5],[66.8,33.5]]); map.fitBounds(focusBounds,{padding:[8,8]}); map.setMaxBounds(focusBounds.pad(.08)); const focusEvents=events.filter(inFocus).slice(0,MAX_MARKERS); for(const ev of focusEvents){ const lat=Number(ev.geo.lat),lon=Number(ev.geo.lon),sev=severityNum(ev); L.circleMarker([lat,lon],{radius:sev>=4?5.8:sev>=3?4.9:4.0,color:colorForEvent(ev),weight:1.4,fillColor:colorForEvent(ev),fillOpacity:.72,opacity:.95}).bindPopup(`<b>${esc(ev.title)}</b><br>${esc(sourceName(ev))}<br>${esc(ev.severity || "")}`).addTo(map); } setTimeout(()=>map.invalidateSize(),150); el("mapMeta").textContent=`${focusEvents.length}/${events.filter(e=>e?.geo).length} GEO im Fokus`; return focusEvents.length; }
 
   function snapshotFilename(ext){ const p=n=>String(n).padStart(2,"0"); const d=new Date(); return `MAGIC_PAWS_snapshot_${d.getUTCFullYear()}${p(d.getUTCMonth()+1)}${p(d.getUTCDate())}_${p(d.getUTCHours())}${p(d.getUTCMinutes())}Z_${HOURS}h.${ext}`; }
-  async function saveSnapshotPng(){ const toolbar=document.querySelector(".snapshotToolbar"); const btn=el("btnSavePng"); if(!window.html2canvas){ alert("PNG-Snapshot nicht verfügbar: html2canvas konnte nicht geladen werden. Für PDF bitte DRUCK / PDF nutzen."); return; } try{ toolbar?.classList.add("hiddenDuringCapture"); if(btn) btn.textContent="ERSTELLE PNG …"; await new Promise(r=>setTimeout(r,160)); const canvas=await window.html2canvas(el("snapshotRoot"),{backgroundColor:"#050607",scale:2,useCORS:true,allowTaint:false,logging:false,windowWidth:1600,windowHeight:900}); const a=document.createElement("a"); a.download=snapshotFilename("png"); a.href=canvas.toDataURL("image/png"); document.body.appendChild(a); a.click(); a.remove(); }catch(err){ console.error(err); alert("PNG-Snapshot fehlgeschlagen. Vermutlich blockiert ein Karten-Tile/CORS die Canvas-Erstellung. PDF-Druck funktioniert weiterhin."); }finally{ if(btn) btn.textContent="SNAPSHOT PNG"; toolbar?.classList.remove("hiddenDuringCapture"); } }
+  async function saveSnapshotPng(){ const toolbar=document.querySelector(".snapshotToolbar"); const btn=el("btnSavePng"); if(!window.html2canvas){ alert("PNG-Snapshot nicht verfügbar: html2canvas konnte nicht geladen werden. Für PDF bitte PDF nutzen."); return; } try{ toolbar?.classList.add("hiddenDuringCapture"); if(btn) btn.textContent="ERSTELLE PNG …"; await new Promise(r=>setTimeout(r,160)); const canvas=await window.html2canvas(el("snapshotRoot"),{backgroundColor:"#050607",scale:2,useCORS:true,allowTaint:false,logging:false,windowWidth:1600,windowHeight:900}); const a=document.createElement("a"); a.download=snapshotFilename("png"); a.href=canvas.toDataURL("image/png"); document.body.appendChild(a); a.click(); a.remove(); }catch(err){ console.error(err); alert("PNG-Snapshot fehlgeschlagen. Vermutlich blockiert ein Karten-Tile/CORS die Canvas-Erstellung. PDF-Druck funktioniert weiterhin."); }finally{ if(btn) btn.textContent="PNG"; toolbar?.classList.remove("hiddenDuringCapture"); } }
   function printSnapshotPdf(){ window.print(); }
   document.addEventListener("click", ev => { const png=ev.target.closest?.("#btnSavePng"); const pdf=ev.target.closest?.("#btnPrintPdf"); if(png){ ev.preventDefault(); saveSnapshotPng(); } if(pdf){ ev.preventDefault(); printSnapshotPdf(); } });
 
