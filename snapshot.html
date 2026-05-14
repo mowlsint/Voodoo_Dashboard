@@ -154,7 +154,7 @@
     <header class="header panel">
       <div class="logoBox"><img src="./assets/magic-paws-logo.png" alt="Magic Paws Logo" onerror="this.style.display='none';this.parentElement.textContent='🐾';" /></div>
       <div class="brand"><h1>MAGIC PAWS // MARITIME PHASE ZERO</h1><div class="sub">TÄGLICHER SNAPSHOT / KURZLAGEBILD</div></div>
-      <div class="metaBox"><div><b id="versionLabel">v5.27 “Interactive Snapshot”</b></div><div>Source: <b id="sourceLabel">–</b> &nbsp; | &nbsp; Stand: <b id="standLabel">–</b></div><div>Worker: <b id="workerLabel">–</b></div></div>
+      <div class="metaBox"><div><b id="versionLabel">v5.28 “Interactive Snapshot / Weirdness Sync”</b></div><div>Source: <b id="sourceLabel">–</b> &nbsp; | &nbsp; Stand: <b id="standLabel">–</b></div><div>Worker: <b id="workerLabel">–</b></div></div>
       <div class="classBox"><div>Klassifikation: <b>UNCLASSIFIED</b></div><div>Zeitraum: <b id="periodLabel">letzte 36 Stunden</b></div><div>Raum: <b>Nordsee / Ostsee / Kanal / Mittelmeer</b></div></div>
     </header>
 
@@ -242,7 +242,54 @@
   function scoreEventForHybrid(ev){ const sev=severityNum(ev); let pts=sev===4?10:sev===3?7:sev===2?3:1; const conf=ev?.confidence || labels(ev).find(l=>/^CONF:/.test(l)) || ""; if(/HIGH/.test(conf)) pts*=1.2; else if(/LOW/.test(conf)) pts*=.85; if(ev?.phase0?.suspect || labels(ev).includes("P0:SUSPECT")) pts*=1.55; if(hasAny(ev,["OBJ:CABLE","OBJ:PIPELINE","OBJ:WINDFARM","OBJ:PORT","OBJ:VTS_WSV","D:INFRA_CI"])) pts*=1.25; if(hasAny(ev,["PAT:LOITERING","PAT:STS_SUSPECT","PAT:AIS_GAP","PAT:DARK_ACTIVITY","PAT:SURVEYING","PAT:ROUTE_DEVIATION","PAT:GNSS_JAM","PAT:GNSS_SPOOF"])) pts*=1.2; if(hasAny(ev,["V:SHADOW_FLEET","V:RUS_RESEARCH","V:RUS_WARSHIP"])) pts*=1.15; return pts; }
   function scorePhaseZero(events){ const total=events.reduce((a,e)=>a+scoreEventForHybrid(e),0); return clamp(Math.round((total/Math.max(70,events.length*5.5))*100),0,100); }
   function statusFromScore(v){ return v>=75?"HOCH":v>=55?"ERHÖHT":v>=30?"BEOBACHTEN":"RUHIG"; }
-  function scoreAuthorityWeirdness(events,mode){ const regs=mode==="north"?["REG:NORTH_SEA","REG:GER_BIGHT","REG:CHANNEL"]:["REG:BALTIC","REG:BALTIC_SEA","REG:DANISH_STRAITS","REG:ORESUND","REG:GOTLAND_SEA"]; let score=0; const seen=new Set(); for(const ev of events){ const ls=labels(ev); const text=norm(eventText(ev)); const hit=regs.includes(ev?.region)||ls.some(l=>regs.includes(l))||(mode==="north"&&/north sea|nordsee|german bight|deutsche bucht|channel|ärmelkanal/.test(text))||(mode!=="north"&&/baltic|ostsee|øresund|oresund|kattegat|gotland|danish straits|dänische/.test(text)); if(!hit) continue; const key=ev?.url||ev?.id||ev?.number||ev?.title; if(seen.has(key)) continue; seen.add(key); let w=severityNum(ev)*2; if(hasAny(ev,["SRC:OFFICIAL","D:AIR_ACTIVITY","D:RF_SIGNAL","RF:NAVWARN","RF:NAVTEX","V:SAR_UNIT","V:RUS_WARSHIP","V:RUS_RESEARCH","V:AUTHORITY"])) w*=1.4; if(hasAny(ev,["OBJ:CABLE","OBJ:PIPELINE","OBJ:PORT","OBJ:WINDFARM"])) w*=1.18; score+=w; } return clamp(Math.round((score/55)*100),0,100); }
+  function scoreAuthorityWeirdness(events,mode){
+    // Synced with index.html: Government-Weirdness must use all loaded events,
+    // then internally limit to last 7 days and exact Nordsee/Ostsee region labels.
+    const regionLabels = mode === "north"
+      ? ["REG:NORTH_SEA","REG:GER_BIGHT"]
+      : ["REG:BALTIC_SEA","REG:BALTIC"];
+
+    const recent = events.filter(ev => {
+      const inWindow = ageDays(ev) <= 7;
+      const ls = labels(ev);
+      const regionHit = regionLabels.includes(ev?.region) || ls.some(l => regionLabels.includes(l));
+      return inWindow && regionHit;
+    });
+
+    let w = 0;
+    const seen = new Set();
+    for (const ev of recent){
+      const ls = labels(ev);
+      const key = ev?.url || ev?.id || ev?.number || ev?.title;
+      if (seen.has(key)) continue;
+      seen.add(key);
+
+      const sev = ev?.severity || ls.find(l => /^SEV:\d/.test(l)) || "SEV:1";
+      const conf = ev?.confidence || ls.find(l => /^CONF:/.test(l)) || "CONF:LOW";
+      const sevW = sev === "SEV:4" ? 7 : sev === "SEV:3" ? 5 : sev === "SEV:2" ? 2.5 : 1;
+      const confW = conf === "CONF:HIGH" ? 1.1 : conf === "CONF:MED" ? 1.0 : 0.85;
+
+      const official = ls.includes("SRC:OFFICIAL");
+      const authorityVessel = ls.some(l => l.startsWith("V:AUTH_") || l === "V:SAR_UNIT" || l === "V:RUS_GOV" || l === "V:RUS_WARSHIP" || l === "V:RUS_AUXILIARY" || l === "V:RUS_RESEARCH");
+      const air = ls.includes("D:AIR_ACTIVITY");
+      const sar = ls.includes("D:SAR") || ls.includes("V:SAR_UNIT");
+      const navwarn = ls.includes("RF:NAVWARN") || ls.includes("RF:NAVTEX");
+      const rf = ls.includes("D:RF_SIGNAL") || ls.some(l => l.startsWith("RF:"));
+      const ci = ["OBJ:PORT","OBJ:VTS_WSV","OBJ:CABLE","OBJ:PIPELINE","OBJ:WINDFARM"].some(x => ls.includes(x));
+
+      let evW = sevW * confW;
+      if (official) evW *= 1.20;
+      if (authorityVessel) evW *= 1.55;
+      if (air) evW *= 1.35;
+      if (sar) evW *= 1.20;
+      if (navwarn) evW *= 0.85;
+      if (rf) evW *= 1.20;
+      if (ci) evW *= 1.15;
+      w += evW;
+    }
+
+    return clamp(Math.round((w / 45) * 100), 0, 100);
+  }
 
   function buildHourlyBuckets(events){ const bucketMs=3600000,count=72; const buckets=Array.from({length:count},(_,idx)=>({idx,maritime:0,infra:0,cyber:0,drone:0,info:0})); for(const ev of events){ const ms=getEventChronologyMs(ev); if(!ms) continue; const age=Date.now()-ms; if(age<0||age>count*bucketMs) continue; const b=count-1-Math.floor(age/bucketMs); if(b<0||b>=count) continue; const s=scoreEventForHybrid(ev); if(hasAny(ev,["D:INFRA_CI","OBJ:CABLE","OBJ:PIPELINE","OBJ:PORT","OBJ:WINDFARM"])) buckets[b].infra+=s; else if(hasAny(ev,["D:CYBER_OT","D:RF_SIGNAL","PAT:GNSS_JAM","PAT:GNSS_SPOOF"])) buckets[b].cyber+=s; else if(hasAny(ev,["D:DRONE_UAS","D:AIR_ACTIVITY"])) buckets[b].drone+=s; else if(hasAny(ev,["D:INFOOPS","D:NEWS_INTEL","SRC:THINKTANK","SRC:ANALYSIS"])) buckets[b].info+=s; else buckets[b].maritime+=s; } return buckets; }
   function topDomains(events){ const m=new Map(); for(const ev of events){ const key=sourceName(ev)||hostFromUrl(sourceUrl(ev)); if(!m.has(key)) m.set(key,{key,count:0,maxSev:1,href:issueSearchUrl(`"${key}"`)}); const row=m.get(key); row.count++; row.maxSev=Math.max(row.maxSev,severityNum(ev)); } return [...m.values()].sort((a,b)=>b.count-a.count||b.maxSev-a.maxSev).slice(0,6); }
@@ -267,7 +314,7 @@
   document.addEventListener("click", ev => { const png=ev.target.closest?.("#btnSavePng"); const pdf=ev.target.closest?.("#btnPrintPdf"); if(png){ ev.preventDefault(); saveSnapshotPng(); } if(pdf){ ev.preventDefault(); printSnapshotPdf(); } });
 
   async function fetchJson(url,fallback){ try{ const res=await fetch(url,{cache:"no-store",credentials:"omit"}); const data=await res.json(); if(!res.ok||data?.ok===false) throw new Error(data?.error||`HTTP ${res.status}`); return data; }catch(err){ console.warn("Snapshot fetch failed",url,err); return fallback; } }
-  async function boot(){ el("workerLabel").textContent=new URL(BASE).hostname; el("periodLabel").textContent=`letzte ${HOURS} Stunden`; el("domainMeta").textContent=`${HOURS}h`; el("hybridMeta").textContent=`${HOURS}h`; el("kwSubtitle").textContent=`Social + RSS • ${HOURS}h`; const [bundle,navtex,weather]=await Promise.all([fetchJson(API.bundle,{events:[],source:null,generated_at:null}),fetchJson(API.navtex,{items:[]}),fetchJson(API.weather,{points:[]})]); const allEvents=Array.isArray(bundle?.events)?bundle.events:[]; const windowEvents=eventsSince(allEvents,HOURS); const analysisEvents=eventsSince(allEvents,ANALYSIS_DAYS*24); el("sourceLabel").textContent=bundle?.source?`${bundle.source.owner||"?"}/${bundle.source.repo||"?"}`:"Bundle"; el("standLabel").textContent=bundle?.generated_at?new Date(bundle.generated_at).toISOString().replace("T"," ").slice(0,16)+" UTC":"–"; const focusCount=initMap(windowEvents); const score=scorePhaseZero(windowEvents); el("hybridScore").textContent=String(score); el("hybridStatus").textContent=statusFromScore(score); renderStats(windowEvents,focusCount); renderWeird(scoreAuthorityWeirdness(windowEvents,"north"),scoreAuthorityWeirdness(windowEvents,"baltic")); drawSeismograph(allEvents); renderDomainRows(windowEvents); renderKeywordRows(windowEvents); renderAnalyses(analysisEvents); renderNavtex(navtex); renderWeather(weather); renderShortlage(windowEvents,navtex,focusCount); document.documentElement.dataset.snapshotReady="true"; window.__MAGIC_PAWS_SNAPSHOT_READY__=true; el("loading").classList.add("hidden"); }
+  async function boot(){ el("workerLabel").textContent=new URL(BASE).hostname; el("periodLabel").textContent=`letzte ${HOURS} Stunden`; el("domainMeta").textContent=`${HOURS}h`; el("hybridMeta").textContent=`${HOURS}h`; el("kwSubtitle").textContent=`Social + RSS • ${HOURS}h`; const [bundle,navtex,weather]=await Promise.all([fetchJson(API.bundle,{events:[],source:null,generated_at:null}),fetchJson(API.navtex,{items:[]}),fetchJson(API.weather,{points:[]})]); const allEvents=Array.isArray(bundle?.events)?bundle.events:[]; const windowEvents=eventsSince(allEvents,HOURS); const analysisEvents=eventsSince(allEvents,ANALYSIS_DAYS*24); el("sourceLabel").textContent=bundle?.source?`${bundle.source.owner||"?"}/${bundle.source.repo||"?"}`:"Bundle"; el("standLabel").textContent=bundle?.generated_at?new Date(bundle.generated_at).toISOString().replace("T"," ").slice(0,16)+" UTC":"–"; const focusCount=initMap(windowEvents); const score=scorePhaseZero(windowEvents); el("hybridScore").textContent=String(score); el("hybridStatus").textContent=statusFromScore(score); renderStats(windowEvents,focusCount); renderWeird(scoreAuthorityWeirdness(allEvents,"north"),scoreAuthorityWeirdness(allEvents,"baltic")); drawSeismograph(allEvents); renderDomainRows(windowEvents); renderKeywordRows(windowEvents); renderAnalyses(analysisEvents); renderNavtex(navtex); renderWeather(weather); renderShortlage(windowEvents,navtex,focusCount); document.documentElement.dataset.snapshotReady="true"; window.__MAGIC_PAWS_SNAPSHOT_READY__=true; el("loading").classList.add("hidden"); }
   boot().catch(err=>{ console.error(err); el("loading").innerHTML=`SNAPSHOT FEHLER<br><span style="font-size:20px;color:#fff">${esc(err.message||String(err))}</span>`; window.__MAGIC_PAWS_SNAPSHOT_READY__=true; });
 })();
 </script>
