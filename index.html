@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Magic Paws – Maritime Phase Zero (Retro Ops) v5.24 "Source-Time 48h Filter"</title>
+  <title>Magic Paws – Maritime Phase Zero (Retro Ops) v5.30 "20-Day Log + Archive"</title>
 
   <!-- Leaflet -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -270,6 +270,23 @@
       width:auto; min-width:118px;
       background:#111317; color:var(--text); border:1px solid rgba(176,136,0,.35); border-radius:10px; padding:9px 12px;
       font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; box-shadow: inset 0 0 0 1px rgba(255,255,255,.03);
+    }
+    .logWindowNote{
+      margin-top:8px;
+      font-size:15px;
+      line-height:1.15;
+      color:var(--muted);
+    }
+    .archiveChip{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:3px 8px;
+      border-radius:999px;
+      border:1px solid rgba(176,136,0,.38);
+      background:rgba(0,0,0,.24);
+      color:var(--money);
+      white-space:nowrap;
     }
     .seismoWrap{display:grid; grid-template-columns:minmax(0,1fr) 128px; gap:12px; align-items:stretch;}
     .seismoLegend{display:grid; grid-template-rows:repeat(4,1fr); gap:8px; min-height:132px;}
@@ -710,7 +727,7 @@
       <div class="brand">
         <div class="brandLine">
           <h1>MAGIC PAWS // MARITIME PHASE ZERO</h1>
-          <span class="ver">v5.24 “Source-Time 48h Filter”</span>
+          <span class="ver">v5.31 “Repo Log Archive”</span>
         </div>
         <div class="sub">
           Source: <span id="src">–</span> • Stand: <span id="stand">–</span> • Worker: <span class="hint" id="wkr">–</span>
@@ -726,8 +743,11 @@
             <option value="24">24 h</option>
             <option value="48" selected>48 h</option>
             <option value="120">120 h</option>
+            <option value="480">20 Tage</option>
+            <option value="2160">90 Tage</option>
           </select>
           <button class="btn secondary" id="btnExport">REPORT EXPORT</button>
+          <button class="btn secondary" id="btnArchiveExport">LOG/ARCHIV EXPORT</button>
         </div>
       </div>
     </div>
@@ -785,6 +805,16 @@
                 <label class="toggle"><input type="checkbox" id="onlyP0"> only P0:SUSPECT</label>
                 <label class="toggle"><input type="checkbox" id="onlyGeo"> only with GEO</label>
               </div>
+              <label for="displayWindow" style="margin-top:10px;">Anzeigezeitraum / Log</label>
+              <select id="displayWindow">
+                <option value="24">24 h</option>
+                <option value="48">48 h</option>
+                <option value="168">7 Tage</option>
+                <option value="480" selected>20 Tage Log</option>
+                <option value="2160">90 Tage Archiv</option>
+                <option value="all">Archiv komplett</option>
+              </select>
+              <div class="logWindowNote" id="logWindowNote">20-Tage-Arbeitslog aktiv; Repo-JSON + lokaler Cache.</div>
             </div>
           </div>
 
@@ -808,6 +838,7 @@
                   <option value="48">48h</option>
                   <option value="72" selected>72h</option>
                   <option value="168">7 Tage</option>
+                  <option value="480">20 Tage</option>
                   <option value="720">30 Tage</option>
                   <option value="2160">90 Tage</option>
                   <option value="all">alle offenen</option>
@@ -1018,6 +1049,25 @@ Wilhelmshaven JadeWeserPort"></textarea>
   const FETCH_OPTS = { cache: "no-store", credentials: "omit" };
   const apiFetch = (url, opts={}) => fetch(url, { ...FETCH_OPTS, ...opts });
 
+  // v5.30: 20-Tage-Arbeitslog + lokales Archiv. Das HTML speichert gesehene Events im Browser,
+  // damit ältere Meldungen nicht aus der Arbeitsliste verschwinden, sobald der Worker sie nicht mehr mitliefert.
+  const STORAGE_KEYS = {
+    events: "magic_paws_event_archive_v1",
+    meta: "magic_paws_event_archive_meta_v1"
+  };
+  const DEFAULT_DISPLAY_WINDOW_HOURS = 480; // 20 Tage
+  const ARCHIVE_RETENTION_DAYS = 365;
+  const ARCHIVE_EVENT_LIMIT = 5000;
+
+  // v5.31: Repository-Archiv. Diese Dateien werden durch GitHub Actions erzeugt.
+  // Die HTML liest sie nur; geschrieben wird serverseitig durch scripts/magicpaws_build_log_archive.mjs.
+  const REPO_DATA = {
+    active20d: "./data/logs/magicpaws_events_20d.json",
+    manifest: "./data/archive/magicpaws_archive_manifest.json",
+    dailySummary: "./data/snapshots/magicpaws_daily_summary.json",
+    sensorLatest: "./data/snapshots/magicpaws_sensor_latest.json"
+  };
+
   // show worker host
   try { el("wkr").textContent = new URL(BASE).hostname; } catch(_e){}
 
@@ -1032,7 +1082,20 @@ Wilhelmshaven JadeWeserPort"></textarea>
     weatherData: null,
     navtexData: null,
     navtexMiniMap: null,
-    navtexMiniLayers: null
+    navtexMiniLayers: null,
+    liveEvents: [],
+    archiveEvents: [],
+    dailySummary: [],
+    repoArchive: {
+      activeEvents: [],
+      manifest: null,
+      dailySummaryPack: null,
+      sensorLatest: null,
+      loadedMonthFiles: new Set(),
+      loadedArchiveEvents: [],
+      status: "not_loaded"
+    },
+    archiveStats: { live:0, repoActive:0, repoArchive:0, archiveBefore:0, merged:0, olderThanActiveWindow:0, storage:"not_loaded" }
   };
 
   function nowStr(){ return new Date().toLocaleString(); }
@@ -1196,8 +1259,10 @@ Wilhelmshaven JadeWeserPort"></textarea>
     const sev = el("sev").value;
     const onlyP0 = el("onlyP0").checked;
     const onlyGeo = el("onlyGeo").checked;
+    const displayHours = selectedDisplayWindowHours();
 
     const filtered = state.events.filter(ev => {
+      if (!isWithinHours(ev, displayHours)) return false;
       if (domain && ev.category !== domain) return false;
       if (region && ev.region !== region) return false;
       if (sev && ev.severity !== sev) return false;
@@ -1213,6 +1278,7 @@ Wilhelmshaven JadeWeserPort"></textarea>
 
     filtered.sort((a,b)=> getEventChronologyMs(b) - getEventChronologyMs(a));
     state.filtered = filtered;
+    updateLogWindowNote();
 
     renderEvents();
     updateKPIsAndInstruments();
@@ -1221,6 +1287,17 @@ Wilhelmshaven JadeWeserPort"></textarea>
 
   function renderEvents(){
     const list = el("list");
+    if (!state.filtered.length) {
+      const hours = selectedDisplayWindowHours();
+      list.innerHTML = `
+        <div class="event">
+          <div class="title">Keine Treffer im gewählten Zeitfenster</div>
+          <div class="summary">Anzeigezeitraum: ${escapeHtml(windowLabelFromHours(hours))}. Ältere Meldungen sind nicht gelöscht; wähle „Archiv komplett“ oder exportiere LOG/ARCHIV.</div>
+        </div>
+      `;
+      el("foot").textContent = `Angezeigt: 0 / ${state.events.length} Events • ${windowLabelFromHours(hours)} • Archiv älter: ${state.archiveStats.olderThanActiveWindow ?? 0}`;
+      return;
+    }
     list.innerHTML = state.filtered.map(ev => {
       const labels = ev.labels ?? [];
       const key = []
@@ -1262,12 +1339,291 @@ Wilhelmshaven JadeWeserPort"></textarea>
       `;
     }).join("");
 
-    el("foot").textContent = `Angezeigt: ${state.filtered.length} / ${state.events.length} Events`;
+    const hours = selectedDisplayWindowHours();
+    const activeTotal = state.events.filter(ev => isWithinHours(ev, hours)).length;
+    const older = hours === null ? 0 : Math.max(0, state.events.length - activeTotal);
+    el("foot").textContent = `Angezeigt: ${state.filtered.length} / ${activeTotal} im Fenster • gesamt/Archiv: ${state.events.length} • älter: ${older} • ${windowLabelFromHours(hours)}`;
   }
 
   function parseISO(ts){ const d = ts ? new Date(ts) : null; return (d && !isNaN(d)) ? d : null; }
   function daysAgo(d){ return (Date.now() - d.getTime()) / (1000*60*60*24); }
   function hoursAgo(d, now = new Date()){ return (now.getTime() - d.getTime()) / (1000*60*60); }
+
+
+  function eventArchiveKey(ev){
+    const directUrl = cleanUrl(ev?.url || ev?.original_url || ev?.source_url || ev?.link || originalUrlFromEvent(ev) || "");
+    if (directUrl) return `url:${directUrl.toLowerCase()}`;
+    if (ev?.id) return `id:${ev.id}`;
+    if (ev?.number) return `issue:${ev.number}`;
+    const ms = getEventChronologyMs(ev) || parseDateMs(ev?.ts) || 0;
+    return `txt:${normalizeText((ev?.title || "").slice(0, 180))}:${ms}`;
+  }
+
+  function selectedDisplayWindowHours(){
+    const raw = el("displayWindow")?.value || String(DEFAULT_DISPLAY_WINDOW_HOURS);
+    if (raw === "all") return null;
+    const n = Number(raw);
+    return Number.isFinite(n) && n > 0 ? n : DEFAULT_DISPLAY_WINDOW_HOURS;
+  }
+
+  function windowLabelFromHours(hours){
+    if (hours === null) return "Archiv komplett";
+    if (hours === 24) return "24 h";
+    if (hours === 48) return "48 h";
+    if (hours === 168) return "7 Tage";
+    if (hours === 480) return "20 Tage";
+    if (hours === 720) return "30 Tage";
+    if (hours === 2160) return "90 Tage";
+    if (hours % 24 === 0) return `${Math.round(hours / 24)} Tage`;
+    return `${hours} h`;
+  }
+
+  function isWithinHours(ev, hours){
+    if (hours === null) return true;
+    const eventMs = getEventChronologyMs(ev);
+    if (!eventMs) return false;
+    const age = Date.now() - eventMs;
+    return age >= -60 * 60 * 1000 && age <= hours * 60 * 60 * 1000;
+  }
+
+
+  async function fetchRepoJsonMaybe(url, label){
+    try {
+      const res = await fetch(url, { cache: "no-store", credentials: "omit" });
+      if (!res.ok) {
+        if (res.status !== 404) console.warn(`Repo-JSON nicht geladen (${label}): HTTP ${res.status}`);
+        return null;
+      }
+      return await res.json();
+    } catch (e) {
+      console.warn(`Repo-JSON nicht geladen (${label})`, e);
+      return null;
+    }
+  }
+
+  async function fetchRepoJsonlMaybe(url, label){
+    try {
+      const res = await fetch(url, { cache: "no-store", credentials: "omit" });
+      if (!res.ok) {
+        if (res.status !== 404) console.warn(`Repo-JSONL nicht geladen (${label}): HTTP ${res.status}`);
+        return [];
+      }
+      const text = await res.text();
+      return text.split(/\r?\n/).filter(Boolean).map(line => JSON.parse(line));
+    } catch (e) {
+      console.warn(`Repo-JSONL nicht geladen (${label})`, e);
+      return [];
+    }
+  }
+
+  function mergeEventLists(...lists){
+    const byKey = new Map();
+    for (const list of lists) {
+      for (const ev of Array.isArray(list) ? list : []) {
+        const key = eventArchiveKey(ev);
+        const prev = byKey.get(key);
+        if (!prev || getEventChronologyMs(ev) >= getEventChronologyMs(prev)) byKey.set(key, ev);
+      }
+    }
+    return [...byKey.values()].sort((a,b) => getEventChronologyMs(b) - getEventChronologyMs(a));
+  }
+
+  async function loadRepoArchiveBase(){
+    const [activePack, manifest, dailyPack, sensorLatest] = await Promise.all([
+      fetchRepoJsonMaybe(REPO_DATA.active20d, "20d-log"),
+      fetchRepoJsonMaybe(REPO_DATA.manifest, "archive-manifest"),
+      fetchRepoJsonMaybe(REPO_DATA.dailySummary, "daily-summary"),
+      fetchRepoJsonMaybe(REPO_DATA.sensorLatest, "sensor-latest")
+    ]);
+
+    const activeEvents = Array.isArray(activePack?.events) ? activePack.events : [];
+    state.repoArchive.activeEvents = activeEvents;
+    state.repoArchive.manifest = manifest;
+    state.repoArchive.dailySummaryPack = dailyPack;
+    state.repoArchive.sensorLatest = sensorLatest;
+
+    const manifestCount = Number(manifest?.total_events || 0);
+    const activeCount = activeEvents.length;
+    state.repoArchive.status = activePack
+      ? `Repo ok: 20d=${activeCount.toLocaleString("de-DE")}, Archiv=${manifestCount.toLocaleString("de-DE")}`
+      : "Repo-Archiv noch nicht vorhanden; nutze Worker + lokalen Cache";
+
+    return activeEvents;
+  }
+
+  async function ensureRepoArchiveForSelectedWindow(){
+    const hours = selectedDisplayWindowHours();
+    if (hours !== null && hours <= DEFAULT_DISPLAY_WINDOW_HOURS) return;
+    const manifest = state.repoArchive.manifest;
+    const months = Array.isArray(manifest?.months) ? manifest.months : [];
+    if (!months.length) return;
+
+    const cutoff = hours === null ? 0 : Date.now() - hours * 60 * 60 * 1000;
+    const wanted = months.filter(m => {
+      if (!m?.file) return false;
+      if (state.repoArchive.loadedMonthFiles.has(m.file)) return false;
+      if (hours === null) return true;
+      const lastMs = parseDateMs(m.last_utc);
+      return lastMs && lastMs >= cutoff;
+    });
+    if (!wanted.length) return;
+
+    if (el("foot")) el("foot").textContent = `Archiv wird geladen: ${wanted.length} Monatsdatei(en) …`;
+    const loadedLists = await Promise.all(wanted.map(m => fetchRepoJsonlMaybe(`./${m.file}`, m.file)));
+    for (let i = 0; i < wanted.length; i++) state.repoArchive.loadedMonthFiles.add(wanted[i].file);
+    const loaded = loadedLists.flat();
+    state.repoArchive.loadedArchiveEvents = mergeEventLists(state.repoArchive.loadedArchiveEvents, loaded);
+    state.events = mergeEventLists(state.events, loaded);
+    state.archiveEvents = state.events;
+    state.dailySummary = buildDailySummaries(state.events, 365);
+    writeEventArchive(state.events);
+    state.archiveStats.repoArchive = state.repoArchive.loadedArchiveEvents.length;
+    state.archiveStats.merged = state.events.length;
+    state.archiveStats.storage = `${state.repoArchive.status}; Monatsarchive geladen=${state.repoArchive.loadedMonthFiles.size}`;
+  }
+
+  function readEventArchive(){
+    try {
+      const raw = localStorage.getItem(STORAGE_KEYS.events);
+      const parsed = raw ? JSON.parse(raw) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) {
+      console.warn("MAGIC PAWS archive read failed", e);
+      return [];
+    }
+  }
+
+  function archiveCompactEvent(ev){
+    const c = compactEvent(ev);
+    c.summary = shortText(c.summary, 800);
+    c.original_url = originalUrlFromEvent(ev) || ev?.original_url || ev?.source_url || ev?.link || null;
+    c.archive_key = eventArchiveKey(ev);
+    c.archived_at = new Date().toISOString();
+    return c;
+  }
+
+  function writeEventArchive(events){
+    const sorted = [...events].sort((a,b) => getEventChronologyMs(b) - getEventChronologyMs(a));
+    let compact = sorted.map(archiveCompactEvent).slice(0, ARCHIVE_EVENT_LIMIT);
+    while (compact.length >= 100) {
+      try {
+        localStorage.setItem(STORAGE_KEYS.events, JSON.stringify(compact));
+        localStorage.setItem(STORAGE_KEYS.meta, JSON.stringify({
+          updated_at: new Date().toISOString(),
+          retained_events: compact.length,
+          retention_days: ARCHIVE_RETENTION_DAYS,
+          event_limit: ARCHIVE_EVENT_LIMIT
+        }));
+        return { ok:true, stored: compact.length, reduced:false };
+      } catch (e) {
+        console.warn("MAGIC PAWS archive write failed; reducing archive size", e);
+        compact = compact.slice(0, Math.floor(compact.length * 0.72));
+      }
+    }
+    return { ok:false, stored:0, reduced:true };
+  }
+
+  function mergeAndPersistEventArchive(liveEvents, repoEvents = []){
+    const archiveBefore = mergeEventLists(repoEvents, readEventArchive());
+    const byKey = new Map();
+    const cutoffMs = Date.now() - ARCHIVE_RETENTION_DAYS * 24 * 60 * 60 * 1000;
+
+    for (const ev of archiveBefore) {
+      const ms = getEventChronologyMs(ev);
+      if (ms && ms < cutoffMs) continue;
+      byKey.set(eventArchiveKey(ev), ev);
+    }
+    for (const ev of liveEvents) {
+      byKey.set(eventArchiveKey(ev), ev);
+    }
+
+    const merged = [...byKey.values()].sort((a,b) => getEventChronologyMs(b) - getEventChronologyMs(a));
+    const storage = writeEventArchive(merged);
+    const activeHours = selectedDisplayWindowHours();
+    const olderThanActiveWindow = activeHours === null ? 0 : merged.filter(ev => !isWithinHours(ev, activeHours)).length;
+
+    state.liveEvents = liveEvents;
+    state.archiveEvents = merged;
+    state.archiveStats = {
+      live: liveEvents.length,
+      repoActive: repoEvents.length,
+      repoArchive: state.repoArchive.loadedArchiveEvents.length,
+      archiveBefore: archiveBefore.length,
+      merged: merged.length,
+      olderThanActiveWindow,
+      storage: storage.ok ? `${state.repoArchive.status}; localStorage ok (${storage.stored})` : `${state.repoArchive.status}; localStorage voll/nicht verfügbar`
+    };
+    state.dailySummary = buildDailySummaries(merged, 365);
+    return merged;
+  }
+
+  function updateLogWindowNote(){
+    const node = el("logWindowNote");
+    if (!node) return;
+    const hours = selectedDisplayWindowHours();
+    const label = windowLabelFromHours(hours);
+    const activeCount = state.events.filter(ev => isWithinHours(ev, hours)).length;
+    const older = hours === null ? 0 : Math.max(0, state.events.length - activeCount);
+    node.innerHTML = `<span class="archiveChip">${escapeHtml(label)}</span> sichtbar: ${activeCount.toLocaleString("de-DE")} Events • Archiv älter: ${older.toLocaleString("de-DE")} • Speicher: ${escapeHtml(state.archiveStats.storage || "–")}`;
+  }
+
+  function countBy(values){
+    const out = {};
+    for (const v of values.filter(Boolean)) out[v] = (out[v] || 0) + 1;
+    return Object.fromEntries(Object.entries(out).sort((a,b) => b[1] - a[1]));
+  }
+
+  function topKeywordsForEvents(events, max = 10){
+    const scores = new Map();
+    for (const ev of events){
+      const text = `${ev.title || ""} ${ev.summary || ""} ${(ev.labels || []).join(" ")}`;
+      const t = normalizeText(text);
+      for (const kw of [...KEYWORD_TIERS.hard, ...KEYWORD_TIERS.soft]){
+        const nk = normalizeText(kw);
+        if (nk && t.includes(nk)) scores.set(kw, (scores.get(kw) || 0) + 1);
+      }
+    }
+    return [...scores.entries()].sort((a,b) => b[1] - a[1]).slice(0, max).map(([keyword, count]) => ({ keyword, count }));
+  }
+
+  function buildDailySummaries(events, days = 180){
+    const cutoff = Date.now() - days * 24 * 60 * 60 * 1000;
+    const groups = new Map();
+    for (const ev of events){
+      const ms = getEventChronologyMs(ev);
+      if (!ms || ms < cutoff) continue;
+      const day = new Date(ms).toISOString().slice(0, 10);
+      if (!groups.has(day)) groups.set(day, []);
+      groups.get(day).push(ev);
+    }
+
+    return [...groups.entries()].sort((a,b) => b[0].localeCompare(a[0])).map(([date, dayEvents]) => {
+      const hybridRaw = dayEvents.reduce((sum, ev) => sum + scoreEventForHybrid(ev), 0);
+      const northEvents = dayEvents.filter(ev => {
+        const labels = ev.labels || [];
+        return ev.region === "REG:NORTH_SEA" || ev.region === "REG:GER_BIGHT" || labels.includes("REG:NORTH_SEA") || labels.includes("REG:GER_BIGHT");
+      });
+      const balticEvents = dayEvents.filter(ev => {
+        const labels = ev.labels || [];
+        return ev.region === "REG:BALTIC_SEA" || ev.region === "REG:BALTIC" || labels.includes("REG:BALTIC_SEA") || labels.includes("REG:BALTIC");
+      });
+      return {
+        date,
+        events_total: dayEvents.length,
+        p0_suspect: dayEvents.filter(ev => ev.phase0?.suspect || (ev.labels || []).includes("P0:SUSPECT")).length,
+        geo_events: dayEvents.filter(ev => !!ev.geo).length,
+        top_domains: countBy(dayEvents.map(ev => ev.category)),
+        top_regions: countBy(dayEvents.map(ev => ev.region)),
+        severity: countBy(dayEvents.map(ev => ev.severity)),
+        hybrid_index_proxy: clamp(Math.round((hybridRaw / 70) * 100), 0, 100),
+        government_weirdness_proxy: {
+          north_sea: clamp(Math.round((northEvents.reduce((sum, ev) => sum + scoreEventForHybrid(ev), 0) / 35) * 100), 0, 100),
+          baltic_sea: clamp(Math.round((balticEvents.reduce((sum, ev) => sum + scoreEventForHybrid(ev), 0) / 35) * 100), 0, 100)
+        },
+        top_keywords: topKeywordsForEvents(dayEvents, 8)
+      };
+    });
+  }
 
   function scorePhaseZero(events){
     const recent = events.filter(e => { const d = eventChronologyDate(e); return d ? daysAgo(d) <= 7 : false; });
@@ -1688,7 +2044,7 @@ Wilhelmshaven JadeWeserPort"></textarea>
     const pts = src.filter(e => e.geo && Number.isFinite(Number(e.geo.lat)) && Number.isFinite(Number(e.geo.lon)));
 
     const ms = el("mapStatus");
-    const label = tw === "all" ? "alle offenen" : (tw === "168" ? "7 Tage" : tw === "720" ? "30 Tage" : tw === "2160" ? "90 Tage" : `${tw}h`);
+    const label = tw === "all" ? "alle offenen" : (tw === "168" ? "7 Tage" : tw === "480" ? "20 Tage" : tw === "720" ? "30 Tage" : tw === "2160" ? "90 Tage" : `${tw}h`);
     if (ms) ms.textContent = `MAP: ${label} • src=${src.length}/${baseSrc.length} geo=${pts.length}`;
 
     let bounds = null;
@@ -1813,7 +2169,10 @@ Wilhelmshaven JadeWeserPort"></textarea>
     if (data?.ok === false) throw new Error(data.error || data.message || "bundle failed");
 
     state.bundle = data;
-    state.events = Array.isArray(data.events) ? data.events : [];
+    const liveEvents = Array.isArray(data.events) ? data.events : [];
+    const repoEvents = await loadRepoArchiveBase();
+    state.events = mergeAndPersistEventArchive(liveEvents, repoEvents);
+    await ensureRepoArchiveForSelectedWindow();
 
     el("src").textContent = `${data.source?.owner ?? "?"}/${data.source?.repo ?? "?"}`;
     el("stand").textContent = data.generated_at ? new Date(data.generated_at).toLocaleString() : "–";
@@ -1824,9 +2183,9 @@ Wilhelmshaven JadeWeserPort"></textarea>
     buildSelectOptions(el("domain"), domains);
     buildSelectOptions(el("region"), regions);
 
-    console.log("MAGIC PAWS bundle loaded", { fresh, events: state.events.length, first: state.events[0] });
+    console.log("MAGIC PAWS bundle loaded", { fresh, live: state.liveEvents.length, merged: state.events.length, first: state.events[0] });
     applyFilters();
-    if (el("foot")) el("foot").textContent = `Reload ok: ${state.events.length} Events • ${nowStr()}`;
+    if (el("foot")) el("foot").textContent = `Reload ok: ${state.liveEvents.length} live • ${state.events.length} im Repo/Archiv/Log • ${nowStr()}`;
   }
 
   async function reloadNow(){
@@ -1849,7 +2208,7 @@ Wilhelmshaven JadeWeserPort"></textarea>
         refreshMapLayers();
       }
 
-      if (el("foot")) el("foot").textContent = `Reload abgeschlossen • ${state.events.length} Events • ${nowStr()}`;
+      if (el("foot")) el("foot").textContent = `Reload abgeschlossen • ${state.liveEvents.length} live • ${state.events.length} im Repo/Archiv/Log • ${nowStr()}`;
     } catch (err) {
       console.error("Reload failed", err);
       if (el("foot")) el("foot").textContent = `Reload fehlgeschlagen: ${err?.message || String(err)}`;
@@ -2072,8 +2431,8 @@ Wilhelmshaven JadeWeserPort"></textarea>
       generated_at: state.bundle?.generated_at ?? null,
       export_window: {
         selected_hours: selectedHours,
-        allowed_hours: [24, 48, 120],
-        label_de: `letzte ${selectedHours} Stunden`
+        allowed_hours: [24, 48, 120, 480, 2160],
+        label_de: selectedHours % 24 === 0 ? `letzte ${Math.round(selectedHours / 24)} Tage` : `letzte ${selectedHours} Stunden`
       },
       dashboard: {
         worker_base: BASE,
@@ -2083,15 +2442,25 @@ Wilhelmshaven JadeWeserPort"></textarea>
           region: el("region")?.value ?? "",
           sev: el("sev")?.value ?? "",
           onlyP0: !!el("onlyP0")?.checked,
-          onlyGeo: !!el("onlyGeo")?.checked
+          onlyGeo: !!el("onlyGeo")?.checked,
+          displayWindow: el("displayWindow")?.value ?? String(DEFAULT_DISPLAY_WINDOW_HOURS)
         },
+        log_window: {
+          visible_hours: selectedDisplayWindowHours(),
+          visible_label_de: windowLabelFromHours(selectedDisplayWindowHours()),
+          default_hours: DEFAULT_DISPLAY_WINDOW_HOURS
+        },
+        archive_status: state.archiveStats,
         counts: {
+          live_events_from_worker: state.liveEvents.length,
           loaded_events: state.events.length,
           filtered_events: state.filtered.length,
-          selected_window_events: selectedEvents.length
+          selected_window_events: selectedEvents.length,
+          daily_summary_days: state.dailySummary.length
         }
       },
       sensors_current: currentSensorValues(),
+      daily_summary_latest: state.dailySummary.slice(0, 30),
       report_window_export: {
         profile: "Ausgewähltes Exportfenster",
         time_window_hours: selectedHours,
@@ -2115,7 +2484,9 @@ Wilhelmshaven JadeWeserPort"></textarea>
       machine_notes_de: [
         "Dieses Paket ist ein strukturierter Export, keine fertige Meldung.",
         "Für Daily Honkytonk und Greybook jetzt primär report_window_export nutzen.",
-        "Das Exportfenster kann oben rechts zwischen 24, 48 und 120 Stunden gewählt werden.",
+        "Das Exportfenster kann oben rechts zwischen 24, 48, 120 Stunden, 20 Tagen und 90 Tagen gewählt werden.",
+        "Die Main Console nutzt zusätzlich ein sichtbares Log-Fenster, Standard: 20 Tage.",
+        "Ältere Events werden durch die GitHub Action im Repo archiviert; localStorage bleibt nur Fallback/zusätzlicher Cache.",
         "Quellenqualität, Dubletten und tatsächliche maritime Relevanz vor Veröffentlichung prüfen.",
         "Die 90-Tage-Lernkurve liegt separat in data/snapshots/magicpaws_sensor_snapshots.ndjson."
       ]
@@ -2125,6 +2496,40 @@ Wilhelmshaven JadeWeserPort"></textarea>
   function exportFiltered(){
     const pack = buildReportExport();
     downloadJson(`${isoStampForFile()}_MAGIC_PAWS_report_export_pack.json`, pack);
+  }
+
+
+  function exportArchiveLog(){
+    const activeHours = selectedDisplayWindowHours();
+    const activeEvents = state.events.filter(ev => isWithinHours(ev, activeHours));
+    const olderEvents = activeHours === null ? [] : state.events.filter(ev => !isWithinHours(ev, activeHours));
+    const pack = {
+      export_schema: "MAGIC_PAWS_LOG_ARCHIVE_PACK_v1",
+      exported_at: new Date().toISOString(),
+      purpose_de: "Arbeitslog, lokales Archiv und Tagesverdichtung für Magic Paws / ShadowBroker-Heuristik.",
+      source: state.bundle?.source ?? null,
+      generated_at: state.bundle?.generated_at ?? null,
+      dashboard_version: "v5.31 Repo Log Archive",
+      active_window: {
+        hours: activeHours,
+        label_de: windowLabelFromHours(activeHours),
+        events: activeEvents.map(compactEvent)
+      },
+      archive: {
+        stats: state.archiveStats,
+        retention_days: ARCHIVE_RETENTION_DAYS,
+        event_limit: ARCHIVE_EVENT_LIMIT,
+        older_than_active_window_count: olderEvents.length,
+        older_than_active_window: olderEvents.map(compactEvent)
+      },
+      daily_summary: state.dailySummary,
+      notes_de: [
+        "Dieses Archiv kommt aus Repo-JSON plus lokalem Browser-Fallback.",
+        "Das dauerhafte Team-/Geräte-übergreifende Archiv liegt in data/logs, data/archive und data/snapshots im GitHub-Repo.",
+        "daily_summary ist für Trendvergleiche, Government-Weirdness-/Hybridindex-Baseline und 60/90-Tage-Heuristik gedacht."
+      ]
+    };
+    downloadJson(`${isoStampForFile()}_MAGIC_PAWS_log_archive_pack.json`, pack);
   }
 
   function fmtWx(v, suffix = ""){
@@ -2546,10 +2951,15 @@ Wilhelmshaven JadeWeserPort"></textarea>
   ["q","domain","region","sev","onlyP0","onlyGeo"].forEach(id => {
     on(id, id === "q" ? "input" : "change", applyFilters);
   });
+  on("displayWindow", "change", async () => {
+    await ensureRepoArchiveForSelectedWindow();
+    applyFilters();
+  });
 
   on("btnReload", "click", reloadNow);
   on("btnRebuild", "click", rebuildNow);
   on("btnExport", "click", exportFiltered);
+  on("btnArchiveExport", "click", exportArchiveLog);
   on("btnFit", "click", refreshMapLayers);
   on("btnGeoLocate", "click", locateFromGeoInput);
   on("btnGeoSearch", "click", searchGeoName);
