@@ -1,0 +1,1359 @@
+{
+  "schema": "MAGIC_PAWS_DAILY_SUMMARY_v1",
+  "generated_at": "2026-05-16T13:27:08.483Z",
+  "worker_base": "https://voodoo-hybrid-api.mowlsint.workers.dev",
+  "days": 39,
+  "summary_window_days": 365,
+  "daily_summary": [
+    {
+      "date": "2026-05-16",
+      "events_total": 5,
+      "p0_suspect": 0,
+      "geo_events": 1,
+      "top_domains": {
+        "D:NEWS_INTEL": 5
+      },
+      "top_regions": {
+        "REG:BLACK_SEA": 1,
+        "REG:GLOBAL": 1
+      },
+      "severity": {
+        "SEV:1": 5
+      },
+      "hybrid_index_proxy": 7,
+      "government_weirdness_proxy": {
+        "north_sea": 0,
+        "baltic_sea": 0
+      },
+      "top_keywords": [
+        {
+          "keyword": "mpa",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-05-15",
+      "events_total": 31,
+      "p0_suspect": 0,
+      "geo_events": 6,
+      "top_domains": {
+        "D:NEWS_INTEL": 24,
+        "D:INFRA_CI": 7
+      },
+      "top_regions": {
+        "REG:GLOBAL": 6,
+        "REG:PERSIAN_GULF": 5,
+        "REG:EUROPE": 4,
+        "REG:OTHER": 3,
+        "REG:CARIBBEAN": 1
+      },
+      "severity": {
+        "SEV:1": 31
+      },
+      "hybrid_index_proxy": 41,
+      "government_weirdness_proxy": {
+        "north_sea": 0,
+        "baltic_sea": 0
+      },
+      "top_keywords": [
+        {
+          "keyword": "ot",
+          "count": 13
+        },
+        {
+          "keyword": "sts",
+          "count": 5
+        },
+        {
+          "keyword": "coast guard",
+          "count": 2
+        },
+        {
+          "keyword": "cyber",
+          "count": 2
+        },
+        {
+          "keyword": "patrol",
+          "count": 1
+        },
+        {
+          "keyword": "navy",
+          "count": 1
+        },
+        {
+          "keyword": "mpa",
+          "count": 1
+        },
+        {
+          "keyword": "drone",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-05-14",
+      "events_total": 39,
+      "p0_suspect": 0,
+      "geo_events": 7,
+      "top_domains": {
+        "D:NEWS_INTEL": 26,
+        "D:INFRA_CI": 9,
+        "D:SECURITY_CRIME": 2,
+        "D:DRONE_UAS": 1,
+        "D:INCIDENT": 1
+      },
+      "top_regions": {
+        "REG:GLOBAL": 8,
+        "REG:EUROPE": 5,
+        "REG:OTHER": 5,
+        "REG:PERSIAN_GULF": 4,
+        "REG:RED_SEA": 1,
+        "REG:BAB_EL_MANDEB": 1,
+        "REG:CARIBBEAN": 1,
+        "REG:NORTH_SEA": 1,
+        "REG:MEDITERRANEAN": 1
+      },
+      "severity": {
+        "SEV:1": 39
+      },
+      "hybrid_index_proxy": 51,
+      "government_weirdness_proxy": {
+        "north_sea": 2,
+        "baltic_sea": 0
+      },
+      "top_keywords": [
+        {
+          "keyword": "ot",
+          "count": 16
+        },
+        {
+          "keyword": "mpa",
+          "count": 5
+        },
+        {
+          "keyword": "sts",
+          "count": 3
+        },
+        {
+          "keyword": "isr",
+          "count": 3
+        },
+        {
+          "keyword": "drone",
+          "count": 2
+        },
+        {
+          "keyword": "navy",
+          "count": 2
+        },
+        {
+          "keyword": "coast guard",
+          "count": 2
+        },
+        {
+          "keyword": "disruption",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "date": "2026-05-13",
+      "events_total": 59,
+      "p0_suspect": 0,
+      "geo_events": 10,
+      "top_domains": {
+        "D:NEWS_INTEL": 49,
+        "D:INFRA_CI": 9,
+        "D:SECURITY_CRIME": 1
+      },
+      "top_regions": {
+        "REG:OTHER": 19,
+        "REG:EUROPE": 8,
+        "REG:GLOBAL": 8,
+        "REG:PERSIAN_GULF": 6,
+        "REG:NORTH_AMERICA": 2,
+        "REG:NORTH_SEA": 1,
+        "REG:ATLANTIC_NE": 1
+      },
+      "severity": {
+        "SEV:1": 59
+      },
+      "hybrid_index_proxy": 74,
+      "government_weirdness_proxy": {
+        "north_sea": 2,
+        "baltic_sea": 0
+      },
+      "top_keywords": [
+        {
+          "keyword": "ot",
+          "count": 35
+        },
+        {
+          "keyword": "drone",
+          "count": 6
+        },
+        {
+          "keyword": "mpa",
+          "count": 5
+        },
+        {
+          "keyword": "isr",
+          "count": 5
+        },
+        {
+          "keyword": "disruption",
+          "count": 4
+        },
+        {
+          "keyword": "coast guard",
+          "count": 3
+        },
+        {
+          "keyword": "sts",
+          "count": 3
+        },
+        {
+          "keyword": "sar",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "date": "2026-05-12",
+      "events_total": 130,
+      "p0_suspect": 0,
+      "geo_events": 14,
+      "top_domains": {
+        "D:NEWS_INTEL": 95,
+        "D:SECURITY_CRIME": 25,
+        "D:INFRA_CI": 10
+      },
+      "top_regions": {
+        "REG:OTHER": 65,
+        "REG:GLOBAL": 7,
+        "REG:EUROPE": 6,
+        "REG:PERSIAN_GULF": 6,
+        "REG:NORTH_AMERICA": 3,
+        "REG:ATLANTIC_NE": 2,
+        "REG:SOUTH_AMERICA_EAST": 2,
+        "REG:CARIBBEAN": 1,
+        "REG:CHANNEL": 1
+      },
+      "severity": {
+        "SEV:1": 114,
+        "SEV:2": 16
+      },
+      "hybrid_index_proxy": 100,
+      "government_weirdness_proxy": {
+        "north_sea": 0,
+        "baltic_sea": 0
+      },
+      "top_keywords": [
+        {
+          "keyword": "ot",
+          "count": 87
+        },
+        {
+          "keyword": "incident",
+          "count": 16
+        },
+        {
+          "keyword": "mpa",
+          "count": 7
+        },
+        {
+          "keyword": "drone",
+          "count": 6
+        },
+        {
+          "keyword": "sts",
+          "count": 6
+        },
+        {
+          "keyword": "cyber",
+          "count": 3
+        },
+        {
+          "keyword": "sar",
+          "count": 3
+        },
+        {
+          "keyword": "navy",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "date": "2026-05-11",
+      "events_total": 98,
+      "p0_suspect": 0,
+      "geo_events": 13,
+      "top_domains": {
+        "D:NEWS_INTEL": 81,
+        "D:SECURITY_CRIME": 10,
+        "D:INFRA_CI": 6,
+        "D:INCIDENT": 1
+      },
+      "top_regions": {
+        "REG:OTHER": 68,
+        "REG:PERSIAN_GULF": 7,
+        "REG:EUROPE": 5,
+        "REG:BALTIC": 3,
+        "REG:SOUTH_AMERICA_EAST": 2,
+        "REG:ATLANTIC_NE": 2,
+        "REG:CARIBBEAN": 1
+      },
+      "severity": {
+        "SEV:1": 98
+      },
+      "hybrid_index_proxy": 100,
+      "government_weirdness_proxy": {
+        "north_sea": 0,
+        "baltic_sea": 7
+      },
+      "top_keywords": [
+        {
+          "keyword": "ot",
+          "count": 83
+        },
+        {
+          "keyword": "sts",
+          "count": 9
+        },
+        {
+          "keyword": "navy",
+          "count": 7
+        },
+        {
+          "keyword": "drone",
+          "count": 7
+        },
+        {
+          "keyword": "isr",
+          "count": 5
+        },
+        {
+          "keyword": "mpa",
+          "count": 5
+        },
+        {
+          "keyword": "surveillance",
+          "count": 3
+        },
+        {
+          "keyword": "incident",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "date": "2026-05-10",
+      "events_total": 36,
+      "p0_suspect": 0,
+      "geo_events": 4,
+      "top_domains": {
+        "D:NEWS_INTEL": 27,
+        "D:SECURITY_CRIME": 6,
+        "D:INFRA_CI": 3
+      },
+      "top_regions": {
+        "REG:OTHER": 21,
+        "REG:EUROPE": 2,
+        "REG:BALTIC": 2,
+        "REG:PERSIAN_GULF": 2
+      },
+      "severity": {
+        "SEV:1": 36
+      },
+      "hybrid_index_proxy": 45,
+      "government_weirdness_proxy": {
+        "north_sea": 0,
+        "baltic_sea": 5
+      },
+      "top_keywords": [
+        {
+          "keyword": "ot",
+          "count": 26
+        },
+        {
+          "keyword": "navy",
+          "count": 3
+        },
+        {
+          "keyword": "mpa",
+          "count": 2
+        },
+        {
+          "keyword": "jamming",
+          "count": 2
+        },
+        {
+          "keyword": "surveillance",
+          "count": 2
+        },
+        {
+          "keyword": "coast guard",
+          "count": 1
+        },
+        {
+          "keyword": "sts",
+          "count": 1
+        },
+        {
+          "keyword": "spoofing",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-05-08",
+      "events_total": 2,
+      "p0_suspect": 0,
+      "geo_events": 0,
+      "top_domains": {
+        "D:INFRA_CI": 2
+      },
+      "top_regions": {
+        "REG:EUROPE": 2
+      },
+      "severity": {
+        "SEV:1": 2
+      },
+      "hybrid_index_proxy": 3,
+      "government_weirdness_proxy": {
+        "north_sea": 0,
+        "baltic_sea": 0
+      },
+      "top_keywords": [
+        {
+          "keyword": "cyber",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-05-07",
+      "events_total": 4,
+      "p0_suspect": 0,
+      "geo_events": 0,
+      "top_domains": {
+        "D:INFRA_CI": 4
+      },
+      "top_regions": {
+        "REG:EUROPE": 3
+      },
+      "severity": {
+        "SEV:1": 4
+      },
+      "hybrid_index_proxy": 5,
+      "government_weirdness_proxy": {
+        "north_sea": 0,
+        "baltic_sea": 0
+      },
+      "top_keywords": [
+        {
+          "keyword": "ot",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "date": "2026-05-06",
+      "events_total": 5,
+      "p0_suspect": 0,
+      "geo_events": 1,
+      "top_domains": {
+        "D:INFRA_CI": 5
+      },
+      "top_regions": {
+        "REG:EUROPE": 5
+      },
+      "severity": {
+        "SEV:1": 5
+      },
+      "hybrid_index_proxy": 7,
+      "government_weirdness_proxy": {
+        "north_sea": 0,
+        "baltic_sea": 0
+      },
+      "top_keywords": [
+        {
+          "keyword": "isr",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-05-05",
+      "events_total": 9,
+      "p0_suspect": 0,
+      "geo_events": 1,
+      "top_domains": {
+        "D:INFRA_CI": 9
+      },
+      "top_regions": {
+        "REG:EUROPE": 9
+      },
+      "severity": {
+        "SEV:1": 9
+      },
+      "hybrid_index_proxy": 13,
+      "government_weirdness_proxy": {
+        "north_sea": 0,
+        "baltic_sea": 0
+      },
+      "top_keywords": [
+        {
+          "keyword": "cyber",
+          "count": 4
+        },
+        {
+          "keyword": "ot",
+          "count": 3
+        },
+        {
+          "keyword": "isr",
+          "count": 2
+        },
+        {
+          "keyword": "espionage",
+          "count": 1
+        },
+        {
+          "keyword": "spionage",
+          "count": 1
+        },
+        {
+          "keyword": "sar",
+          "count": 1
+        },
+        {
+          "keyword": "sts",
+          "count": 1
+        },
+        {
+          "keyword": "disruption",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-05-04",
+      "events_total": 4,
+      "p0_suspect": 0,
+      "geo_events": 1,
+      "top_domains": {
+        "D:INFRA_CI": 4
+      },
+      "top_regions": {
+        "REG:EUROPE": 3
+      },
+      "severity": {
+        "SEV:1": 4
+      },
+      "hybrid_index_proxy": 5,
+      "government_weirdness_proxy": {
+        "north_sea": 0,
+        "baltic_sea": 0
+      },
+      "top_keywords": [
+        {
+          "keyword": "sts",
+          "count": 1
+        },
+        {
+          "keyword": "ot",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-05-01",
+      "events_total": 1,
+      "p0_suspect": 0,
+      "geo_events": 0,
+      "top_domains": {
+        "D:INFRA_CI": 1
+      },
+      "top_regions": {},
+      "severity": {
+        "SEV:1": 1
+      },
+      "hybrid_index_proxy": 1,
+      "government_weirdness_proxy": {
+        "north_sea": 0,
+        "baltic_sea": 0
+      },
+      "top_keywords": []
+    },
+    {
+      "date": "2026-04-30",
+      "events_total": 4,
+      "p0_suspect": 0,
+      "geo_events": 0,
+      "top_domains": {
+        "D:INFRA_CI": 4
+      },
+      "top_regions": {
+        "REG:EUROPE": 4
+      },
+      "severity": {
+        "SEV:1": 4
+      },
+      "hybrid_index_proxy": 6,
+      "government_weirdness_proxy": {
+        "north_sea": 0,
+        "baltic_sea": 0
+      },
+      "top_keywords": [
+        {
+          "keyword": "cyber",
+          "count": 2
+        },
+        {
+          "keyword": "mpa",
+          "count": 1
+        },
+        {
+          "keyword": "isr",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-04-29",
+      "events_total": 4,
+      "p0_suspect": 0,
+      "geo_events": 0,
+      "top_domains": {
+        "D:INFRA_CI": 4
+      },
+      "top_regions": {
+        "REG:EUROPE": 4
+      },
+      "severity": {
+        "SEV:1": 4
+      },
+      "hybrid_index_proxy": 6,
+      "government_weirdness_proxy": {
+        "north_sea": 0,
+        "baltic_sea": 0
+      },
+      "top_keywords": [
+        {
+          "keyword": "sts",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-04-28",
+      "events_total": 7,
+      "p0_suspect": 0,
+      "geo_events": 0,
+      "top_domains": {
+        "D:INFRA_CI": 7
+      },
+      "top_regions": {
+        "REG:EUROPE": 6
+      },
+      "severity": {
+        "SEV:1": 7
+      },
+      "hybrid_index_proxy": 10,
+      "government_weirdness_proxy": {
+        "north_sea": 0,
+        "baltic_sea": 0
+      },
+      "top_keywords": [
+        {
+          "keyword": "disruption",
+          "count": 1
+        },
+        {
+          "keyword": "isr",
+          "count": 1
+        },
+        {
+          "keyword": "mpa",
+          "count": 1
+        },
+        {
+          "keyword": "cyber",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-04-27",
+      "events_total": 4,
+      "p0_suspect": 0,
+      "geo_events": 0,
+      "top_domains": {
+        "D:INFRA_CI": 4
+      },
+      "top_regions": {
+        "REG:EUROPE": 4
+      },
+      "severity": {
+        "SEV:1": 4
+      },
+      "hybrid_index_proxy": 6,
+      "government_weirdness_proxy": {
+        "north_sea": 0,
+        "baltic_sea": 0
+      },
+      "top_keywords": [
+        {
+          "keyword": "ot",
+          "count": 2
+        },
+        {
+          "keyword": "cyber",
+          "count": 2
+        },
+        {
+          "keyword": "shadow fleet",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-04-26",
+      "events_total": 1,
+      "p0_suspect": 0,
+      "geo_events": 1,
+      "top_domains": {
+        "D:INFRA_CI": 1
+      },
+      "top_regions": {
+        "REG:EUROPE": 1
+      },
+      "severity": {
+        "SEV:1": 1
+      },
+      "hybrid_index_proxy": 1,
+      "government_weirdness_proxy": {
+        "north_sea": 0,
+        "baltic_sea": 0
+      },
+      "top_keywords": [
+        {
+          "keyword": "disruption",
+          "count": 1
+        },
+        {
+          "keyword": "isr",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-04-24",
+      "events_total": 1,
+      "p0_suspect": 0,
+      "geo_events": 0,
+      "top_domains": {
+        "D:INFRA_CI": 1
+      },
+      "top_regions": {
+        "REG:EUROPE": 1
+      },
+      "severity": {
+        "SEV:1": 1
+      },
+      "hybrid_index_proxy": 1,
+      "government_weirdness_proxy": {
+        "north_sea": 0,
+        "baltic_sea": 0
+      },
+      "top_keywords": [
+        {
+          "keyword": "cyber",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-04-23",
+      "events_total": 1,
+      "p0_suspect": 0,
+      "geo_events": 0,
+      "top_domains": {
+        "D:INFRA_CI": 1
+      },
+      "top_regions": {},
+      "severity": {
+        "SEV:1": 1
+      },
+      "hybrid_index_proxy": 1,
+      "government_weirdness_proxy": {
+        "north_sea": 0,
+        "baltic_sea": 0
+      },
+      "top_keywords": [
+        {
+          "keyword": "sts",
+          "count": 1
+        },
+        {
+          "keyword": "ot",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-04-22",
+      "events_total": 5,
+      "p0_suspect": 0,
+      "geo_events": 0,
+      "top_domains": {
+        "D:INFRA_CI": 5
+      },
+      "top_regions": {
+        "REG:EUROPE": 5
+      },
+      "severity": {
+        "SEV:1": 5
+      },
+      "hybrid_index_proxy": 7,
+      "government_weirdness_proxy": {
+        "north_sea": 0,
+        "baltic_sea": 0
+      },
+      "top_keywords": [
+        {
+          "keyword": "ot",
+          "count": 2
+        },
+        {
+          "keyword": "sts",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-04-20",
+      "events_total": 2,
+      "p0_suspect": 0,
+      "geo_events": 0,
+      "top_domains": {
+        "D:INFRA_CI": 2
+      },
+      "top_regions": {
+        "REG:EUROPE": 2
+      },
+      "severity": {
+        "SEV:1": 2
+      },
+      "hybrid_index_proxy": 3,
+      "government_weirdness_proxy": {
+        "north_sea": 0,
+        "baltic_sea": 0
+      },
+      "top_keywords": [
+        {
+          "keyword": "cyber",
+          "count": 2
+        },
+        {
+          "keyword": "sts",
+          "count": 1
+        },
+        {
+          "keyword": "mpa",
+          "count": 1
+        },
+        {
+          "keyword": "isr",
+          "count": 1
+        },
+        {
+          "keyword": "ot",
+          "count": 1
+        },
+        {
+          "keyword": "anchoring",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-04-16",
+      "events_total": 1,
+      "p0_suspect": 0,
+      "geo_events": 0,
+      "top_domains": {
+        "D:INFRA_CI": 1
+      },
+      "top_regions": {
+        "REG:NORTH_SEA": 1
+      },
+      "severity": {
+        "SEV:1": 1
+      },
+      "hybrid_index_proxy": 1,
+      "government_weirdness_proxy": {
+        "north_sea": 3,
+        "baltic_sea": 3
+      },
+      "top_keywords": [
+        {
+          "keyword": "ot",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-04-15",
+      "events_total": 3,
+      "p0_suspect": 0,
+      "geo_events": 0,
+      "top_domains": {
+        "D:INFRA_CI": 3
+      },
+      "top_regions": {
+        "REG:EUROPE": 1
+      },
+      "severity": {
+        "SEV:1": 3
+      },
+      "hybrid_index_proxy": 4,
+      "government_weirdness_proxy": {
+        "north_sea": 0,
+        "baltic_sea": 0
+      },
+      "top_keywords": [
+        {
+          "keyword": "sts",
+          "count": 1
+        },
+        {
+          "keyword": "sar",
+          "count": 1
+        },
+        {
+          "keyword": "cyber",
+          "count": 1
+        },
+        {
+          "keyword": "ot",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-04-14",
+      "events_total": 1,
+      "p0_suspect": 0,
+      "geo_events": 0,
+      "top_domains": {
+        "D:INFRA_CI": 1
+      },
+      "top_regions": {
+        "REG:NORTH_SEA": 1
+      },
+      "severity": {
+        "SEV:1": 1
+      },
+      "hybrid_index_proxy": 1,
+      "government_weirdness_proxy": {
+        "north_sea": 3,
+        "baltic_sea": 3
+      },
+      "top_keywords": [
+        {
+          "keyword": "isr",
+          "count": 1
+        },
+        {
+          "keyword": "ot",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-04-09",
+      "events_total": 1,
+      "p0_suspect": 0,
+      "geo_events": 0,
+      "top_domains": {
+        "D:INFRA_CI": 1
+      },
+      "top_regions": {},
+      "severity": {
+        "SEV:1": 1
+      },
+      "hybrid_index_proxy": 1,
+      "government_weirdness_proxy": {
+        "north_sea": 0,
+        "baltic_sea": 0
+      },
+      "top_keywords": []
+    },
+    {
+      "date": "2026-04-08",
+      "events_total": 1,
+      "p0_suspect": 0,
+      "geo_events": 0,
+      "top_domains": {
+        "D:INFRA_CI": 1
+      },
+      "top_regions": {
+        "REG:EUROPE": 1
+      },
+      "severity": {
+        "SEV:1": 1
+      },
+      "hybrid_index_proxy": 1,
+      "government_weirdness_proxy": {
+        "north_sea": 0,
+        "baltic_sea": 0
+      },
+      "top_keywords": [
+        {
+          "keyword": "cyber",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-04-07",
+      "events_total": 1,
+      "p0_suspect": 0,
+      "geo_events": 0,
+      "top_domains": {
+        "D:INFRA_CI": 1
+      },
+      "top_regions": {
+        "REG:EUROPE": 1
+      },
+      "severity": {
+        "SEV:1": 1
+      },
+      "hybrid_index_proxy": 1,
+      "government_weirdness_proxy": {
+        "north_sea": 0,
+        "baltic_sea": 0
+      },
+      "top_keywords": [
+        {
+          "keyword": "cyber",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-04-02",
+      "events_total": 2,
+      "p0_suspect": 0,
+      "geo_events": 1,
+      "top_domains": {
+        "D:INFRA_CI": 2
+      },
+      "top_regions": {
+        "REG:EUROPE": 2
+      },
+      "severity": {
+        "SEV:1": 2
+      },
+      "hybrid_index_proxy": 3,
+      "government_weirdness_proxy": {
+        "north_sea": 0,
+        "baltic_sea": 0
+      },
+      "top_keywords": [
+        {
+          "keyword": "cyber",
+          "count": 2
+        },
+        {
+          "keyword": "sts",
+          "count": 1
+        },
+        {
+          "keyword": "ot",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-04-01",
+      "events_total": 1,
+      "p0_suspect": 0,
+      "geo_events": 0,
+      "top_domains": {
+        "D:INFRA_CI": 1
+      },
+      "top_regions": {
+        "REG:NORTH_SEA": 1
+      },
+      "severity": {
+        "SEV:1": 1
+      },
+      "hybrid_index_proxy": 1,
+      "government_weirdness_proxy": {
+        "north_sea": 3,
+        "baltic_sea": 3
+      },
+      "top_keywords": [
+        {
+          "keyword": "ot",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-03-31",
+      "events_total": 3,
+      "p0_suspect": 0,
+      "geo_events": 0,
+      "top_domains": {
+        "D:INFRA_CI": 3
+      },
+      "top_regions": {
+        "REG:NORTH_SEA": 2,
+        "REG:EUROPE": 1
+      },
+      "severity": {
+        "SEV:1": 3
+      },
+      "hybrid_index_proxy": 4,
+      "government_weirdness_proxy": {
+        "north_sea": 6,
+        "baltic_sea": 6
+      },
+      "top_keywords": [
+        {
+          "keyword": "ot",
+          "count": 2
+        },
+        {
+          "keyword": "cyber",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-03-16",
+      "events_total": 1,
+      "p0_suspect": 0,
+      "geo_events": 0,
+      "top_domains": {
+        "D:INFRA_CI": 1
+      },
+      "top_regions": {
+        "REG:NORTH_SEA": 1
+      },
+      "severity": {
+        "SEV:1": 1
+      },
+      "hybrid_index_proxy": 1,
+      "government_weirdness_proxy": {
+        "north_sea": 3,
+        "baltic_sea": 3
+      },
+      "top_keywords": [
+        {
+          "keyword": "ot",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-02-03",
+      "events_total": 1,
+      "p0_suspect": 0,
+      "geo_events": 0,
+      "top_domains": {
+        "D:INFRA_CI": 1
+      },
+      "top_regions": {
+        "REG:NORTH_SEA": 1
+      },
+      "severity": {
+        "SEV:1": 1
+      },
+      "hybrid_index_proxy": 1,
+      "government_weirdness_proxy": {
+        "north_sea": 3,
+        "baltic_sea": 3
+      },
+      "top_keywords": [
+        {
+          "keyword": "ot",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-02-02",
+      "events_total": 1,
+      "p0_suspect": 0,
+      "geo_events": 0,
+      "top_domains": {
+        "D:INFRA_CI": 1
+      },
+      "top_regions": {
+        "REG:NORTH_SEA": 1
+      },
+      "severity": {
+        "SEV:1": 1
+      },
+      "hybrid_index_proxy": 1,
+      "government_weirdness_proxy": {
+        "north_sea": 3,
+        "baltic_sea": 3
+      },
+      "top_keywords": [
+        {
+          "keyword": "ot",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-01-25",
+      "events_total": 1,
+      "p0_suspect": 0,
+      "geo_events": 1,
+      "top_domains": {
+        "D:INFRA_CI": 1
+      },
+      "top_regions": {
+        "REG:NORTH_SEA": 1
+      },
+      "severity": {
+        "SEV:1": 1
+      },
+      "hybrid_index_proxy": 1,
+      "government_weirdness_proxy": {
+        "north_sea": 3,
+        "baltic_sea": 3
+      },
+      "top_keywords": [
+        {
+          "keyword": "sabotage",
+          "count": 1
+        },
+        {
+          "keyword": "spionage",
+          "count": 1
+        },
+        {
+          "keyword": "ot",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "date": "2026-01-20",
+      "events_total": 1,
+      "p0_suspect": 0,
+      "geo_events": 0,
+      "top_domains": {
+        "D:INFRA_CI": 1
+      },
+      "top_regions": {
+        "REG:NORTH_SEA": 1
+      },
+      "severity": {
+        "SEV:1": 1
+      },
+      "hybrid_index_proxy": 1,
+      "government_weirdness_proxy": {
+        "north_sea": 3,
+        "baltic_sea": 3
+      },
+      "top_keywords": [
+        {
+          "keyword": "sts",
+          "count": 1
+        },
+        {
+          "keyword": "ot",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "date": "2025-10-22",
+      "events_total": 1,
+      "p0_suspect": 0,
+      "geo_events": 0,
+      "top_domains": {
+        "D:INFRA_CI": 1
+      },
+      "top_regions": {
+        "REG:EUROPE": 1
+      },
+      "severity": {
+        "SEV:1": 1
+      },
+      "hybrid_index_proxy": 1,
+      "government_weirdness_proxy": {
+        "north_sea": 0,
+        "baltic_sea": 0
+      },
+      "top_keywords": [
+        {
+          "keyword": "cyber",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "date": "2025-07-15",
+      "events_total": 1,
+      "p0_suspect": 0,
+      "geo_events": 0,
+      "top_domains": {
+        "D:INFRA_CI": 1
+      },
+      "top_regions": {
+        "REG:EUROPE": 1
+      },
+      "severity": {
+        "SEV:1": 1
+      },
+      "hybrid_index_proxy": 1,
+      "government_weirdness_proxy": {
+        "north_sea": 0,
+        "baltic_sea": 0
+      },
+      "top_keywords": [
+        {
+          "keyword": "cyber",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "date": "2025-06-06",
+      "events_total": 1,
+      "p0_suspect": 0,
+      "geo_events": 0,
+      "top_domains": {
+        "D:INFRA_CI": 1
+      },
+      "top_regions": {
+        "REG:EUROPE": 1
+      },
+      "severity": {
+        "SEV:1": 1
+      },
+      "hybrid_index_proxy": 1,
+      "government_weirdness_proxy": {
+        "north_sea": 0,
+        "baltic_sea": 0
+      },
+      "top_keywords": [
+        {
+          "keyword": "cyber",
+          "count": 1
+        }
+      ]
+    }
+  ]
+}
