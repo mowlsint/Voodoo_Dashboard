@@ -1,0 +1,49 @@
+name: Magic Paws Log Archive
+
+on:
+  schedule:
+    # alle 6 Stunden, leicht versetzt zur vollen Stunde
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: magic-paws-log-archive
+  cancel-in-progress: false
+
+jobs:
+  build-log-archive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Build Magic Paws log/archive JSON
+        env:
+          MAGIC_PAWS_WORKER_BASE: "https://voodoo-hybrid-api.mowlsint.workers.dev"
+          MAGIC_PAWS_ACTIVE_WINDOW_DAYS: "20"
+          MAGIC_PAWS_DAILY_SUMMARY_DAYS: "365"
+        run: node scripts/magicpaws_build_log_archive.mjs
+
+      - name: Commit generated JSON files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/logs data/archive data/snapshots
+          if git diff --cached --quiet; then
+            echo "No generated JSON changes to commit."
+            exit 0
+          fi
+          git commit -m "Update Magic Paws log archive"
+          git push
